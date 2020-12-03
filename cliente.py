@@ -2,9 +2,7 @@ import asyncio
 import websockets
 import json
 import time
-import random
-#import ChessEngine_V098
-import IA_V1
+import ia
 
 board = [                                                                                      
     [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
@@ -112,7 +110,7 @@ async def eventos(socketa):
             print("Identificador de partida:",data["data"]["board_id"])
             print("Jugador blanco: " , data["data"]["white_username"] , data["data"]["white_score"])
             print("Jugador negro : " , data["data"]["black_username"] , data["data"]["black_score"])
-            IA_V1.limpiar(data["data"]["board_id"])
+            ia.limpiar(data["data"]["board_id"])
 
         #EVENTO: Solicitud de movimiento (continuacion o inicio de partida)
         if data['event'] == 'your_turn':            
@@ -127,7 +125,7 @@ async def eventos(socketa):
                 turno = False      
             
             #3) LLamo a la logica de la IA para que me devuelva el mejor movimiento para el estado actual del tablero
-            move_choice = IA_V1.bot_work(data["data"]["board_id"], data["data"]["board"], turno)
+            move_choice = ia.bot_work(data["data"]["board_id"], data["data"]["board"], turno)
             #await asyncio.sleep(3)
             print("Move:",move_choice)
             #print()

@@ -1,6 +1,6 @@
 #Class responsible for determining the valid moves at the current state
 #import os.path
-class Game_State():
+class game():
     def __init__(self,color):           #Cuando creo el juego, debo guardar el color con el que se jugara la partida
         self.turn = color
         self.move_Functions = {"P": self.get_Pawn_Moves, "R": self.get_Rook_Moves, "H":self.get_Knight_Moves, "B": self.get_Bishop_Moves,"Q": self.get_Queen_Moves,"K": self.get_King_Moves,
@@ -31,6 +31,13 @@ class Game_State():
     q_quantity_row_upgrade_mia   = 0
     q_quantity_row_upgrade_rival = 0    #Reinas mias en la de upgrade rival
     Q_quantity_row_upgrade_rival = 0    #Reinas rvales en su fila de upgrade
+
+    row_upgrade_mia   = 8
+    row_upgrade_rival = 7
+    row_tactical      = 9
+    reina_mia         = "Q"
+    reina_rival       = "q"
+
 
     #Actualizar con el estado actual del tablero
     def Actualizar (self, refresh):
@@ -167,6 +174,7 @@ class Game_State():
         else:
             color = "black"
 
+        ''''
         if self.turn:
             row_upgrade_mia   = 8
             row_upgrade_rival = 7
@@ -176,6 +184,8 @@ class Game_State():
             row_upgrade_mia   = 7
             row_upgrade_rival = 8
             row_tactical      = 6
+        '''
+
 
         for d in directions:
             for i in range(1,16):        #bishops can move max of 7 squares
@@ -185,9 +195,9 @@ class Game_State():
                     extra = 0
                     if queen_call != 0:        
 
-                        if (self.q_quantity_row_upgrade_mia > 1)    and (self.q_quantity_row_tactical == 0) and (endRow == row_tactical) and (r == row_upgrade_mia):
+                        if (self.q_quantity_row_upgrade_mia > 1)    and (self.q_quantity_row_tactical == 0) and (endRow == self.row_tactical) and (r == self.row_upgrade_mia):
                             extra = extra + 1000
-                        if (self.q_quantity_row_upgrade_rival == 0) and (self.Q_quantity_row_upgrade_rival == 0) and (endRow == row_upgrade_rival) and (r == row_upgrade_mia):
+                        if (self.q_quantity_row_upgrade_rival == 0) and (self.Q_quantity_row_upgrade_rival == 0) and (endRow == self.row_upgrade_rival) and (r == self.row_upgrade_mia):
                             extra = extra + 10000
 
 
@@ -213,19 +223,19 @@ class Game_State():
         if change==0:
             self.queens_Quantity=self.queens_Quantity+1
             #Analisis tactico
-            if self.turn:
+            #if self.turn:
                 #row_upgrade_mia   = 8
-                row_upgrade_rival = 7
-                row_tactical      = 9
+            #    row_upgrade_rival = 7
+            #    row_tactical      = 9
 
-            if not self.turn:
+            #if not self.turn:
                 #row_upgrade_mia   = 7
-                row_upgrade_rival = 8
-                row_tactical      = 6
+            #    row_upgrade_rival = 8
+            #    row_tactical      = 6
 
-            if (self.q_quantity_row_upgrade_mia > 1)    and (self.q_quantity_row_tactical == 0) and (r == row_tactical):
+            if (self.q_quantity_row_upgrade_mia > 1)    and (self.q_quantity_row_tactical == 0) and (r == self.row_tactical):
                 extra = extra + 1000
-            if (self.q_quantity_row_upgrade_rival == 0) and (self.Q_quantity_row_upgrade_rival == 0) and (r == row_upgrade_rival):
+            if (self.q_quantity_row_upgrade_rival == 0) and (self.Q_quantity_row_upgrade_rival == 0) and (r == self.row_upgrade_rival):
                 extra = extra + 10000
         
         self.get_Rook_Moves(r,c,queen_moves,change,extra)              
@@ -271,24 +281,16 @@ class Game_State():
                 elif (endPiece[0].isupper() and color=="black") or (endPiece[0].islower() and change==1):
                     king_moves[0].append([(r,c),(endRow,endCol), 0, "k"+endPiece[0]])
 
+    #Estas variables se inicial por defecto para las piezas blancas, pero si me tocan negras, las cambio por las correctas
+    def seteo_Inicial(self):
+        if not self.turn:
+            self.row_upgrade_mia   = 7
+            self.row_upgrade_rival = 8
+            self.row_tactical      = 6
+            self.reina_mia         = "q"
+            self.reina_rival       = "Q"
 
     def columna_Rating(self):
-
-        #Este seteo se deberia hacer una sola vez en la partida, lo podrias meter en el init
-        if self.turn:
-            row_upgrade_mia   = 8
-            row_upgrade_rival = 7
-            row_tactical      = 9
-            reina_mia         = "Q"
-            reina_rival       = "q"
-
-        else:
-            row_upgrade_mia   = 7
-            row_upgrade_rival = 8
-            row_tactical      = 6
-            reina_mia         = "q"
-            reina_rival       = "Q"
-
         #Esto se tiene que resetear todos los turnos
         self.best_col = {-5:-10,-4:-10,-3:-10,-2:-10,-1:-10       ,0:0 ,1:0 ,2:0 ,3:1 ,4:0 ,5:0 ,6:0 ,7:0 ,8:0 ,9:0 ,10:0 ,11:0 ,12:0 ,13:0 ,14:0 ,15:0      ,16:-10,17:-10,18:-10,19:-10,20:-10}
         self.q_quantity_row_tactical      = 0
@@ -297,31 +299,31 @@ class Game_State():
         self.Q_quantity_row_upgrade_rival = 0    #Reinas rvales en su fila de upgrade
 
         #1) Analisis: Cantidad de reinas mias en row tactical
-        for col in range(len(self.board[row_tactical])):
-            if reina_mia == self.board[row_tactical][col]:
+        for col in range(len(self.board[self.row_tactical])):
+            if self.reina_mia == self.board[self.row_tactical][col]:
                 self.q_quantity_row_tactical = self.q_quantity_row_tactical + 1
 
         #2) Analisis: Cantidad de reinas mias en row upgrade y la columna en que se encuentra
-        for col in range(len(self.board[row_upgrade_mia])):
-            if reina_mia == self.board[row_upgrade_mia][col]:
+        for col in range(len(self.board[self.row_upgrade_mia])):
+            if self.reina_mia == self.board[self.row_upgrade_mia][col]:
                 self.q_quantity_row_upgrade_mia = self.q_quantity_row_upgrade_mia + 1
 
-                if self.q_quantity_row_tactical == 0:                           #Lo que quisiste decir aca es: Si no tengo reinas propias en row_tactical, avanza peones en la columna al lado de una reina que tengas en row_upgrade
-                    self.best_col[col+1] = self.best_col[col+1] + 5             #El problema es que esta suma la hace siempre, NO referida a si tenes una reina en row_upgrade
-                    self.best_col[col-1] = self.best_col[col-1] + 5
+            if self.q_quantity_row_tactical == 0:                           #Lo que quisiste decir aca es: Si no tengo reinas propias en row_tactical, avanza peones en la columna al lado de una reina que tengas en row_upgrade
+                self.best_col[col+1] = self.best_col[col+1] + 5             #El problema es que esta suma la hace siempre, NO referida a si tenes una reina en row_upgrade
+                self.best_col[col-1] = self.best_col[col-1] + 5
 
-                else:
-                    self.best_col[col+2] = self.best_col[col+2] + 8
-                    self.best_col[col-2] = self.best_col[col-2] + 8
+            else:
+                self.best_col[col+2] = self.best_col[col+2] + 8
+                self.best_col[col-2] = self.best_col[col-2] + 8
 
         #3) Analisis: Cantidad de reinas rivales en su upgrade, cantidad de reinas propias en su upgrade y la columna en la que se encuentra la reina del rival (si las hay)
-        for col in range(len(self.board[row_upgrade_rival])):
-            if reina_mia == self.board[row_upgrade_rival][col]:
+        for col in range(len(self.board[self.row_upgrade_rival])):
+            if self.reina_mia == self.board[self.row_upgrade_rival][col]:
                 self.q_quantity_row_upgrade_rival = self.q_quantity_row_upgrade_rival + 1   #verifico si tengo reinas propias en la fila de upgrade rival
-            if reina_rival == self.board[row_upgrade_rival][col]:
+            if self.reina_rival == self.board[self.row_upgrade_rival][col]:
                 self.Q_quantity_row_upgrade_rival = self.Q_quantity_row_upgrade_rival + 1   #verifico si tengo reinas propias en la fila de upgrade rival
 
-            if reina_rival == self.board[row_upgrade_rival][col]:
+            if self.reina_rival == self.board[self.row_upgrade_rival][col]:
                 
                 self.best_col[col]   = self.best_col[col]   - 4 
                 self.best_col[col+1] = self.best_col[col+1] - 3 

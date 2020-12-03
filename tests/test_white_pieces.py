@@ -1,10 +1,10 @@
 import unittest
-import ChessEngine_V1
+import tablero
 
 #AAA Rule: Arrange, Act, Assert
-class Test_Engine(unittest.TestCase):
+class test_white_pieces(unittest.TestCase):
     def setUp(self):
-        self.game_TEST = ChessEngine_V1.Game_State(True)
+        self.game_TEST = tablero.game(True)
         self.moves = [[],[]]
         self.game_TEST.board = [
             ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
