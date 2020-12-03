@@ -23,9 +23,10 @@ turno = '''{
 
 
 
+
 x = json.loads(turno)
 actual = x["data"]["board_test"]
-
+print(x["data"])
 
 def peon_rival(fila, color):  
     if color == "white":

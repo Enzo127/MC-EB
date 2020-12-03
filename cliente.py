@@ -2,7 +2,7 @@ import asyncio
 import websockets
 import json
 import time
-import ia
+import bot
 
 board = [                                                                                      
     [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
@@ -110,7 +110,11 @@ async def eventos(socketa):
             print("Identificador de partida:",data["data"]["board_id"])
             print("Jugador blanco: " , data["data"]["white_username"] , data["data"]["white_score"])
             print("Jugador negro : " , data["data"]["black_username"] , data["data"]["black_score"])
-            ia.limpiar(data["data"]["board_id"])
+            try:    
+                bot.limpiar(data["data"]["board_id"])    #Al terminar la partida, cierro el objeto game con el board_id correspondiente
+                
+            except:       #Este except esta solo porque cuando juego contra mi mismo, al terminar la partida, intento limpiar el objeto 2 veces y eso me da error
+                pass      
 
         #EVENTO: Solicitud de movimiento (continuacion o inicio de partida)
         if data['event'] == 'your_turn':            
@@ -118,14 +122,15 @@ async def eventos(socketa):
             p_msg_move["data"]["turn_token"] = data["data"]["turn_token"]       #Actualizacion de turn token (debe actualizarse en cada turno)
             p_msg_move["data"]["board_id"]   = data["data"]["board_id"]         #Actualizacion de board_id   (Si posteriormente creo una sola vez el objeto partida, este paso es necesario realizarlo una sola vez(igual que con el color))
 
+            '''
             #2) Como el color solo tiene 2 posibilidades (Blanco o Negro), lo paso a variable booleana, para ser mas eficiente
             if data["data"]["actual_turn"] == "white":
                 turno = True
             else:
                 turno = False      
-            
+            '''
             #3) LLamo a la logica de la IA para que me devuelva el mejor movimiento para el estado actual del tablero
-            move_choice = ia.bot_work(data["data"]["board_id"], data["data"]["board"], turno)
+            move_choice = bot.bot_work(data["data"])
             #await asyncio.sleep(3)
             print("Move:",move_choice)
             #print()
