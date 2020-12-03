@@ -26,17 +26,17 @@ class game():
     
     queens_Quantity = 0            
     
-    best_col = {-5:0,-4:0,-3:0,-2:0,-1:0       ,0:0 ,1:0 ,2:0 ,3:1 ,4:0 ,5:0 ,6:0 ,7:0 ,8:0 ,9:0 ,10:0 ,11:0 ,12:0 ,13:0 ,14:0 ,15:0      ,16:0,17:0,18:0,19:0,20:0}
+    best_col = {0:0 ,1:0 ,2:0 ,3:1 ,4:0 ,5:0 ,6:0 ,7:0 ,8:0 ,9:0 ,10:0 ,11:0 ,12:0 ,13:0 ,14:0 ,15:0 }
     q_quantity_row_tactical      = 0
     q_quantity_row_upgrade_mia   = 0
     q_quantity_row_upgrade_rival = 0    #Reinas mias en la de upgrade rival
     Q_quantity_row_upgrade_rival = 0    #Reinas rvales en su fila de upgrade
 
-    row_upgrade_mia   = 8
-    row_upgrade_rival = 7
-    row_tactical      = 9
-    reina_mia         = "Q"
-    reina_rival       = "q"
+    row_upgrade_mia   = 0
+    row_upgrade_rival = 0
+    row_tactical      = 0
+    reina_mia         = 0
+    reina_rival       = 0
 
 
     #Actualizar con el estado actual del tablero
@@ -174,19 +174,6 @@ class game():
         else:
             color = "black"
 
-        ''''
-        if self.turn:
-            row_upgrade_mia   = 8
-            row_upgrade_rival = 7
-            row_tactical      = 9
-
-        if not self.turn:
-            row_upgrade_mia   = 7
-            row_upgrade_rival = 8
-            row_tactical      = 6
-        '''
-
-
         for d in directions:
             for i in range(1,16):        #bishops can move max of 7 squares
                 endRow = r + d[0] * i
@@ -194,12 +181,24 @@ class game():
                 if (0 <= endRow < 16) and (0 <= endCol < 16): #on board
                     extra = 0
                     if queen_call != 0:        
-
+                        #aca podrias llamar a una funcion
+                        '''
+                        Moverte con una reina desde la fila de coronacion propia a la fila tactica(la fila anterior a la coronacion) tiene un valor agregado
+                        Condiciones: _La pieza a evaluar es una reina en la fila de coronacion propia
+                                     _Tengo al menos 2 reinas en la fila de coronacion propia (asi no la dejo libre para ser ocupada por el rival)
+                                     _En la fila tactica no hay ni una reina propia 
+                        '''
                         if (self.q_quantity_row_upgrade_mia > 1)    and (self.q_quantity_row_tactical == 0) and (endRow == self.row_tactical) and (r == self.row_upgrade_mia):
                             extra = extra + 1000
+                        
+                        '''
+                        Moverte con una reina desde la fila de coronacion propia a la fila de coronacion del rival(la fila posterior a la coronacion propia) tiene un valor agregado
+                        Condiciones: _La pieza a evaluar es una reina en la fila de coronacion propia
+                                     _El rival no tiene reinas suyas en su fila de coronacion (que me puedan recapturar si me muevo ahi)
+                                     _Yo no tengo otra reina su fila de coronacion (con una es suficiente)
+                        '''
                         if (self.q_quantity_row_upgrade_rival == 0) and (self.Q_quantity_row_upgrade_rival == 0) and (endRow == self.row_upgrade_rival) and (r == self.row_upgrade_mia):
                             extra = extra + 10000
-
 
                     endPiece = self.board[endRow][endCol]                   
                     if endPiece == " ": #empty space valid
@@ -219,24 +218,9 @@ class game():
                     break
 
     def get_Queen_Moves(self,r,c,queen_moves,change,extra):
-        extra = 1
+        extra = 1                                           #Esto me sirve para cuando llamo al metodo bishop y rook, que este sepa que va a conformar los movimientos de una reina
         if change==0:
-            self.queens_Quantity=self.queens_Quantity+1
-            #Analisis tactico
-            #if self.turn:
-                #row_upgrade_mia   = 8
-            #    row_upgrade_rival = 7
-            #    row_tactical      = 9
-
-            #if not self.turn:
-                #row_upgrade_mia   = 7
-            #    row_upgrade_rival = 8
-            #    row_tactical      = 6
-
-            if (self.q_quantity_row_upgrade_mia > 1)    and (self.q_quantity_row_tactical == 0) and (r == self.row_tactical):
-                extra = extra + 1000
-            if (self.q_quantity_row_upgrade_rival == 0) and (self.Q_quantity_row_upgrade_rival == 0) and (r == self.row_upgrade_rival):
-                extra = extra + 10000
+            self.queens_Quantity=self.queens_Quantity+1     #Contador de numero de reinas para el tablero actual
         
         self.get_Rook_Moves(r,c,queen_moves,change,extra)              
         self.get_Bishop_Moves(r,c,queen_moves,change,extra)
@@ -282,24 +266,26 @@ class game():
                     king_moves[0].append([(r,c),(endRow,endCol), 0, "k"+endPiece[0]])
 
     #Estas variables se inicial por defecto para las piezas blancas, pero si me tocan negras, las cambio por las correctas
-    def seteo_Inicial(self):
-        if self.turn:
+    def seteo_Inicial(self, color):
+        if color:
             self.row_upgrade_mia   = 8
             self.row_upgrade_rival = 7
             self.row_tactical      = 9
             self.reina_mia         = "Q"
             self.reina_rival       = "q"
 
-        if not self.turn:
+        else:
             self.row_upgrade_mia   = 7
             self.row_upgrade_rival = 8
             self.row_tactical      = 6
             self.reina_mia         = "q"
             self.reina_rival       = "Q"
 
+
+
     def columna_Rating(self):
         #Esto se tiene que resetear todos los turnos
-        self.best_col = {-5:-10,-4:-10,-3:-10,-2:-10,-1:-10       ,0:0 ,1:0 ,2:0 ,3:1 ,4:0 ,5:0 ,6:0 ,7:0 ,8:0 ,9:0 ,10:0 ,11:0 ,12:0 ,13:0 ,14:0 ,15:0      ,16:-10,17:-10,18:-10,19:-10,20:-10}
+        self.best_col = {0:0 ,1:0 ,2:0 ,3:1 ,4:0 ,5:0 ,6:0 ,7:0 ,8:0 ,9:0 ,10:0 ,11:0 ,12:0 ,13:0 ,14:0 ,15:0 }
         self.q_quantity_row_tactical      = 0
         self.q_quantity_row_upgrade_mia   = 0
         self.q_quantity_row_upgrade_rival = 0    #Reinas mias en la de upgrade rival
@@ -310,18 +296,31 @@ class game():
             if self.reina_mia == self.board[self.row_tactical][col]:
                 self.q_quantity_row_tactical = self.q_quantity_row_tactical + 1
 
+                self.best_col[col] = self.best_col[col] - 20                    #Si tengo una reina en la fila de tactica, no conviene mover el peon que esta detras de ella (ya que los bloquea mi propia pieza)
+                                                                                #Conviene mas mover peones de otra columna para coronarlos
+
+
         #2) Analisis: Cantidad de reinas mias en row upgrade y la columna en que se encuentra
         for col in range(len(self.board[self.row_upgrade_mia])):
             if self.reina_mia == self.board[self.row_upgrade_mia][col]:
                 self.q_quantity_row_upgrade_mia = self.q_quantity_row_upgrade_mia + 1
 
-            if self.q_quantity_row_tactical == 0:                           #Lo que quisiste decir aca es: Si no tengo reinas propias en row_tactical, avanza peones en la columna al lado de una reina que tengas en row_upgrade
-                self.best_col[col+1] = self.best_col[col+1] + 5             #El problema es que esta suma la hace siempre, NO referida a si tenes una reina en row_upgrade
-                self.best_col[col-1] = self.best_col[col-1] + 5
+                self.best_col[col] = self.best_col[col] - 20                    #Si tengo una reina en la fila de coronacion, no conviene mover el peon que esta detras de ella (ya que los bloquea mi propia pieza)
+                                                                                #Conviene mas mover peones de otra columna para coronarlos
 
-            else:
-                self.best_col[col+2] = self.best_col[col+2] + 8
-                self.best_col[col-2] = self.best_col[col-2] + 8
+                if self.q_quantity_row_tactical == 0:                           #Lo que quisiste decir aca es: Si no tengo reinas propias en row_tactical, avanza peones en la columna al lado de una reina que tengas en row_upgrade
+                    if col+1 <= 15:
+                        self.best_col[col+1] = self.best_col[col+1] + 5    
+                    if col-1 >= 0:             
+                        self.best_col[col-1] = self.best_col[col-1] + 5
+
+                else:
+                    if col+2 <= 15:
+                        self.best_col[col+2] = self.best_col[col+2] + 8
+                        self.best_col[col+1] = self.best_col[col+1] + 1
+                    if col-2 >= 0: 
+                        self.best_col[col-2] = self.best_col[col-2] + 8
+                        self.best_col[col-1] = self.best_col[col-1] + 1
 
         #3) Analisis: Cantidad de reinas rivales en su upgrade, cantidad de reinas propias en su upgrade y la columna en la que se encuentra la reina del rival (si las hay)
         for col in range(len(self.board[self.row_upgrade_rival])):
@@ -329,17 +328,15 @@ class game():
                 self.q_quantity_row_upgrade_rival = self.q_quantity_row_upgrade_rival + 1   #verifico si tengo reinas propias en la fila de upgrade rival
             if self.reina_rival == self.board[self.row_upgrade_rival][col]:
                 self.Q_quantity_row_upgrade_rival = self.Q_quantity_row_upgrade_rival + 1   #verifico si tengo reinas propias en la fila de upgrade rival
+         
+                self.best_col[col]   = self.best_col[col]   - 4     
+                for i in range(1,4):
 
-            if self.reina_rival == self.board[self.row_upgrade_rival][col]:
-                
-                self.best_col[col]   = self.best_col[col]   - 4 
-                self.best_col[col+1] = self.best_col[col+1] - 3 
-                self.best_col[col-1] = self.best_col[col+1] - 3 
-                self.best_col[col+2] = self.best_col[col+2] - 2 
-                self.best_col[col-2] = self.best_col[col-2] - 2 
-                self.best_col[col+3] = self.best_col[col+3] - 1 
-                self.best_col[col-3] = self.best_col[col-3] - 1 
-                self.best_col[col+4] = self.best_col[col+4] + 1 
-                self.best_col[col-4] = self.best_col[col-4] + 1 
+                    if col+i <= 15:
+                        self.best_col[col+i] = self.best_col[col+i] + (i*2-4)
+
+                    if col-i >= 0:
+                        self.best_col[col-i] = self.best_col[col-i] + (i*2-4)
+                    
                 
         

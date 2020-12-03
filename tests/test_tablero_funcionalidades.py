@@ -41,7 +41,7 @@ class test_tablero_funcionalidades(unittest.TestCase):
         row_upgrade_mia   = 8
         reina_mia         = "Q"
 
-        funcionalidades.seteo_Inicial()
+        funcionalidades.seteo_Inicial(True)
 
         self.assertEqual (funcionalidades.row_upgrade_mia  , row_upgrade_mia)
         self.assertEqual (funcionalidades.reina_mia        , reina_mia)
@@ -52,7 +52,34 @@ class test_tablero_funcionalidades(unittest.TestCase):
         row_tactical      = 6
         reina_rival       = "Q"
 
-        funcionalidades.seteo_Inicial()
+        funcionalidades.seteo_Inicial(False)
 
         self.assertEqual (funcionalidades.row_tactical    , row_tactical)
         self.assertEqual (funcionalidades.reina_rival     , reina_rival)
+
+
+
+    def test_best_col(self):
+        funcionalidades = tablero.game(False)     
+        funcionalidades.seteo_Inicial(False)          
+        funcionalidades.board = [
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'R', 'H', 'h', 'r', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', 'q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],#tactical negra
+            [' ', ' ', 'q', 'q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],#coronacion negra
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],#coronacion blanca
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
+        funcionalidades.columna_Rating()
+        print()
+        for i in funcionalidades.best_col:
+            print(i,  funcionalidades.best_col[i])
