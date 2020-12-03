@@ -6,14 +6,14 @@ class test_tablero_black_pieces(unittest.TestCase):
     Inicio el test como jugador negro y coloco piezas de forma estrategica en el tablero para analizar situaciones criticas y ver si las funciones que invocan responden 
     de la manera esperada, las piezas a analizar (fila, columna) son:
 
-     PIEZAS     |  Test 1   |   Test 2
-    --------------------------------------
-    -Peones     |  (3,2)    |  (6,13)
-    -Caballos   |  (9,1)    |  (5,5) 
-    -Alfil      |  (6,1)    |  (11,8)
-    -Torre      |  (8,0)    |  (13,15)
-    -Reina      |  (4,2)    |  (12,14)
-    -Rey        |  (4,0)    |  (12,9)
+     PIEZAS     |  Test 1   |   Test 2   |  Test 3
+    ---------------------------------------------------
+    -Peones     |  (3,2)    |  (6,13)    |    (3,15)
+    -Caballos   |  (9,1)    |  (5,5)     |    
+    -Alfil      |  (6,1)    |  (11,8)    |   
+    -Torre      |  (8,0)    |  (13,15)   |   
+    -Reina      |  (4,2)    |  (12,14)   |    
+    -Rey        |  (4,0)    |  (12,9)    |    
 
     Edit: Las piezas se han agrupado un poco para considerar principalmente situaciones criticas y no analizar de mas movimientos a espacios vacios (que son los mas comunes)
 
@@ -61,6 +61,14 @@ class test_tablero_black_pieces(unittest.TestCase):
         self.game_TEST.get_Pawn_Moves(6, 13, self.moves, 0, 0)
         self.assertEqual(self.moves, actual_move)
 
+    def test_Pawn_black_3(self):
+        #Test 2
+        move_capture = []
+        move_free    = [[(3, 15), (5, 15), 0] ]
+        actual_move  = [move_capture ,move_free]
+
+        self.game_TEST.get_Pawn_Moves(3, 15, self.moves, 0, 0)
+        self.assertEqual(self.moves, actual_move)
 
     #TEST KNIGHTS
     def test_Knight_black_1(self):
