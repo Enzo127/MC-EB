@@ -283,6 +283,13 @@ class game():
 
     #Estas variables se inicial por defecto para las piezas blancas, pero si me tocan negras, las cambio por las correctas
     def seteo_Inicial(self):
+        if self.turn:
+            self.row_upgrade_mia   = 8
+            self.row_upgrade_rival = 7
+            self.row_tactical      = 9
+            self.reina_mia         = "Q"
+            self.reina_rival       = "q"
+
         if not self.turn:
             self.row_upgrade_mia   = 7
             self.row_upgrade_rival = 8
