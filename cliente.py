@@ -122,25 +122,19 @@ async def eventos(socketa):
             p_msg_move["data"]["turn_token"] = data["data"]["turn_token"]       #Actualizacion de turn token (debe actualizarse en cada turno)
             p_msg_move["data"]["board_id"]   = data["data"]["board_id"]         #Actualizacion de board_id   (Si posteriormente creo una sola vez el objeto partida, este paso es necesario realizarlo una sola vez(igual que con el color))
 
-            '''
-            #2) Como el color solo tiene 2 posibilidades (Blanco o Negro), lo paso a variable booleana, para ser mas eficiente
-            if data["data"]["actual_turn"] == "white":
-                turno = True
-            else:
-                turno = False      
-            '''
-            #3) LLamo a la logica de la IA para que me devuelva el mejor movimiento para el estado actual del tablero
+
+            #2) LLamo a la logica de la IA para que me devuelva el mejor movimiento para el estado actual del tablero
             move_choice = bot.bot_work(data["data"])
             #await asyncio.sleep(3)
             print("Move:",move_choice)
-            #print()
-            #4) Conformacion de la respuesta
+
+            #3) Conformacion de la respuesta
             p_msg_move["data"]["from_row"] = move_choice[0][0]                  #Start_SQ
             p_msg_move["data"]["from_col"] = move_choice[0][1]
             p_msg_move["data"]["to_row"]   = move_choice[1][0]                  #End_SQ
             p_msg_move["data"]["to_col"]   = move_choice[1][1]
             
-            #5) Envio de la respuesta en formato JSON
+            #4) Envio de la respuesta en formato JSON
             msg_move = json.dumps(p_msg_move)
             await socketa.send(msg_move)        #esto deberia estar en una funcion aparte, mira la guia
 
@@ -156,8 +150,6 @@ async def eventos(socketa):
             #if h==2:
             confirmacion = input("Aceptar desafio? (y/n)")
             if confirmacion == "y":                                                     #Desafio aceptado
-                #print ("Inicia el juego")
-                #print("id_game: {}".format(data["data"]["board_id"]))
                 p_msg_accept["data"]["board_id"] = data["data"]["board_id"]             #Actualizo el mensaje de aceptacion con el board_id correspondiente
                 enviar_aceptacion =  json.dumps(p_msg_accept)                           #Convierto el diccionario python a string JSON
                 await socketa.send(enviar_aceptacion)                                   #Envio el msj de aceptacion via websocket

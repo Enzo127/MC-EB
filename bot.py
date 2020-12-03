@@ -1,3 +1,5 @@
+#Detallar los alcances de este programa (a bot le llega el estado de una partida y tiene que discernir que juego es, si tiene que crearlo y pedir
+# a distintos programas todo lo necesario para devolver el mejor movimiento)
 import tablero
 import ia
 
