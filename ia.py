@@ -1,4 +1,4 @@
-import ChessEngine_V1
+import tablero
 import copy
 #Aca vas a tener que crear otro objeto en lo posible
 
@@ -61,8 +61,8 @@ valores_mios  = {"P":10 ,"H":50, "B":40,"R":60,"Q":70,"K":5,        #Los valores
 valores_rival = {"p":10,"h":40,"b":50,"r":70,"q":80,"k":300,
                  "P":10,"H":40,"B":50,"R":70,"Q":80,"K":300}
 
-valor_peon_white = {13:10, 12:15 ,11:20 ,10:25 ,9:80 ,8:90}         #row=8 ----> Coronacion
-valor_peon_black = {2:10  ,3:15  ,4:20  ,5:25  ,6:80 ,7:90}         #row=7 ----> Coronacion
+valor_peon_white = {13:10, 12:25 ,11:30 ,10:35 ,9:75 ,8:90}         #row=8 ----> Coronacion
+valor_peon_black = {2:10  ,3:25  ,4:30  ,5:35  ,6:75 ,7:90}         #row=7 ----> Coronacion
 
 
 #best_col_0 = {0:9 ,1:9 ,2:3 ,3:3 ,4:8 ,5:8 ,6:8 ,7:0 ,8:0 ,9:0 ,10:0 ,11:5 ,12:5 ,13:5 ,14:8 ,15:8}
@@ -214,9 +214,11 @@ def bot_work(id_Actual, refresh, turno):
     if juego_actual is None:
         print ("Inicia el juego")
         print("id_game: {}".format(id_Actual))
-        number = ChessEngine_V1.Game_State(turno)
+        number = tablero.game(turno)
         juegos_Ejecutandose.update({id_Actual:number})
         juego_actual = juegos_Ejecutandose.get(id_Actual)
+
+        juego_actual.seteo_Inicial()
     
     #2)Actualizar el tablero
     juego_actual.Actualizar(refresh)
