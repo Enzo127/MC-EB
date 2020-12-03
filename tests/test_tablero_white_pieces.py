@@ -2,7 +2,22 @@ import unittest
 import tablero
 
 #AAA Rule: Arrange, Act, Assert
-class test_white_pieces(unittest.TestCase):
+class test_tablero_white_pieces(unittest.TestCase):
+    '''
+    Inicio el test como jugador blanco y coloco piezas de forma estrategica en el tablero para analizar situaciones criticas y ver si las funciones que invocan responden 
+    de la manera esperada, las piezas a analizar (fila, columna) son:
+
+     PIEZAS     |  Test 1   |   Test 2
+    --------------------------------------
+    -Peones     |  (12,10)  |  (12,15)
+    -Caballos   |  (1,12)   |  (8,0) 
+    -Alfil      |  (7,2)    |  (7,8)
+    -Torre      |  (1,11)   |  (7,9)
+    -Reina      |  (5,0)    |  (11,7)
+    -Rey        |  (6,2)    |  (4,15)
+
+    Edit: Las piezas se han agrupado un poco para considerar principalmente situaciones criticas y no analizar de mas movimientos a espacios vacios (que son los mas comunes)
+    '''
     def setUp(self):
         self.game_TEST = tablero.game(True)
         self.moves = [[],[]]
@@ -24,9 +39,7 @@ class test_white_pieces(unittest.TestCase):
             ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
             ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
 
-    #Comprobacion de color
-    def test_turn(self):
-        self.assertEqual(self.game_TEST.turn, True)
+
 
     ####                            PIEZAS BLANCAS                            ####
 
@@ -157,34 +170,5 @@ class test_white_pieces(unittest.TestCase):
         self.game_TEST.get_King_Moves(4, 15, self.moves, 0, 0)
         self.assertEqual(self.moves, actual_move)
 
-    #Comprobar si se rellena el tablero de forma correcta
-    def test_Actualizar(self):
-        #Arrange
-        board_test = "rrhhbbqqkkbbhhrrrrhhbbqqkkbbhhrrpppppppppppppppppppppppppppppppp                                                                                                                                PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPRRHHBBQQKKBBHHRRRRHHBBQQKKBBHHRR"
-        board_test_result = [
-            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
-            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
-            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
-        #Act
-        self.game_TEST.Actualizar(board_test)
-        #Assert
-        self.assertEqual (self.game_TEST.board, board_test_result)
 
-
-
-if __name__ == "__main__":
-    unittest.main()
 
