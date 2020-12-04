@@ -6,7 +6,6 @@ import ia
 #Diccionario que juega los juegos corriendose actualmente (cada juego es un objeto), identifico cada juego mediante "board_id" 
 juegos_Ejecutandose = {}
 
-
 #-----------------------------------------------------------BOT--------------------------------------------------------------------------------#
 #Esta funcion tiene como input el estado antes de que tenga que mover y entrega como output el mejor movimiento posible para responder al server
 def bot_work(datos_partida):   
@@ -46,10 +45,9 @@ def bot_work(datos_partida):
     
     #6)Obtencion del mejor movimiento respecto a la calificacion otorgada 
     return comparacion(moves_analized)
-#-----------------------------------------------------------FIN BOT --------------------------------------------------------------------------------#
 
+#----------------------------------------------------------------FIN BOT----------------------------------------------------------------------------#
 #-----------------------------------------------------------FUNCIONES DEl BOT-----------------------------------------------------------------------#
-
 # Funcion que crea para cada "board_id" un objeto "game"
 def crear_juego(id_nueva, color):
     print ("Inicia el juego")
@@ -61,7 +59,6 @@ def crear_juego(id_nueva, color):
 # Funcion que verifica el valor asignado por la ia a cada movimiento y elige el de mayor valor
 def comparacion(moves):
     comparacion = None
-    
     best_move = []
     for piece in range(6):
         for tipo in range(2):
