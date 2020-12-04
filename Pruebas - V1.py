@@ -87,25 +87,25 @@ valor_peon_black = {2:10  ,3:20  ,4:30  ,5:50  ,6:80,7:100}        #row=7 ----> 
 best_col = {0:9 ,1:9 ,2:3 ,3:3 ,4:8 ,5:8 ,6:8 ,7:1 ,8:1 ,9:1 ,10:1 ,11:5 ,12:5 ,13:5 ,14:9 ,15:9}
 
 #Peones cambian su valor dependiendo de la fila en la que se encuentran, las reinas varian su valor dependiendo de la cantidad de estas que tenga
-color = "whit"
-game = tablero.game("white" == "whie")
+color = "white"
+game = tablero.game("white" == "white")
 game.Actualizar(actual)
 
 game.board = [
             ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
             ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'R', 'H', 'h', 'r', 'r'],
             ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            ['p', ' ', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            ['k', 'B', 'q', 'K', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'H', ' ', ' '],
-            ['Q', ' ', ' ', ' ', ' ', 'h', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', 'b', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'p', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', 'Q', ' ', ' ', ' ', ' ', ' ', 'K', ' ', ' ', ' '],
-            ['r', ' ', ' ', 'B', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', 'h', ' ', ' ', ' ', 'r', 'H', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
             [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'b', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
             ['k', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'k', 'P', 'P', 'P', 'P', 'q', 'P'],
-            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'r'],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
             ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
             ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
 
@@ -248,14 +248,14 @@ print()
 print("free space knight:",moves[0][1])
 print("free space knight:",len(moves[0][1]))
 print()
-'''
+
 print("captures bishop:",moves[1][0])
 print("captures: bishop",len(moves[1][0]))
 print()
 print("free space bishop:",moves[1][1])
 print("free space bishop:",len(moves[1][1]))
 print()
-'''
+
 print("captures Rook:",moves[2][0])
 print("captures Rook:",len(moves[2][0]))
 print()
@@ -287,5 +287,5 @@ print("free space King:",len(moves[5][1]))
 print(moves)
 print(len(moves))
 '''
-#for line in game.board:
-#    print(line)
+#print(moves)
+

@@ -52,8 +52,6 @@ valor_peon_black = {2:10  ,3:25  ,4:30  ,5:35  ,6:75 ,7:90}         #row=7 ---->
 
 ####-------------------------------------------------------Fin Variables-------------------------------------------------------####
 
-
-
 #Esta funcion recibe toda la data (movimientos posibles mios, los del rival, la cantidad de reinas, mejores columnas para mover peones) y asigna un valor a cada movimiento
 def bot_inteligence(moves, moves_enemy, queens_quantity, color, game_Actual):  
     tablero = copy.deepcopy(Arreglo)               #Cada vez que llamo a esta funcion, empiezo trabajando con un arreglo limpio
@@ -69,7 +67,7 @@ def bot_inteligence(moves, moves_enemy, queens_quantity, color, game_Actual):
                     tablero[movement[1][0]][movement[1][1]].append([piece,tipo,i,movement[3]])      #Como aca analizo capturas, tambien debo agregar el termino movement[3] // ej: Rr: Mi torre captura torre rival
                     
                     if movement[3][1] == "P" or movement[3][1] == "p":
-                        movement[2] = movement[2] + peon_rival(movement[1][0], color) * 10
+                        movement[2] = movement[2] + peon(movement[1][0], not color) * 10
                     
                     else:
                         movement[2] = movement[2] + valores_rival[movement[3][1]] * 10                               #movement[3][0] = la pieza con la que yo capture // movement[3][1] la pieza que capture
@@ -84,10 +82,10 @@ def bot_inteligence(moves, moves_enemy, queens_quantity, color, game_Actual):
 
                     if piece == 3:
                         if queens_quantity < 14:
-                            movement[2] = movement[2] + peon_propio(movement[1][0], color) + game_Actual.best_col[movement[1][1]] + 450
+                            movement[2] = movement[2] + peon(movement[1][0], color) + game_Actual.best_col[movement[1][1]] + 450
 
                         else:
-                            movement[2] = movement[2] + peon_propio(movement[1][0], color) + game_Actual.best_col[movement[1][1]] + 50
+                            movement[2] = movement[2] + peon(movement[1][0], color) + game_Actual.best_col[movement[1][1]] + 50
                         
                     i=i+1
 
@@ -134,32 +132,20 @@ def bot_inteligence(moves, moves_enemy, queens_quantity, color, game_Actual):
  
     return moves
 
-
-
-
-#Esta funcion evalua el valor de los peones rivales para la captura
-#esto deberia ser un metodo de la clase pieza o peon
-def peon_rival(fila, color):  
-    if color == True:
-        return valor_peon_black[fila]
-    else:
-        return valor_peon_white[fila]
-
 #Esta funcion me da el valor del movimiento de un peon, el cual aumenta mientras mas cerca de coronar este
-#esto deberia ser un metodo de la clase pieza o peon
-def peon_propio(fila, color):
+def peon(fila, color):
     if color == True:
         return valor_peon_white[fila]
     else:
         return valor_peon_black[fila]
 
 #Actualiza el valor de las reinas dependiendo de la cantidad de estas que controle
-#esto deberia ser un metodo de la clase pieza o reina
 def reina(cantidad, color):
-
     valor = 120 - cantidad * 5
+
     if valor < 0:
         valor = 30
+
     if color == True:
         valores_mios["Q"] = valor
     else:
