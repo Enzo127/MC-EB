@@ -146,10 +146,10 @@ async def eventos(socketa):
             '''if len(data["data"]["message"]) > 0:
                 print (data["data"]["message"])
             '''
-            #h=1
-            #if h==2:
-            confirmacion = input("Aceptar desafio? (y/n)")
-            if confirmacion == "y":                                                     #Desafio aceptado
+            h=1
+            if h==2:
+            #confirmacion = input("Aceptar desafio? (y/n)")
+            #if confirmacion == "y":                                                     #Desafio aceptado
                 p_msg_accept["data"]["board_id"] = data["data"]["board_id"]             #Actualizo el mensaje de aceptacion con el board_id correspondiente
                 enviar_aceptacion =  json.dumps(p_msg_accept)                           #Convierto el diccionario python a string JSON
                 await socketa.send(enviar_aceptacion)                                   #Envio el msj de aceptacion via websocket

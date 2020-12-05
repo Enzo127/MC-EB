@@ -1,8 +1,8 @@
 #Class responsible for determining the valid moves at the current state
 #import os.path
 class game():
-    def __init__(self,color):           #Cuando creo el juego, debo guardar el color con el que se jugara la partida
-        self.turn = color
+    def __init__(self,turn):           #Cuando creo el juego, debo guardar el color con el que se jugara la partida
+        self.color = turn
         self.move_Functions = {"P": self.get_Pawn_Moves, "R": self.get_Rook_Moves, "H":self.get_Knight_Moves, "B": self.get_Bishop_Moves,"Q": self.get_Queen_Moves,"K": self.get_King_Moves,
                                "p": self.get_Pawn_Moves, "r": self.get_Rook_Moves, "h":self.get_Knight_Moves, "b": self.get_Bishop_Moves,"q": self.get_Queen_Moves,"k": self.get_King_Moves}
                                
@@ -60,10 +60,10 @@ class game():
         #Ahora obtenemos las capturas de las piezas negras sobre piezas negras(o viceversa)(recaptura por si las blancas toman esa pieza) y a lugares vacios (para evitar movernos a ellos).
         #Si nos fijamos en la funcion de peones, NO vamos a obtener los movimientos a lugares libres, pero eso es una VENTAJA, ya que los peones solo pueden capturar hacia los costados (y esos si los guardamos).
         if change == 1:                                  
-            self.turn = not self.turn
+            self.color = not self.color
             
         
-        if self.turn:
+        if self.color:
             piece_moves = {"H": knight_moves, "B": bishop_moves,"R": rook_moves,"P": pawn_moves,"Q": queen_moves,"K": king_moves}
         else:
             piece_moves = {"h": knight_moves, "b": bishop_moves,"r": rook_moves,"p": pawn_moves,"q": queen_moves,"k": king_moves}
@@ -73,16 +73,16 @@ class game():
             for c in range(len(self.board[r])):                                                 #numero de columnas para una fila dada
                 piece = self.board[r][c][0]                                                     #Leo y guardo el contenido del casillero
                 if piece != " ":                                                                #Si el casillero esta vacio, lo desestimo
-                    if (self.turn and piece.isupper()) or (not self.turn and piece.islower()):  #
-                        self.move_Functions[piece](r ,c ,piece_moves[piece] ,change, 0)            #LLamo a la funcion correspondiente // el ultimo termino solo sirve como extra (se aplica cuando llamas a la reina)
+                    if (self.color and piece.isupper()) or (not self.color and piece.islower()):  #
+                        self.move_Functions[piece](r ,c ,piece_moves[piece] ,change)            #LLamo a la funcion correspondiente // el ultimo termino solo sirve como extra (se aplica cuando llamas a la reina)
 
         #Vuelvo el color a la normalidad
         if change == 1:                                  
-            self.turn = not self.turn
+            self.color = not self.color
 
         queen_moves = self.queen_Nomenclature_Captures(queen_moves)
 
-        moves = [knight_moves, bishop_moves, rook_moves, pawn_moves, queen_moves, king_moves]
+        moves = [knight_moves, bishop_moves, rook_moves, pawn_moves, king_moves, queen_moves]
         return moves
 
 
@@ -91,7 +91,7 @@ class game():
     def queen_Nomenclature_Captures(self, queen_moves):
         for movement in queen_moves[0]:                
             letter = movement[3][1]
-            if self.turn:
+            if self.color:
                 movement[3] = "Q"+letter
             else:
                 movement[3] = "q"+letter
@@ -104,8 +104,8 @@ class game():
 #Metiendo ademas los distintos tipos de movimiento como metodos, pero que se yo, fijate
 
 #Aca investiga, serie bueno crear una clase pieza, tal que todas las sgtes funciones sean metodos de pieza y que pieza herede game
-    def get_Pawn_Moves(self,r,c,pawn_moves,change,extra): 
-        if self.turn:    #deberias pasar otro parametro = color, capaz mas arriba, pero aca verificas(una sola vez hace falta verificar, hacelo con un if y un flag)
+    def get_Pawn_Moves(self,r,c,pawn_moves,change): 
+        if self.color:    #deberias pasar otro parametro = color, capaz mas arriba, pero aca verificas(una sola vez hace falta verificar, hacelo con un if y un flag)
             if self.board[r-1][c] == " " and change==0: #1 square pawn advance  
                 if (r == 13 or r ==12) and self.board[r-2][c] == " ": #2 square pawn advance
                     pawn_moves[1].append([(r,c),(r-2,c),0])
@@ -136,14 +136,10 @@ class game():
                     pawn_moves[0].append([(r,c),(r+1,c+1), 0, "p"+self.board[r+1][c+1][0]])
 
 
-    def get_Rook_Moves(self,r,c,rook_moves,change,extra):
+    def get_Rook_Moves(self,r,c,rook_moves,change):
         directions = ((-1,0),(0,-1),(1,0),(0,1))
         #OPTIMIZAR
         extra=0
-        if self.turn:
-            color = "white"
-        else:
-            color = "black"
 
         for d in directions:
             for i in range(1,16):
@@ -153,13 +149,15 @@ class game():
                     endPiece = self.board[endRow][endCol]
                     if endPiece == " ": #empty space valid
                         rook_moves[1].append([(r,c),(endRow,endCol),extra])
-                        
-                    elif (endPiece[0].islower() and color=="white") or (endPiece[0].isupper() and change==1): #enemy piece valid
-                        rook_moves[0].append([(r,c),(endRow,endCol), extra, "R"+endPiece[0]])
-                        break
 
-                    elif (endPiece[0].isupper() and color=="black") or (endPiece[0].islower() and change==1): #enemy piece valid
-                        rook_moves[0].append([(r,c),(endRow,endCol), extra, "r"+endPiece[0]])
+                    elif (endPiece.islower() and self.color) or (endPiece.isupper() and change==1): #enemy piece valid
+
+                        rook_moves[0].append([(r,c),(endRow,endCol), extra, "R"+endPiece])
+                        break
+                    
+                    elif (endPiece.isupper() and not self.color) or (endPiece.islower() and change==1): #enemy piece valid
+
+                        rook_moves[0].append([(r,c),(endRow,endCol), extra, "r"+endPiece])
                         break
 
                     else:   #friendly piece invalid
@@ -167,103 +165,75 @@ class game():
                 else:       #off board
                     break
 
-    def get_Bishop_Moves(self,r,c,bishop_moves,change,queen_call):
+    def get_Bishop_Moves(self,r,c,bishop_moves,change):
         directions = ((-1,-1),(-1,1),(1,-1),(1,1))
-        if self.turn:
-            color = "white"
-        else:
-            color = "black"
 
+        extra = 0
         for d in directions:
             for i in range(1,16):        #bishops can move max of 7 squares
                 endRow = r + d[0] * i
                 endCol = c + d[1] * i
                 if (0 <= endRow < 16) and (0 <= endCol < 16): #on board
-                    extra = 0
-                    if queen_call != 0:        
-                        #aca podrias llamar a una funcion
-                        '''
-                        Moverte con una reina desde la fila de coronacion propia a la fila tactica(la fila anterior a la coronacion) tiene un valor agregado
-                        Condiciones: _La pieza a evaluar es una reina en la fila de coronacion propia
-                                     _Tengo al menos 2 reinas en la fila de coronacion propia (asi no la dejo libre para ser ocupada por el rival)
-                                     _En la fila tactica no hay ni una reina propia 
-                        '''
-                        if (self.qm_quantity_row_upgrade_mia > 1)    and (self.qm_quantity_row_tactical == 0) and (endRow == self.row_tactical) and (r == self.row_upgrade_mia):
-                            extra = extra + 1000
-                        
-                        '''
-                        Moverte con una reina desde la fila de coronacion propia a la fila de coronacion del rival(la fila posterior a la coronacion propia) tiene un valor agregado
-                        Condiciones: _La pieza a evaluar es una reina en la fila de coronacion propia
-                                     _El rival no tiene reinas suyas en su fila de coronacion (que me puedan recapturar si me muevo ahi)
-                                     _Yo no tengo otra reina su fila de coronacion (con una es suficiente)
-                        '''
-                        if (self.qm_quantity_row_upgrade_rival == 0) and (self.qr_quantity_row_upgrade_rival == 0) and (endRow == self.row_upgrade_rival) and (r == self.row_upgrade_mia):
-                            extra = extra + 10000
-
+                    
                     endPiece = self.board[endRow][endCol]                   
                     if endPiece == " ": #empty space valid
                         bishop_moves[1].append([(r,c),(endRow,endCol),extra])
 
 
-                    elif (endPiece[0].islower() and color=="white") or (endPiece[0].isupper() and change==1): #enemy piece valid
-                        bishop_moves[0].append([(r,c),(endRow,endCol), extra, "B"+endPiece[0]])
+                    elif (endPiece.islower() and self.color) or (endPiece.isupper() and change==1): #enemy piece valid
+                        bishop_moves[0].append([(r,c),(endRow,endCol), extra, "B"+endPiece])
                         break
 
-                    elif (endPiece[0].isupper() and color=="black") or (endPiece[0].islower() and change==1): #enemy piece valid
-                        bishop_moves[0].append([(r,c),(endRow,endCol), extra, "b"+endPiece[0]])
+                    elif (endPiece.isupper() and not self.color) or (endPiece.islower() and change==1): #enemy piece valid
+                        bishop_moves[0].append([(r,c),(endRow,endCol), extra, "b"+endPiece])
                         break
                     else:   #friendly piece invalid
                         break
                 else:       #off board
                     break
 
-    def get_Queen_Moves(self,r,c,queen_moves,change,extra):
-        extra = 1                                           #Esto me sirve para cuando llamo al metodo bishop y rook, que este sepa que va a conformar los movimientos de una reina
+    def get_Queen_Moves(self,r,c,queen_moves,change):
+        
         if change==0:
             self.queens_Quantity=self.queens_Quantity+1     #Contador de numero de reinas para el tablero actual
         
-        self.get_Rook_Moves(r,c,queen_moves,change,extra)              
-        self.get_Bishop_Moves(r,c,queen_moves,change,extra)
+        self.get_Rook_Moves(r,c,queen_moves,change)              
+        self.get_Bishop_Moves(r,c,queen_moves,change)
 
-    def get_Knight_Moves(self,r,c,knight_moves,change,extra):
+
+    def get_Knight_Moves(self,r,c,knight_moves,change):
         directions = ((-2,-1),(-2,1),(-1,-2),(-1,2),(1,-2),(1,2),(2,-1),(2,1))
-        if self.turn:
-            color = "white"
-        else:
-            color = "black"
+
         for m in directions:
             endRow = r + m[0]
             endCol = c + m[1]
             if (0 <= endRow < 16) and (0 <= endCol < 16):
                 endPiece = self.board[endRow][endCol]
-                if endPiece[0]==" ":                                        #not an ally piece (empty or enemy piece)
+                if endPiece==" ":                                        #not an ally piece (empty or enemy piece)
                     knight_moves[1].append([(r,c),(endRow,endCol),0])
 
-                elif (endPiece[0].islower() and color=="white") or (endPiece[0].isupper() and change==1):  
-                    knight_moves[0].append([(r,c),(endRow,endCol), 0, "H"+endPiece[0]])
+                elif (endPiece.islower() and self.color) or (endPiece.isupper() and change==1):  
+                    knight_moves[0].append([(r,c),(endRow,endCol), 0, "H"+endPiece])
 
-                elif (endPiece[0].isupper() and color=="black") or (endPiece[0].islower() and change==1):
-                    knight_moves[0].append([(r,c),(endRow,endCol), 0, "h"+endPiece[0]])
+                elif (endPiece.isupper() and not self.color) or (endPiece.islower() and change==1):
+                    knight_moves[0].append([(r,c),(endRow,endCol), 0, "h"+endPiece])
                     
-    def get_King_Moves(self,r,c,king_moves,change,extra): 
+    def get_King_Moves(self,r,c,king_moves,change): 
         directions = ((-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1))
-        if self.turn:
-            color = "white"
-        else:
-            color = "black"
+
         for i in range(8):
             endRow = r + directions[i][0]
             endCol = c + directions[i][1]
             if (0 <= endRow < 16) and (0 <= endCol < 16):
                 endPiece = self.board[endRow][endCol]
-                if endPiece[0]==" ":                                        #not an ally piece (empty or enemy piece)
+                if endPiece==" ":                                        #not an ally piece (empty or enemy piece)
                     king_moves[1].append([(r,c),(endRow,endCol),0])
 
-                if (endPiece[0].islower() and color=="white") or (endPiece[0].isupper() and change==1):  
-                    king_moves[0].append([(r,c),(endRow,endCol), 0, "K"+endPiece[0]])
+                if (endPiece.islower() and self.color) or (endPiece.isupper() and change==1):  
+                    king_moves[0].append([(r,c),(endRow,endCol), 0, "K"+endPiece])
 
-                elif (endPiece[0].isupper() and color=="black") or (endPiece[0].islower() and change==1):
-                    king_moves[0].append([(r,c),(endRow,endCol), 0, "k"+endPiece[0]])
+                elif (endPiece.isupper() and not self.color) or (endPiece.islower() and change==1):
+                    king_moves[0].append([(r,c),(endRow,endCol), 0, "k"+endPiece])
 
     #Estas variables se inicial por defecto para las piezas blancas, pero si me tocan negras, las cambio por las correctas
     def seteo_Inicial(self, color):

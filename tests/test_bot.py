@@ -22,7 +22,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         id_prueba_3        = "923rfj23j'3939sf3"
         color_prueba_3     = "black"
         c = bot.crear_juego(id_prueba_3, color_prueba_3)
-        self.assertEqual(c.turn, False )                    #Comprobacion de color
+        self.assertEqual(c.color, False )                    #Comprobacion de color
 
         a = bot.juegos_Ejecutandose[self.id_prueba_1]
         b = bot.juegos_Ejecutandose[self.id_prueba_2]
