@@ -40,7 +40,7 @@ def bot_work(datos_partida):
     moves_enemy = juego_actual.get_All_Possible_Moves(change)      #change=1 ----> Me devuelve una lista con los movimientos validos posibles del rival (para el estado actual del tablero)
     
     #5)Calificar los movimientos obtenidos
-    moves_analized = ia.bot_inteligence(moves, moves_enemy, juego_actual.queens_Quantity, juego_actual.turn, juego_actual)       #Asigno un valor a cada movimiento....(estas pasando juego y 2 atributos de este, podes hacerlo asi para mas orden, pero en is, pasando el objeto ya estas pasando los demas datos)
+    moves_analized = ia.bot_inteligence(moves, moves_enemy, juego_actual.queens_Quantity, juego_actual.turn, juego_actual.best_col, juego_actual)     #Asigno un valor a cada movimiento....(estas pasando juego y 2 atributos de este, podes hacerlo asi para mas orden, pero en is, pasando el objeto ya estas pasando los demas datos)
     juego_actual.queens_Quantity = 0                                                                                          #reseteo el nro de reinas luego de evaluar los movimientos
     
     #6)Obtencion del mejor movimiento respecto a la calificacion otorgada 

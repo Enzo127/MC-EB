@@ -1,1 +1,0 @@
-El programa anda perfecto, hay que iniciar con testing ahora.

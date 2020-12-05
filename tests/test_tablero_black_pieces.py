@@ -49,7 +49,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         move_free    = [ ]
         actual_move  = [move_capture ,move_free]
 
-        self.game_TEST.get_Pawn_Moves(3, 2, self.moves, 0, 0)
+        self.game_TEST.get_Pawn_Moves(3, 2, self.moves, 0)
         self.assertEqual(self.moves, actual_move)
 
     def test_Pawn_black_2(self):
@@ -58,7 +58,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         move_free    = [[(6, 13), (7, 13), 0] ]
         actual_move  = [move_capture ,move_free]
 
-        self.game_TEST.get_Pawn_Moves(6, 13, self.moves, 0, 0)
+        self.game_TEST.get_Pawn_Moves(6, 13, self.moves, 0)
         self.assertEqual(self.moves, actual_move)
 
     def test_Pawn_black_3(self):
@@ -67,7 +67,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         move_free    = [[(3, 15), (5, 15), 0] ]
         actual_move  = [move_capture ,move_free]
 
-        self.game_TEST.get_Pawn_Moves(3, 15, self.moves, 0, 0)
+        self.game_TEST.get_Pawn_Moves(3, 15, self.moves, 0)
         self.assertEqual(self.moves, actual_move)
 
     #TEST KNIGHTS
@@ -77,7 +77,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         move_free    = [ [(9, 1), (7, 0), 0], [(9, 1), (7, 2), 0], [(9, 1), (10, 3), 0], [(9, 1), (11, 0), 0], [(9, 1), (11, 2), 0]]
         actual_move  = [move_capture ,move_free]
 
-        self.game_TEST.get_Knight_Moves(9, 1, self.moves, 0, 0)
+        self.game_TEST.get_Knight_Moves(9, 1, self.moves, 0)
         self.assertEqual(self.moves, actual_move)
 
     def test_Knight_black_2(self):
@@ -86,7 +86,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         move_free    = [[(5, 5), (4, 7), 0], [(5, 5), (6, 3), 0], [(5, 5), (6, 7), 0], [(5, 5), (7, 4), 0] ]
         actual_move  = [move_capture ,move_free]
 
-        self.game_TEST.get_Knight_Moves(5, 5, self.moves, 0, 0)
+        self.game_TEST.get_Knight_Moves(5, 5, self.moves, 0)
         self.assertEqual(self.moves, actual_move)
 
 
@@ -96,7 +96,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         move_free    = [[(6, 1), (5, 2), 0], [(6, 1), (7, 0), 0], [(6, 1), (7, 2), 0] ]
         actual_move  = [move_capture ,move_free]
 
-        self.game_TEST.get_Bishop_Moves(6, 1, self.moves, 0, 0)
+        self.game_TEST.get_Bishop_Moves(6, 1, self.moves, 0)
         self.assertEqual(self.moves, actual_move)
 
     def test_Bishop_black_2(self):
@@ -105,7 +105,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         move_free    = [[(11, 8), (10, 7), 0], [(11, 8), (10, 9), 0], [(11, 8), (9, 10), 0], [(11, 8), (8, 11), 0] ]
         actual_move  = [move_capture ,move_free]
         
-        self.game_TEST.get_Bishop_Moves(11, 8, self.moves, 0, 0)
+        self.game_TEST.get_Bishop_Moves(11, 8, self.moves, 0)
         self.assertEqual(self.moves, actual_move)
 
 
@@ -116,7 +116,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         move_free    = [[(8, 0), (7, 0), 0], [(8, 0), (6, 0), 0], [(8, 0), (9, 0), 0], [(8, 0), (10, 0), 0], [(8, 0), (11, 0), 0], [(8, 0), (8, 1), 0], [(8, 0), (8, 2), 0] ]
         actual_move  = [move_capture ,move_free]
     
-        self.game_TEST.get_Rook_Moves(8, 0, self.moves, 0, 0)
+        self.game_TEST.get_Rook_Moves(8, 0, self.moves, 0)
         self.assertEqual(self.moves, actual_move)
 
     def test_Rook_black_2(self):
@@ -125,7 +125,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         move_free    = [ ]
         actual_move  = [move_capture ,move_free]
 
-        self.game_TEST.get_Rook_Moves(13, 15, self.moves, 0, 0)
+        self.game_TEST.get_Rook_Moves(13, 15, self.moves, 0)
         self.assertEqual(self.moves, actual_move)
 
 
@@ -138,7 +138,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         move_free    = [[(4, 2), (5, 2), 0], [(4, 2), (6, 2), 0], [(4, 2), (7, 2), 0], [(4, 2), (8, 2), 0], [(4, 2), (9, 2), 0], [(4, 2), (10, 2), 0], [(4, 2), (11, 2), 0], [(4, 2), (3, 1), 0], [(4, 2), (5, 1), 0], [(4, 2), (6, 0), 0], [(4, 2), (5, 3), 0], [(4, 2), (6, 4), 0], [(4, 2), (7, 5), 0], [(4, 2), (8, 6), 0], [(4, 2), (9, 7), 0], [(4, 2), (10, 8), 0], [(4, 2), (11, 9), 0] ]
         actual_move  = [move_capture ,move_free]
 
-        self.game_TEST.get_Queen_Moves(4, 2, self.moves, 0, 0)
+        self.game_TEST.get_Queen_Moves(4, 2, self.moves, 0)
         self.game_TEST.queen_Nomenclature_Captures(self.moves)
 
         self.assertEqual(self.moves, actual_move)
@@ -149,7 +149,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         move_free    = [[(12, 14), (11, 14), 0], [(12, 14), (10, 14), 0], [(12, 14), (9, 14), 0], [(12, 14), (8, 14), 0], [(12, 14), (7, 14), 0], [(12, 14), (6, 14), 0], [(12, 14), (5, 14), 0], [(12, 14), (4, 14), 0], [(12, 14), (11, 13), 0], [(12, 14), (10, 12), 0], [(12, 14), (9, 11), 0], [(12, 14), (8, 10), 0], [(12, 14), (7, 9), 0], [(12, 14), (6, 8), 0], [(12, 14), (5, 7), 0], [(12, 14), (4, 6), 0], [(12, 14), (11, 15), 0] ]
         actual_move  = [move_capture ,move_free]
 
-        self.game_TEST.get_Queen_Moves(12, 14, self.moves, 0, 0)
+        self.game_TEST.get_Queen_Moves(12, 14, self.moves, 0)
         self.game_TEST.queen_Nomenclature_Captures(self.moves)
 
         self.assertEqual(self.moves, actual_move)
@@ -162,7 +162,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         move_free    = [[(4, 0), (3, 1), 0], [(4, 0), (5, 1), 0]]
         actual_move  = [move_capture ,move_free]
 
-        self.game_TEST.get_King_Moves(4, 0, self.moves, 0, 0)
+        self.game_TEST.get_King_Moves(4, 0, self.moves, 0)
         self.assertEqual(self.moves, actual_move)
 
     def test_King_black_2(self):
@@ -171,5 +171,5 @@ class test_tablero_black_pieces(unittest.TestCase):
         move_free    = [[(12, 9), (11, 9), 0], [(12, 9), (11, 10), 0] ]
         actual_move  = [move_capture ,move_free]
 
-        self.game_TEST.get_King_Moves(12, 9, self.moves, 0, 0)
+        self.game_TEST.get_King_Moves(12, 9, self.moves, 0)
         self.assertEqual(self.moves, actual_move)
