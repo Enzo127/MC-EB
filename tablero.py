@@ -37,7 +37,7 @@ class game():
     row_tactical      = 0
     reina_mia         = 0
     reina_rival       = 0
-
+    valor_row_strategy = {7:3 ,8:2 ,9:1 ,6:1}
 
     #Actualizar con el estado actual del tablero
     def Actualizar (self, refresh):
@@ -82,7 +82,8 @@ class game():
 
         queen_moves = self.queen_Nomenclature_Captures(queen_moves)
 
-        moves = [knight_moves, bishop_moves, rook_moves, pawn_moves, king_moves, queen_moves]
+        #moves = [knight_moves, bishop_moves, rook_moves, pawn_moves, king_moves, queen_moves]
+        moves = [pawn_moves,knight_moves, bishop_moves, rook_moves,  king_moves, queen_moves]
         return moves
 
 
@@ -113,11 +114,22 @@ class game():
                     pawn_moves[1].append([(r,c),(r-1,c),0])             #Guardo el movimiento de 1 avance SOLO si no puedo avanzar de a 2
 
             if c-1 >= 0: #captures to the left
-                if self.board[r-1][c-1][0].islower() or (self.board[r-1][c-1][0].isupper() and change==1): #enemy piece to capture
+                if change ==1:
+                    pawn_moves[1].append([(r,c),(r-1,c-1), 0, "P"+self.board[r-1][c-1][0]])
+
+                if self.board[r-1][c-1][0].islower(): #enemy piece to capture
                     pawn_moves[0].append([(r,c),(r-1,c-1), 0, "P"+self.board[r-1][c-1][0]])
+
+
             if c+1 <= 15: #captures to the right
-                if self.board[r-1][c+1][0].islower() or (self.board[r-1][c+1][0].isupper() and change==1): #enemy piece to capture
+                if change ==1:
+                    pawn_moves[1].append([(r,c),(r-1,c+1), 0, "P"+self.board[r-1][c+1][0]])
+
+                if self.board[r-1][c+1][0].islower(): #enemy piece to capture
                     pawn_moves[0].append([(r,c),(r-1,c+1), 0, "P"+self.board[r-1][c+1][0]])
+
+
+
 
         else:
             if self.board[r+1][c] == " " and change==0: #1 square pawn advance 
@@ -129,45 +141,22 @@ class game():
                     pawn_moves[1].append([(r,c),(r+1,c),0])           #Guardo el movimiento de 1 avance SOLO si no puedo avanzar de a 2
 
             if c-1 >= 0: #captures to the left
-                if self.board[r+1][c-1][0].isupper() or (self.board[r+1][c-1][0].islower() and change==1): #enemy piece to capture
+                if change ==1:
+                    pawn_moves[1].append([(r,c),(r+1,c-1), 0, "p"+self.board[r+1][c-1][0]])
+
+                if self.board[r+1][c-1][0].isupper(): #enemy piece to capture
                     pawn_moves[0].append([(r,c),(r+1,c-1), 0, "p"+self.board[r+1][c-1][0]])
+
             if c+1 <= 15: #captures to the right
-                if self.board[r+1][c+1][0].isupper() or (self.board[r+1][c+1][0].islower() and change==1): #enemy piece to capture
+                if change ==1:
+                    pawn_moves[1].append([(r,c),(r+1,c+1), 0, "p"+self.board[r+1][c+1][0]])
+
+                if self.board[r+1][c+1][0].isupper(): #enemy piece to capture
                     pawn_moves[0].append([(r,c),(r+1,c+1), 0, "p"+self.board[r+1][c+1][0]])
 
 
-    def get_Rook_Moves(self,r,c,rook_moves,change):
-        directions = ((-1,0),(0,-1),(1,0),(0,1))
-        #OPTIMIZAR
-        extra=0
-
-        for d in directions:
-            for i in range(1,16):
-                endRow = r + d[0] * i
-                endCol = c + d[1] * i
-                if (0 <= endRow < 16) and (0 <= endCol < 16): #on board
-                    endPiece = self.board[endRow][endCol]
-                    if endPiece == " ": #empty space valid
-                        rook_moves[1].append([(r,c),(endRow,endCol),extra])
-
-                    elif (endPiece.islower() and self.color) or (endPiece.isupper() and change==1): #enemy piece valid
-
-                        rook_moves[0].append([(r,c),(endRow,endCol), extra, "R"+endPiece])
-                        break
-                    
-                    elif (endPiece.isupper() and not self.color) or (endPiece.islower() and change==1): #enemy piece valid
-
-                        rook_moves[0].append([(r,c),(endRow,endCol), extra, "r"+endPiece])
-                        break
-
-                    else:   #friendly piece invalid
-                        break
-                else:       #off board
-                    break
-
     def get_Bishop_Moves(self,r,c,bishop_moves,change):
         directions = ((-1,-1),(-1,1),(1,-1),(1,1))
-
         extra = 0
         for d in directions:
             for i in range(1,16):        #bishops can move max of 7 squares
@@ -180,20 +169,60 @@ class game():
                         bishop_moves[1].append([(r,c),(endRow,endCol),extra])
 
 
-                    elif (endPiece.islower() and self.color) or (endPiece.isupper() and change==1): #enemy piece valid
+                    elif endPiece.islower() and self.color: #enemy piece valid
                         bishop_moves[0].append([(r,c),(endRow,endCol), extra, "B"+endPiece])
                         break
 
-                    elif (endPiece.isupper() and not self.color) or (endPiece.islower() and change==1): #enemy piece valid
+                    elif endPiece.isupper() and not self.color: #enemy piece valid
                         bishop_moves[0].append([(r,c),(endRow,endCol), extra, "b"+endPiece])
                         break
+                    
+                    #Cuando change==1, debo verificar que piezas el rival puede defender ante capturas mias (analizo si el rival puede recapturar sus piezas)
+                    elif change==1:  
+                        bishop_moves = analisis_rival(bishop_moves,endPiece, self.color, r,c,endRow,endCol)
+                        break                    
+                    
+                    
+                    
                     else:   #friendly piece invalid
                         break
                 else:       #off board
                     break
 
+
+    def get_Rook_Moves(self,r,c,rook_moves,change):
+        directions = ((-1,0),(0,-1),(1,0),(0,1))
+        extra=0
+        for d in directions:
+            for i in range(1,16):
+                endRow = r + d[0] * i
+                endCol = c + d[1] * i
+
+                if (0 <= endRow < 16) and (0 <= endCol < 16): #on board
+                    endPiece = self.board[endRow][endCol]
+                    if endPiece == " ": #empty space valid
+                        rook_moves[1].append([(r,c),(endRow,endCol),extra])
+
+                    elif endPiece.islower() and self.color: #enemy piece valid
+                        rook_moves[0].append([(r,c),(endRow,endCol), extra, "R"+endPiece])
+                        break
+                        
+                    elif endPiece.isupper() and not self.color: #enemy piece valid
+                        rook_moves[0].append([(r,c),(endRow,endCol), extra, "r"+endPiece])
+                        break
+
+                    #Cuando change==1, debo verificar que piezas el rival puede defender ante capturas mias (analizo si el rival puede recapturar sus piezas)
+                    elif change==1:  
+                        rook_moves = analisis_rival(rook_moves,endPiece, self.color, r,c,endRow,endCol)
+                        break
+
+                    else:   #friendly piece invalid
+                        break
+                else:       #off board
+                    break
+
+
     def get_Queen_Moves(self,r,c,queen_moves,change):
-        
         if change==0:
             self.queens_Quantity=self.queens_Quantity+1     #Contador de numero de reinas para el tablero actual
         
@@ -212,12 +241,17 @@ class game():
                 if endPiece==" ":                                        #not an ally piece (empty or enemy piece)
                     knight_moves[1].append([(r,c),(endRow,endCol),0])
 
-                elif (endPiece.islower() and self.color) or (endPiece.isupper() and change==1):  
+                elif endPiece.islower() and self.color:  
                     knight_moves[0].append([(r,c),(endRow,endCol), 0, "H"+endPiece])
 
-                elif (endPiece.isupper() and not self.color) or (endPiece.islower() and change==1):
+                elif endPiece.isupper() and not self.color:
                     knight_moves[0].append([(r,c),(endRow,endCol), 0, "h"+endPiece])
                     
+                #Cuando change==1, debo verificar que piezas el rival puede defender ante capturas mias (analizo si el rival puede recapturar sus piezas)
+                elif change==1:  
+                    knight_moves = analisis_rival(knight_moves,endPiece, self.color, r,c,endRow,endCol)
+
+
     def get_King_Moves(self,r,c,king_moves,change): 
         directions = ((-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1))
 
@@ -229,28 +263,34 @@ class game():
                 if endPiece==" ":                                        #not an ally piece (empty or enemy piece)
                     king_moves[1].append([(r,c),(endRow,endCol),0])
 
-                if (endPiece.islower() and self.color) or (endPiece.isupper() and change==1):  
+                if endPiece.islower() and self.color:  
                     king_moves[0].append([(r,c),(endRow,endCol), 0, "K"+endPiece])
 
-                elif (endPiece.isupper() and not self.color) or (endPiece.islower() and change==1):
+                elif endPiece.isupper() and not self.color:
                     king_moves[0].append([(r,c),(endRow,endCol), 0, "k"+endPiece])
+
+                #Cuando change==1, debo verificar que piezas el rival puede defender ante capturas mias (analizo si el rival puede recapturar sus piezas)
+                elif change==1:  
+                    king_moves = analisis_rival(king_moves,endPiece, self.color, r,c,endRow,endCol)
+                
 
     #Estas variables se inicial por defecto para las piezas blancas, pero si me tocan negras, las cambio por las correctas
     def seteo_Inicial(self, color):
         if color:
-            self.row_upgrade_mia   = 8
-            self.row_upgrade_rival = 7
-            self.row_tactical      = 9
-            self.reina_mia         = "Q"
-            self.reina_rival       = "q"
+            self.row_upgrade_mia    = 8
+            self.row_upgrade_rival  = 7
+            self.row_tactical       = 9
+            self.reina_mia          = "Q"
+            self.reina_rival        = "q"
+            self.valor_row_strategy = {7:3 ,8:2 ,9:1 ,6:1}   #deberian bajar su valor, dependiendo la cantidad de reinas en la fila (-1 por cada reina, capeado a 0)
 
         else:
-            self.row_upgrade_mia   = 7
-            self.row_upgrade_rival = 8
-            self.row_tactical      = 6
-            self.reina_mia         = "q"
-            self.reina_rival       = "Q"
-
+            self.row_upgrade_mia    = 7
+            self.row_upgrade_rival  = 8
+            self.row_tactical       = 6
+            self.reina_mia          = "q"
+            self.reina_rival        = "Q"
+            self.valor_row_strategy = {8:3 ,7:2 ,6:1 ,9:1}
     '''
     El objetivo de la funcion es evaluar que columna es mejor para empezar a mover un nuevo peon: La mejor columna es en la cual el peon se puede coronar mas rapido, sin
     exponerse a ser capturado por reinas rivales O si se expone, tiene que ser defendido por reinas propias.
@@ -261,13 +301,22 @@ class game():
 
     _Mientras se analizan las 3 filas, se van asignando valores a las columnas dependiendo la posicion de las reinas.
     '''
+    #ESTAS 3 DEBERIAN SEPARARSE EN 3 FUNCIONES MAS PEQUEÑAS
+    #ESTAS 3 DEBERIAN SEPARARSE EN 3 FUNCIONES MAS PEQUEÑAS
+    #ESTAS 3 DEBERIAN SEPARARSE EN 3 FUNCIONES MAS PEQUEÑAS
+    #ESTAS 3 DEBERIAN SEPARARSE EN 3 FUNCIONES MAS PEQUEÑAS
+    
+    #este sistema de asignacion de puntos es medio malo, creo que analizar los eventos de cada columna es MUCHISIMO mejor
     def columna_Rating(self):
         #Esto se tiene que resetear todos los turnos
-        self.best_col = {0:0 ,1:0 ,2:0 ,3:1 ,4:0 ,5:0 ,6:0 ,7:0 ,8:0 ,9:0 ,10:0 ,11:0 ,12:0 ,13:0 ,14:0 ,15:0 }
+        self.best_col = {0:0 ,1:0 ,2:0 ,3:0 ,4:0 ,5:0 ,6:0 ,7:0 ,8:0 ,9:0 ,10:0 ,11:0 ,12:0 ,13:0 ,14:0 ,15:0 }
         self.qm_quantity_row_tactical      = 0
         self.qm_quantity_row_upgrade_mia   = 0   
         self.qm_quantity_row_upgrade_rival = 0    #Reinas mias en la de upgrade rival    // qm = queen mia
         self.qr_quantity_row_upgrade_rival = 0    #Reinas rvales en su fila de upgrade   // qr = queen rival
+
+
+        #ESTAS 3 DEBERIAN SEPARARSE EN 3 FUNCIONES MAS PEQUEÑAS
 
         #1) Analisis: Cantidad de reinas mias en row tactical
         for col in range(len(self.board[self.row_tactical])):
@@ -315,6 +364,17 @@ class game():
 
                     if col-i >= 0:
                         self.best_col[col-i] = self.best_col[col-i] + (i*3-9)     
-                    
-                
         
+
+                
+ 
+def analisis_rival(piece_moves ,endPiece ,color ,r ,c ,endRow ,endCol):
+    if endPiece.islower() and not color:
+        piece_moves[1].append([(r,c),(endRow,endCol), 0, "defiende su pieza"])
+        return piece_moves
+
+    elif endPiece.isupper() and color:
+        piece_moves[1].append([(r,c),(endRow,endCol), 0, "defiende su pieza"])
+        return piece_moves
+
+    return piece_moves
