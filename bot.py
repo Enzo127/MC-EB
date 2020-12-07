@@ -1,7 +1,7 @@
 #Detallar los alcances de este programa (a bot le llega el estado de una partida y tiene que discernir que juego es, si tiene que crearlo y pedir
 # a distintos programas todo lo necesario para devolver el mejor movimiento)
 import tablero
-import ia
+import ia_organizador
 
 #Diccionario que juega los juegos corriendose actualmente (cada juego es un objeto), identifico cada juego mediante "board_id" 
 juegos_Ejecutandose = {}
@@ -11,17 +11,23 @@ juegos_Ejecutandose = {}
 def bot_work(datos_partida):   
     #1) Accedo al juego en cuestion mediante la id unica de cada partida (si no existe, lo creo)
     juego_actual = juegos_Ejecutandose.get(datos_partida["board_id"])
-    if juego_actual is None:
+    if juego_actual is None:    
         juego_actual = crear_juego(datos_partida["board_id"], datos_partida["actual_turn"])     #Para crear una partida necesito el board_id y el color con el que voy a jugar
         juego_actual.seteo_Inicial(datos_partida["actual_turn"] == "white")                     #Al crear un nuevo juego, debo setear ciertos valores dependiendo de si me tocaron blancas o negras
   
     #Esto solo se ejecuta cuando estoy jugando contra mi mismo
     #Tengo un solo objeto creado por partida e inicializado con un color, pero al jugar contra mi mismo, debo ir alternando el color dependiendo de que turno sea
-    if datos_partida["username"] == datos_partida ["opponent_username"]:                        
+    if datos_partida["username"] == datos_partida ["opponent_username"]:   
+                            
         if datos_partida["actual_turn"] == "white":
-            juego_actual.turn = True
+            juego_actual.color = True
+            juego_actual.seteo_Inicial(True)
         else:
-            juego_actual.turn = False
+            juego_actual.color = False
+            juego_actual.seteo_Inicial(False)
+
+    print(juego_actual.color)
+
 
     #2)Actualizar el tablero
     juego_actual.Actualizar(datos_partida["board"])
@@ -40,7 +46,7 @@ def bot_work(datos_partida):
     moves_enemy = juego_actual.get_All_Possible_Moves(change)      #change=1 ----> Me devuelve una lista con los movimientos validos posibles del rival (para el estado actual del tablero)
     
     #5)Calificar los movimientos obtenidos
-    moves_analized = ia.bot_inteligence(moves, moves_enemy, juego_actual.queens_Quantity, juego_actual.turn, juego_actual.best_col, juego_actual)     #Asigno un valor a cada movimiento....(estas pasando juego y 2 atributos de este, podes hacerlo asi para mas orden, pero en is, pasando el objeto ya estas pasando los demas datos)
+    moves_analized = ia_organizador.inicio(moves, moves_enemy, juego_actual)     #Asigno un valor a cada movimiento....(estas pasando juego y 2 atributos de este, podes hacerlo asi para mas orden, pero en is, pasando el objeto ya estas pasando los demas datos)
     juego_actual.queens_Quantity = 0                                                                                          #reseteo el nro de reinas luego de evaluar los movimientos
     
     #6)Obtencion del mejor movimiento respecto a la calificacion otorgada 
@@ -60,16 +66,14 @@ def crear_juego(id_nueva, color):
 def comparacion(moves):
     comparacion = None
     best_move = []
-    for piece in range(6):
-        for tipo in range(2):
-            for movimiento_final in moves[piece][tipo]:
-                if comparacion is None:
-                    comparacion = movimiento_final[2]
-                    best_move = movimiento_final
+    for movimiento_final in moves:
+        if comparacion is None:
+            comparacion = movimiento_final[2]
+            best_move = movimiento_final
 
-                elif movimiento_final[2] > comparacion:
-                    comparacion = movimiento_final[2]
-                    best_move = movimiento_final
+        elif movimiento_final[2] > comparacion:
+            comparacion = movimiento_final[2]
+            best_move = movimiento_final
     
     return best_move
 
