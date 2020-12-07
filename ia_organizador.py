@@ -50,13 +50,20 @@ def inicio(moves, moves_enemy, game):   #es un desperdicio pasar el game complet
             return moves_analysis
        
        #ii) Respuesta coontraatacando (apto para todas las piezas) (recordar que esta es una captura en la que expongo a mi pieza a ser recapturada)
-       #moves_analysis = ia_funcionalidades.analisis_capturas_rival_contraataque (lista_capturas_rival, lista_capturas_sucias ,moves_analysis)
+        moves_analysis = ia_funcionalidades.analisis_capturas_rival_contraataque (lista_capturas_rival, lista_capturas_sucias ,moves_analysis)
+        if moves_analysis != []:
+            return moves_analysis
 
-
+    
     # c) Movimientos estrategicos de reinas     (moves[5][1][1] a espacios con evento "+" o " ")
+    
+    if game.queens_Quantity > 4 and game.qm_quantity_row_upgrade_mia >= 1:        #or game.qm_row_upgrade>1
+        
+        moves_analysis = ia_funcionalidades.move_strategic(moves ,board_eventos ,game ,moves_analysis)
 
-
-
+        if moves_analysis != []:
+            return moves_analysis
+    
     # d) Avance de peones
     if moves_analysis == [] and lista_capturas_limpias == []:
         moves_analysis = peon_avance(moves, game)

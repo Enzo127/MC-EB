@@ -49,6 +49,9 @@ class game():
                 self.board[r][c] = refresh[i]
                 i=i+1
 
+        for row in self.board:
+            print(row)
+
     #All moves without considering cheks
     def get_All_Possible_Moves(self,change):    
         pawn_moves   = [[],[]]                   #pawn_moves[0] = Capture piece    //  pawn_moves[1] = Move to blank space
