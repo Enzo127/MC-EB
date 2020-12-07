@@ -21,7 +21,6 @@ def inicio(moves, moves_enemy, game):   #es un desperdicio pasar el game complet
             if movement != []:
                 lista_capturas_rival.append(movement)
 
-    print("aca",lista_capturas_rival)
 
     #Capturas sucias mias (?)
     lista_capturas_sucias = []
@@ -32,31 +31,34 @@ def inicio(moves, moves_enemy, game):   #es un desperdicio pasar el game complet
     moves_analysis = []
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
     # a) Capturas limpias                       ($)
-    if lista_capturas_limpias != []:
+    if lista_capturas_limpias != []: 
         if len(lista_capturas_limpias) > 1:
             moves_analysis = ia_funcionalidades.analisis_capturas_limpias(lista_capturas_limpias)
             moves_analysis = ia_funcionalidades.extra_capturas_limpias   ( lista_capturas_rival ,moves_analysis)
-
             return moves_analysis
 
+        else:
+            return lista_capturas_limpias
+    #las 4 de abajo deberian hacer appends a la misma lista y retornar todo junto? Nop
 
     # b) Capturas rival                         (&)    
-    elif lista_capturas_rival != []:
-        #moves_analysis = ia_funcionalidades.analisis_capturas_rival_contraataque (lista_capturas_rival, lista_capturas_sucias)
-        print(game.valor_row_strategy)
-        
 
-        moves_analysis = ia_funcionalidades.analisis_capturas_rival_retirada     (lista_capturas_rival, moves, board_eventos ,game.valor_row_strategy ,moves_analysis)
-        
-        return moves_analysis
-        
+    if lista_capturas_rival != []:
+        #i) Respuesta moviendose a row estrategica (solo apto para reinas)
+        moves_analysis = ia_funcionalidades.analisis_capturas_rival_retirada    (lista_capturas_rival, moves, board_eventos ,game.valor_row_strategy ,moves_analysis)
+        if moves_analysis != []:
+            return moves_analysis
+       
+       #ii) Respuesta coontraatacando (apto para todas las piezas) (recordar que esta es una captura en la que expongo a mi pieza a ser recapturada)
+       #moves_analysis = ia_funcionalidades.analisis_capturas_rival_contraataque (lista_capturas_rival, lista_capturas_sucias ,moves_analysis)
+
 
     # c) Movimientos estrategicos de reinas     (moves[5][1][1] a espacios con evento "+" o " ")
 
 
 
     # d) Avance de peones
-    else:
+    if moves_analysis == [] and lista_capturas_limpias == []:
         moves_analysis = peon_avance(moves, game)
         return moves_analysis
 

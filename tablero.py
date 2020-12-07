@@ -27,17 +27,19 @@ class game():
     queens_Quantity = 0            
     
     best_col = {0:0 ,1:0 ,2:0 ,3:1 ,4:0 ,5:0 ,6:0 ,7:0 ,8:0 ,9:0 ,10:0 ,11:0 ,12:0 ,13:0 ,14:0 ,15:0 }
-    qm_quantity_row_tactical      = 0
-    qm_quantity_row_upgrade_mia   = 0
-    qm_quantity_row_upgrade_rival = 0    #Reinas mias en la de upgrade rival
-    qr_quantity_row_upgrade_rival = 0    #Reinas rvales en su fila de upgrade
+    qm_quantity_row_tactical        = 0
+    qm_quantity_row_tactical_rival  = 0
+    qm_quantity_row_upgrade_mia     = 0
+    qm_quantity_row_upgrade_rival   = 0    #Reinas mias en la de upgrade rival
+    qr_quantity_row_upgrade_rival   = 0    #Reinas rvales en su fila de upgrade
 
-    row_upgrade_mia   = 0
-    row_upgrade_rival = 0
-    row_tactical      = 0
-    reina_mia         = 0
-    reina_rival       = 0
-    valor_row_strategy = {7:3 ,8:2 ,9:1 ,6:1}
+    row_upgrade_mia     = 0
+    row_upgrade_rival   = 0
+    row_tactical        = 0
+    row_tactical_rival  = 0
+    reina_mia           = 0
+    reina_rival         = 0
+    valor_row_strategy = {}
 
     #Actualizar con el estado actual del tablero
     def Actualizar (self, refresh):
@@ -280,6 +282,7 @@ class game():
             self.row_upgrade_mia    = 8
             self.row_upgrade_rival  = 7
             self.row_tactical       = 9
+            self.row_tactical_rival = 6
             self.reina_mia          = "Q"
             self.reina_rival        = "q"
             self.valor_row_strategy = {7:3 ,8:2 ,9:1 ,6:1}   #deberian bajar su valor, dependiendo la cantidad de reinas en la fila (-1 por cada reina, capeado a 0)
@@ -288,6 +291,7 @@ class game():
             self.row_upgrade_mia    = 7
             self.row_upgrade_rival  = 8
             self.row_tactical       = 6
+            self.row_tactical_rival = 9
             self.reina_mia          = "q"
             self.reina_rival        = "Q"
             self.valor_row_strategy = {8:3 ,7:2 ,6:1 ,9:1}
@@ -310,10 +314,11 @@ class game():
     def columna_Rating(self):
         #Esto se tiene que resetear todos los turnos
         self.best_col = {0:0 ,1:0 ,2:0 ,3:0 ,4:0 ,5:0 ,6:0 ,7:0 ,8:0 ,9:0 ,10:0 ,11:0 ,12:0 ,13:0 ,14:0 ,15:0 }
-        self.qm_quantity_row_tactical      = 0
-        self.qm_quantity_row_upgrade_mia   = 0   
-        self.qm_quantity_row_upgrade_rival = 0    #Reinas mias en la de upgrade rival    // qm = queen mia
-        self.qr_quantity_row_upgrade_rival = 0    #Reinas rvales en su fila de upgrade   // qr = queen rival
+        self.qm_quantity_row_tactical        = 0
+        self.qm_quantity_row_tactical_rival  = 0
+        self.qm_quantity_row_upgrade_mia     = 0   
+        self.qm_quantity_row_upgrade_rival   = 0    #Reinas mias en la de upgrade rival    // qm = queen mia
+        self.qr_quantity_row_upgrade_rival   = 0    #Reinas rvales en su fila de upgrade   // qr = queen rival
 
 
         #ESTAS 3 DEBERIAN SEPARARSE EN 3 FUNCIONES MAS PEQUEÑAS
@@ -353,6 +358,7 @@ class game():
         for col in range(len(self.board[self.row_upgrade_rival])):
             if self.reina_mia == self.board[self.row_upgrade_rival][col]:
                 self.qm_quantity_row_upgrade_rival = self.qm_quantity_row_upgrade_rival + 1   #verifico si tengo reinas propias en la fila de upgrade rival
+                
             if self.reina_rival == self.board[self.row_upgrade_rival][col]:
                 self.qr_quantity_row_upgrade_rival = self.qr_quantity_row_upgrade_rival + 1   #verifico si tengo reinas propias en la fila de upgrade rival
          
@@ -365,8 +371,39 @@ class game():
                     if col-i >= 0:
                         self.best_col[col-i] = self.best_col[col-i] + (i*3-9)     
         
+        
+        #4) Analisis: Cantidad de reinas propias en row tactical rival             
+        for col in range(len(self.board[self.row_tactical_rival])):
+            if self.reina_mia == self.board[self.row_tactical_rival][col]:
+                self.qm_quantity_row_tactical_rival = self.qm_quantity_row_tactical_rival +1
+        #CUANDO TENGAS TIEMPO, OPTIMIZA ESTO CON UNA FUNCION Y UN FOR, CHEQUEA EL METODO ITEMS DE LOS DICCIONARIOS, POR AHI VA LA MANO
+        #Actualizo valor de row_upgrade_rival
 
-                
+
+        
+        fixed_value = self.valor_row_strategy[self.row_upgrade_rival] - self.qm_quantity_row_upgrade_rival
+        self.valor_row_strategy[self.row_upgrade_rival] = fixed_value
+
+        #Actualizo valor de row_tactical
+        fixed_value = self.valor_row_strategy[self.row_tactical] - self.qm_quantity_row_tactical
+        self.valor_row_strategy[self.row_tactical] = fixed_value
+
+        #Actualizo valor de row_upgrade_mia
+        fixed_value = self.valor_row_strategy[self.row_upgrade_mia] - self.qm_quantity_row_upgrade_mia   
+        self.valor_row_strategy[self.row_upgrade_mia] = fixed_value
+
+        #Actualizo valor de row_tactical_rival
+        fixed_value = self.valor_row_strategy[self.row_tactical_rival] - self.qm_quantity_row_tactical_rival  
+        self.valor_row_strategy[self.row_tactical_rival] = fixed_value
+
+        
+
+
+
+
+
+
+
  
 def analisis_rival(piece_moves ,endPiece ,color ,r ,c ,endRow ,endCol):
     if endPiece.islower() and not color:
@@ -378,3 +415,5 @@ def analisis_rival(piece_moves ,endPiece ,color ,r ,c ,endRow ,endCol):
         return piece_moves
 
     return piece_moves
+
+

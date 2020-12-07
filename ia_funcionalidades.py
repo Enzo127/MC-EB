@@ -268,23 +268,34 @@ def analisis_capturas_rival_contraataque(lista_capturas_rival, lista_capturas_su
 '''
 
 def analisis_capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,valor_row_strategy, moves_analysis):
-
     tipo = 1                                        #Voy a analizar mis movimientos a espacios vacios (retirada)
 
     for move_capture in lista_capturas_rival:       #Con el movimiento de captura del rival, busco mi pieza y los movimientos posibles de ella
         piece = piece_number[move_capture[3][1]]    #move_capture[3][1] es el string identificador de la pieza que me puede comer
-        start_sq = move_capture[1]
+        if piece ==5:                               #las retiradas solo las analizo para reinas
+            start_sq = move_capture[1]
 
-        for movement in moves[piece][tipo]:
-            if start_sq == movement[0]:
-                end_sq = movement[1]
-                if board_eventos[end_sq[0]][end_sq[1]] == "+" or board_eventos[end_sq[0]][end_sq[1]] == " ":
-                    if piece == 5:
-                        row = end_sq[0]
-                        if 6 <= row <= 9:
-                            movement[2] = movement[2] + valor_row_strategy[row] * 100
-                            moves_analysis.append([start_sq ,end_sq ,movement[2]])
+            for movement in moves[piece][tipo]:
+                if start_sq == movement[0]:
+                    end_sq = movement[1]
+                    end_row = end_sq[0]
+                    if (board_eventos[end_sq[0]][end_sq[1]] == "+" or board_eventos[end_sq[0]][end_sq[1]] == " ") and  6 <= end_row <=9:
+                        
+                        if start_sq[0] == end_row:                                                  #esto es clave para movimientos de retirada en la misma fila(si estas en row tactical y te queres mover a otra columna dentro de la misma fila, antes te va a decir que ya tenes una reina ahi)
+                            valor_row_strategy[end_row] = valor_row_strategy[end_row] +1
+                            movement[2] =  valor_row_strategy[end_row] * 100
+                            valor_row_strategy[end_row] = valor_row_strategy[end_row] -1
 
+                        else:
+                            movement[2] =  valor_row_strategy[end_row] * 100
+                        
+
+                        move_save = [start_sq ,end_sq ,movement[2]]
+                        repeated = moves_analysis.count(move_save)
+
+                        if movement[2] > 0 and repeated == 0:
+                            
+                            moves_analysis.append(move_save)
 
     return moves_analysis
 
