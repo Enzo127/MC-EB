@@ -122,8 +122,9 @@ class test_tablero_funcionalidades(unittest.TestCase):
 
         funcionalidades.columna_Rating()
 
-        self.assertTrue(funcionalidades.qm_quantity_row_tactical      ==  0 )       #No puse ni una reina propia en row_tactical de las blancas
-        self.assertTrue(funcionalidades.qm_quantity_row_upgrade_mia   ==  4 )       #Hay 4 Q en la fila de coronacion blanca
-        self.assertTrue(funcionalidades.qm_quantity_row_upgrade_rival ==  2 )       #Hay 2 Q en la fila de coronacion negra
-        self.assertTrue(funcionalidades.qr_quantity_row_upgrade_rival ==  3 )       #Hay 3 q en la fila de coronacion de las negras
+        self.assertTrue(funcionalidades.qm_quantity_row_tactical       ==  0 )       #No puse ni una reina propia en row_tactical de las blancas
+        self.assertTrue(funcionalidades.qm_quantity_row_tactical_rival ==  1 )       #Hay 1 Q en la fila tactical del rival
+        self.assertTrue(funcionalidades.qm_quantity_row_upgrade_mia    ==  4 )       #Hay 4 Q en la fila de coronacion blanca
+        self.assertTrue(funcionalidades.qm_quantity_row_upgrade_rival  ==  2 )       #Hay 2 Q en la fila de coronacion negra
+        self.assertTrue(funcionalidades.qr_quantity_row_upgrade_rival  ==  3 )       #Hay 3 q en la fila de coronacion de las negras
 
