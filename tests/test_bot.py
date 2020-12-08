@@ -5,13 +5,11 @@ import tablero
 class test_tablero_black_pieces(unittest.TestCase):
     #Empiezo todos los tests con 2 juegos creados de antemano
     def setUp(self):
-        #1er juego 
-        self.id_prueba_1    = "sfjijoisjef283749"
+        self.id_prueba_1    = "sfjijoisjef283749"               #1er juego 
         color_prueba_1      = "white"
         bot.crear_juego(self.id_prueba_1, color_prueba_1)
 
-        #2do juego 
-        self.id_prueba_2    = "384f98428m4823489"
+        self.id_prueba_2    = "384f98428m4823489"               #2do juego 
         color_prueba_2      = "black"
         bot.crear_juego(self.id_prueba_2, color_prueba_2)
 
@@ -26,16 +24,18 @@ class test_tablero_black_pieces(unittest.TestCase):
 
         a = bot.juegos_Ejecutandose[self.id_prueba_1]
         b = bot.juegos_Ejecutandose[self.id_prueba_2]
-
+        
         self.assertEqual(len(bot.juegos_Ejecutandose), 3)   #Comprobar cantidad de juegos almacenados
-        self.assertTrue(a != b != c)                        #Comprobar que los juegos son distintos
+        self.assertTrue(a != b != c)                         #Comprobar que los juegos son distintos
 
 
     #LLamo a limpiar con un id del setUp y compruebo como antes esa key antes estaba y luego es removida
     def test_eliminar_juego(self):
+        
         self.assertIsNotNone(bot.juegos_Ejecutandose.get(self.id_prueba_1))
         bot.limpiar(self.id_prueba_1)
         self.assertIsNone(bot.juegos_Ejecutandose.get(self.id_prueba_1))
+
 
     #Genero una lista con todos los movimientos posibles tipica, y evaluo si la funcion comparacion me devuelve el mejor movimiento posible
     def test_comparacion(self):
@@ -47,4 +47,55 @@ class test_tablero_black_pieces(unittest.TestCase):
         self.assertEqual(best_move_test, best_move_correcto)
 
 
-  
+    
+    #Recibo la "data" de un evento "your_turn" tipico y debo responder: creando un nuevo juego y devolviendo un movimiento
+    def test_bot_work_new_game(self):
+        data = {
+        'board_id': '329f0cc1-e50f-4d53-b565-05f8f5380983', 
+        'turn_token': '9a7073f6-24ac-4216-8c21-9de70500a47c', 
+        'username': 'EnzoC', 
+        'actual_turn': 'black', 
+        'board': 'rrhhbbqqkkbbhhrrrrhhbbqqkkbbhhrrpppp p ppppppppp       ppppppppp                  q  pp              q              q             Q          QQ                  P     q P     q   P  P P    P P q     PP P   P             P          Q  BBHHRR     BQQKqBBHHRR', 
+        'move_left': 55, 
+        'opponent_username': 'Ulrazen'}
+        
+        move_expected = [(15, 9), (15, 8), 9]
+        move = bot.bot_work(data)
+        
+        self.assertEqual(move, move_expected)
+        self.assertEqual(len(bot.juegos_Ejecutandose), 3)                               #Comprobar cantidad de juegos almacenados (deberian estar los 2 del setUp y el nuevo de este test)
+        bot.limpiar('329f0cc1-e50f-4d53-b565-05f8f5380983')
+        self.assertEqual(len(bot.juegos_Ejecutandose), 2)                               #Elimine el juego que habia creado en este test (para que no haya conflicto con los demas test y para probar bot.limpiar)
+        
+
+    #Partida almacenada contra mi mismo (el objeto fue iniciado como "white" pero ahora debo responderme con las negras usando el mismo objeto)
+    def test_bot_work_myself(self):
+        data = {
+        'board_id': 'sfjijoisjef283749',                       #game inicializado como white en el setUp
+        'turn_token': '9a7073f6-24ac-4216-8c21-9de70500a47c', 
+        'username': 'EnzoC',                                   #username == opponent_username
+        'actual_turn': 'black',                                #Turno actual "black" 
+        'board': '   h b  Q bbhhrr   b    kkbbhhrr         ppppppp                                                        p                                                      b             b                                        PPPPPPPPPP     B QKKBBHHRR     Q QKKBBHHRR', 
+        'move_left': 50, 
+        'opponent_username': 'EnzoC'}
+        
+        move_expected = [(1, 8), (0, 8), 118]   
+        move = bot.bot_work(data)
+        
+        self.assertEqual(move, move_expected)
+        self.assertEqual(len(bot.juegos_Ejecutandose), 2)   #Tienen estar solo los 2 juegos del setUp (accedo a un game ya creado)
+
+    
+    #Testeo mas especificamente "restart_atributes"   (Solo se ejecuta cuando juego contra mi mismo)
+    def test_restart_atributes(self):
+        game = bot.juegos_Ejecutandose[self.id_prueba_2]    #Juego inicializado como "black"
+        
+        self.assertEqual(game.color, False)                                             #Compruebo al menos 2 atributos antes del reset
+        self.assertEqual(game.valor_row_strategy, {7:3 ,6:1 ,5:2    ,8:5 ,10:4})
+
+        bot.restart_atributes("white", game)
+        self.assertEqual(game.color, True)                                              #Compruebo que los atributos han cambiado luego del rest
+        self.assertEqual(game.valor_row_strategy, {8:3 ,9:1 ,10:2    ,7:5 ,5:4})
+        
+
+    
