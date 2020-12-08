@@ -31,7 +31,7 @@ class game():
             self.qq_row_strategy    = {7:0 ,6:0 ,5:0    ,8:0 ,10:0} #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
             self.valor_row_strategy = {7:3 ,6:1 ,5:2    ,8:5 ,10:4}
             self.retaguardia_rival  = [14, 15]
-            self.retaguardia_mia  = [0, 1]
+            self.retaguardia_mia    = [0, 1]
     #Atributos comunes a los 2 colores
     board = [                                                                                      
     [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
@@ -312,18 +312,22 @@ class game():
         if color:                                   #Valores de atributos para jugador blanco
             self.reina_mia          = "Q"
             self.reina_rival        = "q"
-
             self.row_strategy       = {"upgrade_mia":8 ,"upgrade_rival":7 ,"peones_rival":5 ,"peones_mios_1":9 ,"peones_mios_2":10}
             self.qq_row_strategy    = {8:0 ,9:0 ,10:0    ,7:0 ,5:0}   #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
             self.valor_row_strategy = {8:3 ,9:1 ,10:2    ,7:5 ,5:4}
+            self.retaguardia_rival  = [0, 1]
+            self.retaguardia_mia    = [14,15]
 
         else:                                       #Valores de atributos para jugador negro
             self.reina_mia          = "q"
             self.reina_rival        = "Q"
-
             self.row_strategy       = {"upgrade_mia":7 ,"upgrade_rival":8 ,"peones_rival":10 ,"peones_mios_1":6 ,"peones_mios_2":5}
             self.qq_row_strategy    = {7:0 ,6:0 ,5:0    ,8:0 ,10:0} #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
             self.valor_row_strategy = {7:3 ,6:1 ,5:2    ,8:5 ,10:4}
+            self.retaguardia_rival  = [14, 15]
+            self.retaguardia_mia    = [0, 1]
+
+
 
     '''
     El objetivo de la funcion es evaluar que columna es mejor para empezar a mover un nuevo peon: La mejor columna es en la cual el peon se puede coronar mas rapido, sin

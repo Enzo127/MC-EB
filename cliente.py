@@ -105,8 +105,8 @@ async def eventos(socketa):
             #1) Actualizacion de campos
             p_msg_move["data"]["turn_token"] = data["data"]["turn_token"]       #Actualizacion de turn token (debe actualizarse en cada turno)
             p_msg_move["data"]["board_id"]   = data["data"]["board_id"]         #Actualizacion de board_id   (Si posteriormente creo una sola vez el objeto partida, este paso es necesario realizarlo una sola vez(igual que con el color))
-
-
+            
+            print(data["data"]["board"])
             #2) LLamo a la logica de la IA para que me devuelva el mejor movimiento para el estado actual del tablero
             move_choice = bot.bot_work(data["data"])
             #await asyncio.sleep(2)

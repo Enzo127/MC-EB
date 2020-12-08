@@ -3,8 +3,9 @@ import ia_planificador
 import bot
 
 color = "white"
-game = tablero.game("white" == "white")
-game.seteo_Inicial(True)
+game = tablero.game("white" == "whit")
+game.seteo_Inicial(False)
+
 
 
 game.board = [
@@ -61,8 +62,9 @@ game.board = [
 ['R', 'R', 'H', 'H', 'B', 'B', ' ', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']
 ['R', 'R', 'H', 'H', ' ', ' ', ' ', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']
 '''
-
-
+x="rrhhbbqqkkbbhhrrrrhhbbqqkkbbhhrrpppp p ppppppppp       ppppppppp                  q  pp              q              q             Q          QQ                  P     q P     q   P  P P    P P q     PP P   P             P          Q  BBHHRR     BQQKqBBHHRR"
+print(len(x))
+game.Actualizar(x)
 
 for line in game.board:
     print(line)
