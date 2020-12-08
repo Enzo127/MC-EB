@@ -6,8 +6,6 @@ color = "white"
 game = tablero.game("white" == "whit")
 game.seteo_Inicial(False)
 
-
-
 game.board = [
             ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'k', 'h', 'r', 'r'],
             ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', ' ', ' '],

@@ -44,6 +44,8 @@ def analizador_eventos(moves ,moves_enemy ,color):
         [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "]]
 
     board = move_sin_captura(moves, color, board)           #Mapeo mis movimientos a espacios libres (tipo=1)
+    for line in board:
+        print(line)
     board = move_con_captura(moves, board)                  #Mapeo mis movimientos con captura       (tipo=0)
     board = moves_enemy_sin_captura(moves_enemy, board)     #Mapeo los movimientos del rival a espacios libres (tipo=1)
     board = moves_enemy_con_captura(moves_enemy, board)     #Mapeo los movimientos del rival con captura        (tipo=0)
@@ -159,7 +161,7 @@ def evolucion(board):
     return board
 
 
-#Obtengo la posicion (row, col) de los eventos 
+#Obtengo la posicion (row, col) de los eventos     este evento no tiene sentido(osea, la funcion si, pero $$ y $ no tiene sentido, son re pocos moves, no hay drama con el break)
 def eventos(board):
     search = {"$$":0 ,"$":1 ,"?":2}
     tipo_evento = [[],[],[]]
