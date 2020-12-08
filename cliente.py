@@ -124,23 +124,28 @@ async def eventos(socketa):
 
         #EVENTO: Solicitud de partida recibida
         if data['event'] == 'ask_challenge':
-            print("New challenger: {} has arrived".format(data["data"]["username"]))    #Desafiante
-
-            #Proba esto despues, la pagina no envia el campo "message"
-            '''if len(data["data"]["message"]) > 0:
-                print (data["data"]["message"])
-            '''
-            #h=1
-            #if h==2:
-            confirmacion = input("Aceptar desafio? (y/n)")
-            if confirmacion == "y":                                                     #Desafio aceptado
-                p_msg_accept["data"]["board_id"] = data["data"]["board_id"]             #Actualizo el mensaje de aceptacion con el board_id correspondiente
-                enviar_aceptacion =  json.dumps(p_msg_accept)                           #Convierto el diccionario python a string JSON
-                await socketa.send(enviar_aceptacion)                                   #Envio el msj de aceptacion via websocket
-
+            if data["data"]["username"] == "Julieta":
+                pass
             else:
-                print("Invitacion de {} rechazada".format(data["data"]["username"]))    #Desafio rechazado
-                    
+                print("New challenger: {} has arrived".format(data["data"]["username"]))    #Desafiante
+
+                #Proba esto despues, la pagina no envia el campo "message"
+                '''if len(data["data"]["message"]) > 0:
+                    print (data["data"]["message"])
+                '''
+                #h=1
+                #if h==2:
+
+                
+                confirmacion = input("Aceptar desafio? (y/n)")
+                if confirmacion == "y":                                                     #Desafio aceptado
+                    p_msg_accept["data"]["board_id"] = data["data"]["board_id"]             #Actualizo el mensaje de aceptacion con el board_id correspondiente
+                    enviar_aceptacion =  json.dumps(p_msg_accept)                           #Convierto el diccionario python a string JSON
+                    await socketa.send(enviar_aceptacion)                                   #Envio el msj de aceptacion via websocket
+
+                else:
+                    print("Invitacion de {} rechazada".format(data["data"]["username"]))    #Desafio rechazado
+                        
 if __name__ == '__main__':
     #LLama a conexion
     asyncio.run(conexion())
