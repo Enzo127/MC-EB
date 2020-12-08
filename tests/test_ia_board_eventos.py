@@ -1,5 +1,5 @@
 import unittest
-import ia_funcionalidades
+import ia_board_eventos
 import tablero
 
 class test_tablero_black_pieces(unittest.TestCase):
@@ -48,6 +48,6 @@ class test_tablero_black_pieces(unittest.TestCase):
 
         
 
-        resultado = ia_funcionalidades.analizador_casilleros(moves,moves_enemy,True) 
+        resultado = ia_board_eventos.analizador_eventos(moves,moves_enemy,True) 
 
         self.assertEqual(analisis_expected, resultado)

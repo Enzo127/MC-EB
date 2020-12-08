@@ -1,3 +1,7 @@
+'''
+El cliente establece la conexion con el server via websocket y responde a los eventos que este envie, si le llega el evento "your_turn", envia la data del turno al archivo
+bot y espera el movimiento con el que responder al server (este programa es un dummy que no procesa data alguna).
+'''
 import asyncio
 import websockets
 import json
@@ -21,26 +25,6 @@ board = [
     [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
     [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
     [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "]]
-
-
-msg_users = '''{
-"action": "get_connected_users",
-"data": {  
-}
-}
-'''
-p_msg_users = json.loads(msg_users)
-
-
-msg_challenge = '''{
-    "action":"challenge", 
-    "data": {
-        "username": "Ulrazen",
-        "message": "mensaje para el otro usuario"
-    }
-}
-'''
-p_msg_challenge = json.loads(msg_challenge)
 
 
 msg_accept = '''{
