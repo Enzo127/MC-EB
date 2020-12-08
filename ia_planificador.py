@@ -16,7 +16,7 @@ import ia_calificador
 
 def inicio(moves, moves_enemy, game):   
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-#----------------------------------------------------------Paso (1) Mapeo de eventos------------------------------------------------------------------------------                                                                     
+#----------------------------------------------------------(1) Mapeo de eventos----------------------------------------------------------------------------------                                                                    
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
     #i)   Generar board de eventos    
     board_eventos     = analizador_eventos(moves, moves_enemy, True)
@@ -27,8 +27,8 @@ def inicio(moves, moves_enemy, game):
     #iii) Buscar los movimientos validos que tienen como endRow el casillero del evento
     #Capturas limpias mias ($)
     lista_capturas_limpias = []
-    lista_capturas_limpias = finder(moves, lista_desordenada[0],lista_capturas_limpias, True)
-    lista_capturas_limpias = finder(moves, lista_desordenada[1],lista_capturas_limpias, False)
+    lista_capturas_limpias = finder(moves, lista_desordenada[0],lista_capturas_limpias)
+    lista_capturas_limpias = finder(moves, lista_desordenada[1],lista_capturas_limpias)
 
     #Capturas del rival  (&)    #estos son mas faciles de encontrar
     lista_capturas_rival = []
@@ -41,63 +41,80 @@ def inicio(moves, moves_enemy, game):
 
     #Capturas sucias mias (?)
     lista_capturas_sucias = []
-    lista_capturas_sucias = finder(moves, lista_desordenada[2],lista_capturas_sucias, False) 
+    lista_capturas_sucias = finder(moves, lista_desordenada[2],lista_capturas_sucias) 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-#----------------------------------------------------------Paso (2) Calificador de movimientos-------------------------------------------------------------------
+#----------------------------------------------------------(2) Calificador de movimientos------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
     moves_analysis = []
     # i) Capturas limpias                       ($)
     if lista_capturas_limpias != []: 
+        
         if len(lista_capturas_limpias) > 1:
-            moves_analysis = ia_calificador.analisis_capturas_limpias(lista_capturas_limpias)
-            moves_analysis = ia_calificador.extra_capturas_limpias   ( lista_capturas_rival ,moves_analysis)
+            moves_analysis = ia_calificador.analisis_capturas_limpias(lista_capturas_limpias ,moves_analysis)
+            moves_analysis = ia_calificador.extra_capturas_limpias   (lista_capturas_rival ,moves_analysis)
+
+            print("Respondo con captura limpia")
             return moves_analysis
 
         else:
+            print("Respondo con captura limpia")
             return lista_capturas_limpias
-    #las 4 de abajo deberian hacer appends a la misma lista y retornar todo junto? Nop
+    
+    # ii) Reina infiltrada al ataque            (?) Esto toma mayor relevancia cuando quedan solo 30 movimientos (evoluciona a importancia nivel c)
+    if lista_capturas_sucias != []:
+        moves_analysis = ia_calificador.reina_infiltrada(lista_capturas_sucias ,game.retaguardia_rival ,moves_analysis, True)
 
-    # ii) Capturas rival                         (&)    
-
-    if lista_capturas_rival != []:
-        #a) Respuesta moviendose a row estrategica (solo apto para reinas)
-        moves_analysis = ia_calificador.analisis_capturas_rival_retirada    (lista_capturas_rival, moves, board_eventos ,game.valor_row_strategy ,moves_analysis)
         if moves_analysis != []:
+            print("respondo atacando su retaguardia")
             return moves_analysis
-       
-       #b) Respuesta coontraatacando (apto para todas las piezas) (recordar que esta es una captura en la que expongo a mi pieza a ser recapturada)
+
+    # iii) Capturas rival                         (&)    
+    if lista_capturas_rival != []:
+
+        #a) Respuesta coontraatacando (apto para todas las piezas) (recordar que esta es una captura en la que expongo a mi pieza a ser recapturada)
         moves_analysis = ia_calificador.analisis_capturas_rival_contraataque (lista_capturas_rival, lista_capturas_sucias ,moves_analysis)
         if moves_analysis != []:
+            print("Respondo con contraataque")
             return moves_analysis
 
-    
-    # iii) Movimientos estrategicos de reinas     (moves[5][1][1] a espacios con evento "+" o " ")
-    
-    if game.queens_Quantity > 4 and game.qm_quantity_row_upgrade_mia >= 1:        #or game.qm_row_upgrade>1
-        
-        moves_analysis = ia_calificador.move_strategic(moves ,board_eventos ,game ,moves_analysis)
+        #b) Respuesta infiltrando una reina mia en su retaguardia
+        moves_analysis = ia_calificador.reina_infiltrada(lista_capturas_sucias ,game.retaguardia_rival ,moves_analysis, False)
 
         if moves_analysis != []:
+            print("respondo atacando su retaguardia")
+            return moves_analysis
+
+        #c) Respuesta moviendose a row estrategica (solo apto para reinas)
+        moves_analysis = ia_calificador.analisis_capturas_rival_retirada    (lista_capturas_rival, moves, board_eventos ,game.qq_row_strategy ,game.valor_row_strategy ,moves_analysis)
+        if moves_analysis != []:
+            print("Respondo con retirada a row estrategica")
+            return moves_analysis
+    
+    # iii) Movimientos estrategicos de reinas     (moves[5][1][1] a espacios con evento "+" o " ")
+    row_upgrade = game.row_strategy["upgrade_mia"]
+    queens_in_row_upgrade_mia = game.qq_row_strategy[row_upgrade]
+    data_row_upgrade = [row_upgrade ,queens_in_row_upgrade_mia]
+
+    if game.queens_Quantity >= 2 or queens_in_row_upgrade_mia >= 1:        #or game.qm_row_upgrade>1
+        
+        piece = 5
+        tipo  = 1
+        moves_analysis = ia_calificador.move_strategic(moves[piece][tipo] ,board_eventos ,data_row_upgrade ,game.qq_row_strategy ,game.valor_row_strategy, game.retaguardia_mia ,moves_analysis) #----------->EN VEZ DE PASAR TODOS LOS MOVES, PODRIAS PASAR moves[5][1]
+
+        if moves_analysis != []:
+            print("Respondo con un movimiento estrategico")
             return moves_analysis
     
     # iv) Avance de peones
     if moves_analysis == [] and lista_capturas_limpias == []:
         moves_analysis = peon_avance(moves, game)
+        print("Respondo con avance de peones")
         return moves_analysis
 
 
-    # v) Capturas sucias                        (?) Esto toma mayor relevancia cuando quedan solo 30 movimientos (evoluciona a importancia nivel c)
-
-
-
-
-
-
-
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 
 def peon_avance (moves, game):
@@ -120,21 +137,21 @@ def peon_avance (moves, game):
     return moves_selected
 
 
-def finder(moves, buscado, encontrado, multiple):       #si multiple=True , esa pieza puede hacer mas de una captura
+def finder(moves, buscado, encontrado):       #si multiple=True , esa pieza puede hacer mas de una captura
     tipo=0                                              #si multiple=False, esa pieza tiene una sola captura, por lo que se corta la iteracion y pasamos a otra
-    x=False
+    #x=False
     for buscar in buscado:
         for piece in range(6):
             for movement in moves[piece][tipo]:
                 if  movement[1] == buscar:
                     encontrado.append(movement)
 
-                    if multiple:
-                        x=True
-                        break
-            if x:
-                x=False
-                break
+                    #if multiple:
+                    #    x=True
+                    #    break
+            #if x:
+            #    x=False
+            #    break
     return encontrado
 
 

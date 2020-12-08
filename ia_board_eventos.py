@@ -51,6 +51,7 @@ def analizador_eventos(moves ,moves_enemy ,color):
 
     #for line in board:                                     #Visualizacion para testeo
     #    print(line)
+        
     return board
 
 def move_sin_captura(moves, color, board):
