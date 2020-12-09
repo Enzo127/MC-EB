@@ -21,7 +21,7 @@ Si al final de todo el mapeo, tengo eventos "x" sin que se hayan conbinado, sign
 x ----fin mapeo-----> Captura limpia
 '''
 
-def analizador_eventos(moves ,moves_enemy ,color ,board_game):
+def event_maker(moves ,moves_enemy ,color ,board_game):
     board_event = [                                                                                      
         [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
         [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
@@ -47,9 +47,8 @@ def analizador_eventos(moves ,moves_enemy ,color ,board_game):
 
     #Mapeo con las piezas del rival
     board_event = move_not_capture_pawn   (not color, board_event ,board_game, False) #Mapeo los casilleros controlados por peones rivales(aunque no puedan moverse, pero los defienden)
-
-    board_event = move_not_capture_enemy (moves_enemy, board_event)                  #Mapeo los movimientos del rival a espacios libres                           (tipo=1)
-    board_event = move_with_capture_enemy(moves_enemy, board_event)                  #Mapeo los movimientos del rival con captura                                 (tipo=0)
+    board_event = move_not_capture_enemy (moves_enemy, board_event)                   #Mapeo los movimientos del rival a espacios libres                           (tipo=1)
+    board_event = move_with_capture_enemy(moves_enemy, board_event)                   #Mapeo los movimientos del rival con captura                                 (tipo=0)
     
     #print()
     #for line in board_event:                                     
@@ -63,12 +62,11 @@ def analizador_eventos(moves ,moves_enemy ,color ,board_game):
 
 #Los peones controlan casilleros a los que no pueden moverse EXCEPTO que sea con una captura
 #Con esta funcion marco con +p todos los casilleros VACIOS que controlan mis peones
-def move_not_capture_pawn(color, board_event ,board_game, mine):
-    if mine:
+def move_not_capture_pawn(color, board_event ,board_game, mine):    #con mine = True analizo los casilleros controlados por mis peones
+    if mine:                                                        #con mine = False, analizo los casilleros controlados por los peones del rival (mas complejo porque es en el turno sgte)
         event_change = {" ":"+"   ,"+":"+"}
     else:
         event_change = {" ":"-"   ,"+":"#"   ,"x":"?"     ,"#":"#"      ,"?":"?"     ,"-":"-"}  #Conviene hacerlo con un diccionario aca, sino usaria muchos if
-
 
     for r in range(16):
         for c in range(16):
@@ -119,7 +117,6 @@ def move_with_capture_mine(moves, board_event):               #El orden en que c
     return board_event
 
 
-
 def move_not_capture_enemy(moves_enemy, board_event):
     for piece in range(1,6):
         for movement in moves_enemy[piece][1]:
@@ -152,8 +149,8 @@ def move_with_capture_enemy(moves_enemy, board_event):
     return board_event
 
 
-#Obtengo la posicion (row, col) de los eventos     este evento no tiene sentido(osea, la funcion si, pero $$ y $ no tiene sentido, son re pocos moves, no hay drama con el break)
-def eventos(board_event):
+#Obtengo la posicion (row, col) de los eventos de captura limpia ($ = no me puede recapturar) y los eventos de captura sucia (? = me puede recapturar)
+def event_search(board_event):
     search = {"x":0 ,"?":1}
     tipo_evento = [[],[]]
     
