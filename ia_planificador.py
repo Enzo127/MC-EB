@@ -19,19 +19,17 @@ def inicio(moves, moves_enemy, game):
 #----------------------------------------------------------(1) Mapeo de eventos----------------------------------------------------------------------------------                                                                    
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
     #i)   Generar board de eventos    
-    board_eventos     = analizador_eventos(moves, moves_enemy, True)
+    board_eventos     = analizador_eventos(moves, moves_enemy, game.color ,game.board)    
 
     #ii)  Buscar los eventos $, & y ? y guardar el casillero en que se encuentran
     lista_desordenada = eventos(board_eventos)
 
     #iii) Buscar los movimientos validos que tienen como endRow el casillero del evento
-    #Capturas limpias mias ($)
-    lista_capturas_limpias = []
+    lista_capturas_limpias = []                                                                 #Capturas limpias mias ($)
     lista_capturas_limpias = finder(moves, lista_desordenada[0],lista_capturas_limpias)
-    lista_capturas_limpias = finder(moves, lista_desordenada[1],lista_capturas_limpias)
 
-    #Capturas del rival  (&)    #estos son mas faciles de encontrar
-    lista_capturas_rival = []
+
+    lista_capturas_rival = []                                                                   #Capturas del rival  (&)    
     tipo=0
     for piece in range(6):
         for movement in moves_enemy[piece][tipo]:
@@ -39,9 +37,8 @@ def inicio(moves, moves_enemy, game):
                 lista_capturas_rival.append(movement)
 
 
-    #Capturas sucias mias (?)
-    lista_capturas_sucias = []
-    lista_capturas_sucias = finder(moves, lista_desordenada[2],lista_capturas_sucias) 
+    lista_capturas_sucias = []                                                                  #Capturas sucias mias (?)
+    lista_capturas_sucias = finder(moves, lista_desordenada[1],lista_capturas_sucias) 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------(2) Calificador de movimientos------------------------------------------------------------------------
@@ -139,19 +136,12 @@ def peon_avance (moves, game):
 
 def finder(moves, buscado, encontrado):       #si multiple=True , esa pieza puede hacer mas de una captura
     tipo=0                                              #si multiple=False, esa pieza tiene una sola captura, por lo que se corta la iteracion y pasamos a otra
-    #x=False
     for buscar in buscado:
         for piece in range(6):
             for movement in moves[piece][tipo]:
                 if  movement[1] == buscar:
                     encontrado.append(movement)
 
-                    #if multiple:
-                    #    x=True
-                    #    break
-            #if x:
-            #    x=False
-            #    break
     return encontrado
 
 
