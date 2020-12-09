@@ -52,17 +52,8 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
     [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "]]
     
     queens_Quantity = 0            
-    
     best_col = {0:0 ,1:0 ,2:0 ,3:1 ,4:0 ,5:0 ,6:0 ,7:0 ,8:0 ,9:0 ,10:0 ,11:0 ,12:0 ,13:0 ,14:0 ,15:0 }
 
-    qm_quantity_row_tactical        = 0     #BORRAR
-    qm_quantity_row_tactical_rival  = 0
-    qm_quantity_row_upgrade_mia     = 0
-    qm_quantity_row_upgrade_rival   = 0    #Reinas mias en la de upgrade rival
-
-    qr_quantity_row_upgrade_rival   = 0    #Reinas rvales en su fila de upgrade
-
-    
 
     #Actualizar con el estado actual del tablero
     def Actualizar (self, refresh):                     #LAS FUNCIONES NO USAN NI UNA SOLA MAYUSCULA, TOD A MINUSCULA PASALO
@@ -150,16 +141,12 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
                     pawn_moves[1].append([(r,c),(r-1,c),0])             #Guardo el movimiento de 1 avance SOLO si no puedo avanzar de a 2
 
             if c-1 >= 0: #Capturas a la izquierda
-                if change ==1:                        #Casilleros que cubre con captura el peon rival
-                    pawn_moves[1].append([(r,c),(r-1,c-1), 0, "P"+self.board[r-1][c-1][0]])
 
                 if self.board[r-1][c-1][0].islower(): #Captura de pieza enemiga
                     pawn_moves[0].append([(r,c),(r-1,c-1), 0, "P"+self.board[r-1][c-1][0]])
 
 
             if c+1 <= 15: #Capturas a la derecha
-                if change ==1:                         #Casilleros que cubre con captura el peon rival (incluida sus piezas para recaptura)
-                    pawn_moves[1].append([(r,c),(r-1,c+1), 0, "P"+self.board[r-1][c+1][0]])
 
                 if self.board[r-1][c+1][0].islower():                   #Captura de pieza enemiga
                     pawn_moves[0].append([(r,c),(r-1,c+1), 0, "P"+self.board[r-1][c+1][0]])
@@ -173,15 +160,11 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
                     pawn_moves[1].append([(r,c),(r+1,c),0])             #Guardo el movimiento de 1 avance SOLO si no puedo avanzar de a 2
 
             if c-1 >= 0: #Capturas a la izquierda
-                if change ==1:                        #Casilleros que cubre con captura el peon rival (incluida sus piezas para recaptura)
-                    pawn_moves[1].append([(r,c),(r+1,c-1), 0, "p"+self.board[r+1][c-1][0]])
 
                 if self.board[r+1][c-1][0].isupper(): #Captura de pieza enemiga
                     pawn_moves[0].append([(r,c),(r+1,c-1), 0, "p"+self.board[r+1][c-1][0]])
 
             if c+1 <= 15: #Capturas a la derecha
-                if change ==1:
-                    pawn_moves[1].append([(r,c),(r+1,c+1), 0, "p"+self.board[r+1][c+1][0]])
 
                 if self.board[r+1][c+1][0].isupper(): #Captura de pieza enemiga
                     pawn_moves[0].append([(r,c),(r+1,c+1), 0, "p"+self.board[r+1][c+1][0]])
@@ -397,8 +380,7 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
             if self.reina_mia == self.board[row][col]:                     #verifico si tengo reinas propias en la fila de upgrade rival
                 self.qq_row_strategy[row] = self.qq_row_strategy[row] + 1                     
 
-            if self.reina_rival == self.board[row][col]:                   #verifico si el rival tiene reinas propias en su row upgrade   (ESTO HACE FALTA????)
-                self.qr_quantity_row_upgrade_rival = self.qr_quantity_row_upgrade_rival + 1   
+            if self.reina_rival == self.board[row][col]:                   #verifico si el rival tiene reinas propias en su row upgrade   (ESTO HACE FALTA????)  
          
                 self.best_col[col]   = self.best_col[col]   - 9                   #Mover un peon en una columna en la cual hay una reina rival en row_upgrade_rival no es una buena idea
                 for i in range(1,4):
@@ -452,5 +434,4 @@ def analisis_rival(piece_moves ,endPiece ,color ,r ,c ,endRow ,endCol):
         return piece_moves
 
     return piece_moves
-
 

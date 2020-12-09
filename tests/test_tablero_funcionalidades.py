@@ -127,4 +127,4 @@ class test_tablero_funcionalidades(unittest.TestCase):
         self.assertTrue(funcionalidades.qq_row_strategy[10] ==  1 )                  #Hay 4 Q en la fila de coronacion blanca
         self.assertTrue(funcionalidades.qq_row_strategy[7]  ==  2 )                  #Hay 2 Q en la fila de coronacion negra
         self.assertTrue(funcionalidades.qq_row_strategy[5]  ==  3 )                  #Hay 2 Q en la fila de coronacion negra
-        self.assertTrue(funcionalidades.qr_quantity_row_upgrade_rival  ==  3 )       #Hay 3 q en la fila de coronacion de las negras
+        

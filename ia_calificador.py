@@ -39,7 +39,7 @@ def analisis_capturas_limpias(lista_capturas_limpias ,moves_analysis):
 #busco si la posicion inicial de la pieza que puede hacer una captura limpia esta siendo atacada por el rival..si es asi y tengo una captura limpia contra ella, contraataco
 def extra_capturas_limpias   (lista_capturas_rival, moves_analysis):
     
-    for move_selected in moves_analysis:
+    for move_selected in moves_analysis:            #esto analiza si hay una pieza enemiga atacando a mi pieza que dispone de una captura limpia    (+10)
         start_sq = move_selected[0]     #tuple con sq inicial
 
         for movement in lista_capturas_rival:
@@ -48,8 +48,8 @@ def extra_capturas_limpias   (lista_capturas_rival, moves_analysis):
 
                 #break               #No estoy seguro que este bien esto, pero capaz no es tan importante tampoco y te ahorras mucho tiempo
 
-    
-    for move_mio in moves_analysis:
+                                                    #Esto es similar al de arriba pero con un paso extra
+    for move_mio in moves_analysis:                 #Analiza si el rival esta atacando a mi pieza y si yo puedo realizar una captura limpia sobre la pieza que me esta atacando (+100)
         x = (move_mio[0], move_mio[1])
 
         for move_rival in lista_capturas_rival:
