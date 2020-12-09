@@ -8,11 +8,11 @@ _Determinar todos los movimientos validos propios y almacenarlos de forma ordena
 _Determinar todos los movimientos validos del rival posterior a mi posible movimiento (incluyendo recapturas) y almacenarlos de forma ordenada para el board actual
 _Añadir un valor agregado a las mejores columnas para el avance de los peones (para ayudar a la IA en la tarea de calificar el mejor movimiento)
 '''
-class game():       #Las clases empiezan con letra mayuscula----> Game
+class Game():       #Las clases empiezan con letra mayuscula----> Game
     def __init__(self,turn):           #Cuando creo el juego, debo guardar el color con el que se jugara la partida
         self.color = turn
-        self.move_Functions = {"P": self.get_Pawn_Moves, "R": self.get_Rook_Moves, "H":self.get_Knight_Moves, "B": self.get_Bishop_Moves,"Q": self.get_Queen_Moves,"K": self.get_King_Moves,
-                               "p": self.get_Pawn_Moves, "r": self.get_Rook_Moves, "h":self.get_Knight_Moves, "b": self.get_Bishop_Moves,"q": self.get_Queen_Moves,"k": self.get_King_Moves}
+        self.move_functions = {"P": self.get_pawn_moves, "R": self.get_rook_moves, "H":self.get_knight_moves, "B": self.get_bishop_moves,"Q": self.get_queen_moves,"K": self.get_king_moves,
+                               "p": self.get_pawn_moves, "r": self.get_rook_moves, "h":self.get_knight_moves, "b": self.get_bishop_moves,"q": self.get_queen_moves,"k": self.get_king_moves}
 
         if self.color:                      #Valores de atributos para jugador blanco  //cambiar el nombre de color
             self.reina_mia          = "Q"
@@ -51,20 +51,20 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
     [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
     [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "]]
     
-    queens_Quantity = 0            
+    queens_quantity = 0            
     best_col = {0:0 ,1:0 ,2:0 ,3:1 ,4:0 ,5:0 ,6:0 ,7:0 ,8:0 ,9:0 ,10:0 ,11:0 ,12:0 ,13:0 ,14:0 ,15:0 }
 
 
-    #Actualizar con el estado actual del tablero
-    def Actualizar (self, refresh):                     #LAS FUNCIONES NO USAN NI UNA SOLA MAYUSCULA, TOD A MINUSCULA PASALO
+    #actualizar con el estado actual del tablero
+    def actualizar (self, refresh):                     #LAS FUNCIONES NO USAN NI UNA SOLA MAYUSCULA, TOD A MINUSCULA PASALO
         i=0
         for r in range(len(self.board)):
             for c in range(len(self.board[r])):
                 self.board[r][c] = refresh[i]
                 i=i+1
 
-        #for row in self.board:
-        #    print(row)
+        for row in self.board:
+            print(row)
 
     '''
     Obtengo todos los movimientos validos de las piezas (con change=0 obtengo mis movimientos y con change=1 los del rival + las posibles recapturas)
@@ -77,7 +77,7 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
     _move es otra lista que contiene informacion referente al movimiento ---> sq_start, sq_end, valor(empieza en 0, la ia ingresa el resultado del analisis aca) y 
      si el movimiento es de captura añadimos un string identificador de captura   ej: pQ  --------> como jugador negro, puedo comer con un peon una reina blanca del rival
     '''
-    def get_All_Possible_Moves(self,change):    
+    def get_all_possible_moves(self,change):    
         pawn_moves   = [[],[]]                   #Los movimientos con captura se almacenan en moves[0] y los movimientos a espacios libres en moves[1]
         rook_moves   = [[],[]]                    
         bishop_moves = [[],[]]
@@ -102,13 +102,13 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
                 piece = self.board[r][c][0]                                                           #Leo y guardo el contenido del casillero
                 if piece != " ":                                                                      #Si el casillero esta vacio, lo desestimo
                     if (self.color and piece.isupper()) or (not self.color and piece.islower()):  
-                        self.move_Functions[piece](r ,c ,piece_moves[piece] ,change)                  #LLamo a la funcion correspondiente 
+                        self.move_functions[piece](r ,c ,piece_moves[piece] ,change)                  #LLamo a la funcion correspondiente (con esto me ahorro hacer multiples if para cada pieza)
 
         #Vuelvo el color a la normalidad
         if change == 1:                                  
             self.color = not self.color
 
-        queen_moves = self.queen_Nomenclature_Captures(queen_moves)
+        queen_moves = self.queen_nomenclature_captures(queen_moves)
 
         moves = [pawn_moves,knight_moves, bishop_moves, rook_moves,  king_moves, queen_moves]
         return moves
@@ -116,7 +116,7 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
 
     #reajusto la nomenclatura en los movimientos de captura de la reina, ya que al llamar a las funciones "getBishopMoves" y "getRookMoves", se asignaban las letras de captura "b" o "r"
     #Arregla la nomenclatura de la lista que tiene los movimientos con captura de la reina
-    def queen_Nomenclature_Captures(self, queen_moves):         #PASAR queen_moves[0] en vez de las 2 listas
+    def queen_nomenclature_captures(self, queen_moves):         #PASAR queen_moves[0] en vez de las 2 listas
         for movement in queen_moves[0]:                
             letter = movement[3][1]
             if self.color:
@@ -132,7 +132,7 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     
     #Movimientos del peon
-    def get_Pawn_Moves(self,r,c,pawn_moves,change): 
+    def get_pawn_moves(self,r,c,pawn_moves,change): 
         if self.color:    #Logica de peon blanco
             if self.board[r-1][c] == " " and change==0:                 #Verifico si puedo avanzar 1 casillero          #LOS INFS NO SON DETERMINISTICOS PORQUE NECESITO VER LOS POSIBLES DEL RIVAL
                 if (r == 13 or r ==12) and self.board[r-2][c] == " ":   #Avance de a 2
@@ -170,7 +170,7 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
                     pawn_moves[0].append([(r,c),(r+1,c+1), 0, "p"+self.board[r+1][c+1][0]])
 
     #Movimientos del alfil
-    def get_Bishop_Moves(self,r,c,bishop_moves,change):
+    def get_bishop_moves(self,r,c,bishop_moves,change):
         directions = ((-1,-1),(-1,1),(1,-1),(1,1))
         extra = 0
         for d in directions:
@@ -205,7 +205,7 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
                     break
 
     #Movimientos de la torre
-    def get_Rook_Moves(self,r,c,rook_moves,change):
+    def get_rook_moves(self,r,c,rook_moves,change):
         directions = ((-1,0),(0,-1),(1,0),(0,1))                                            #Direcciones de movimiento posible con la torre
         for d in directions:
             for i in range(1,16):
@@ -236,15 +236,15 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
                     break
 
     #Movimientos de la reina, sus movimientos se pueden conformar con los del alfil y la torre
-    def get_Queen_Moves(self,r,c,queen_moves,change):
+    def get_queen_moves(self,r,c,queen_moves,change):
         if change==0:
-            self.queens_Quantity=self.queens_Quantity+1     #Contador de numero de reinas propias para el turno actual
+            self.queens_quantity=self.queens_quantity+1     #Contador de numero de reinas propias para el turno actual
         
-        self.get_Rook_Moves(r,c,queen_moves,change)              
-        self.get_Bishop_Moves(r,c,queen_moves,change)
+        self.get_rook_moves(r,c,queen_moves,change)              
+        self.get_bishop_moves(r,c,queen_moves,change)
 
     #Movimientos del caballero
-    def get_Knight_Moves(self,r,c,knight_moves,change):
+    def get_knight_moves(self,r,c,knight_moves,change):
         directions = ((-2,-1),(-2,1),(-1,-2),(-1,2),(1,-2),(1,2),(2,-1),(2,1))  #Todas las posibles di
 
         for m in directions:
@@ -268,7 +268,7 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
                     knight_moves = analisis_rival(knight_moves,endPiece, self.color, r,c,endRow,endCol)
 
     #Movimientos del rey
-    def get_King_Moves(self,r,c,king_moves,change): 
+    def get_king_moves(self,r,c,king_moves,change): 
         directions = ((-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1))
 
         for i in range(8):
@@ -291,7 +291,7 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
                 
 
     #Esto solo se ejecuta cuando juego contra mi mismo, es la misma asignacion de atributos que dependen del color que hay en el __init__
-    def seteo_Inicial(self, color):
+    def seteo_inicial(self, color):
         if color:                                   #Valores de atributos para jugador blanco
             self.reina_mia          = "Q"
             self.reina_rival        = "q"
@@ -326,7 +326,7 @@ class game():       #Las clases empiezan con letra mayuscula----> Game
     #ESTAS 3 DEBERIAN SEPARARSE EN 3 FUNCIONES MAS PEQUEÑAS
     #ESTAS 3 DEBERIAN SEPARARSE EN 3 FUNCIONES MAS PEQUEÑAS
     
-    def columna_Rating(self):
+    def columna_rating(self):
         #Esto se tiene que resetear todos los turnos
         for row in self.qq_row_strategy:
             self.qq_row_strategy[row] = 0
