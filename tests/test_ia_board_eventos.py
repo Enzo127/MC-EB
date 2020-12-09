@@ -1,5 +1,5 @@
 import unittest
-import ia_board_eventos
+import ia_board_events
 import tablero
 '''
 Voy a realizar 2 testeos (uno como jugador blanco y otro como jugador negro):
@@ -7,7 +7,7 @@ Voy a realizar 2 testeos (uno como jugador blanco y otro como jugador negro):
 _El primer test va paso a paso por cada funcion que compone "analizador_eventos" 
 _El segundo test es completo con la funcion "analizador_eventos"
 '''
-class test_tablero_black_pieces(unittest.TestCase):
+class test_ia_board_eventos(unittest.TestCase):
     def setUp(self):
         self.juego = tablero.game(True)
         self.juego.board = [
@@ -71,7 +71,7 @@ class test_tablero_black_pieces(unittest.TestCase):
                         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
 
 
-        board_received = ia_board_eventos.move_not_capture_pawn(self.juego.color, board_eventos ,self.juego.board , True)
+        board_received = ia_board_events.move_not_capture_pawn(self.juego.color, board_eventos ,self.juego.board , True)
         self.assertEqual(board_received ,board_expected)
 
 
@@ -110,7 +110,7 @@ class test_tablero_black_pieces(unittest.TestCase):
                         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
 
-        board_received = ia_board_eventos.move_not_capture_mine(self.moves, board_event)
+        board_received = ia_board_events.move_not_capture_mine(self.moves, board_event)
         self.assertEqual(board_received ,board_expected)
 
 
@@ -149,7 +149,7 @@ class test_tablero_black_pieces(unittest.TestCase):
                         [' ', ' ', ' ', ' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
 
-        board_received = ia_board_eventos.move_with_capture_mine(self.moves, board_event)
+        board_received = ia_board_events.move_with_capture_mine(self.moves, board_event)
         self.assertEqual(board_received ,board_expected)
 
 
@@ -192,7 +192,7 @@ class test_tablero_black_pieces(unittest.TestCase):
                         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
 
 
-        board_received = ia_board_eventos.move_not_capture_pawn(not self.juego.color, board_eventos ,self.juego.board , False)
+        board_received = ia_board_events.move_not_capture_pawn(not self.juego.color, board_eventos ,self.juego.board , False)
         self.assertEqual(board_received ,board_expected)
 
     
@@ -231,7 +231,7 @@ class test_tablero_black_pieces(unittest.TestCase):
                         [' ', ' ', ' ', ' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
 
-        board_received = ia_board_eventos.move_not_capture_enemy(self.moves_enemy, board_event)
+        board_received = ia_board_events.move_not_capture_enemy(self.moves_enemy, board_event)
         self.assertEqual(board_received ,board_expected)
 
 
@@ -271,7 +271,7 @@ class test_tablero_black_pieces(unittest.TestCase):
                         [' ', ' ', ' ', ' ', '&', 'x', '&', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
                         [' ', ' ', ' ', ' ', '&', '&', '&', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
 
-        board_received = ia_board_eventos.move_with_capture_enemy(self.moves_enemy, board_event)
+        board_received = ia_board_events.move_with_capture_enemy(self.moves_enemy, board_event)
         self.assertEqual(board_received ,board_expected)
 
 #---------------------------------------------------------------2do test---------------------------------------------------------------------
@@ -320,7 +320,7 @@ class test_tablero_black_pieces(unittest.TestCase):
 
         
 
-        result = ia_board_eventos.analizador_eventos(moves ,moves_enemy ,juego_2.color ,juego_2.board) 
+        result = ia_board_events.event_maker(moves ,moves_enemy ,juego_2.color ,juego_2.board) 
 
         self.assertEqual(analisis_expected, result)
         

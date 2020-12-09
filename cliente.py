@@ -7,7 +7,7 @@ import websockets
 import json
 import time
 import bot
-#from elements.board import board_default as board
+from bot import bot_work, limpiar
 
 board = [                                                                                      
         [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
@@ -97,7 +97,7 @@ async def eventos(socketa):
             print("Jugador blanco: " , data["data"]["white_username"] , data["data"]["white_score"])
             print("Jugador negro : " , data["data"]["black_username"] , data["data"]["black_score"])
             try:    
-                bot.limpiar(data["data"]["board_id"])    #Al terminar la partida, cierro el objeto game con el board_id correspondiente
+                limpiar(data["data"]["board_id"])    #Al terminar la partida, cierro el objeto game con el board_id correspondiente
                 
             except:       #Este except esta solo porque cuando juego contra mi mismo, al terminar la partida, intento limpiar el objeto 2 veces y eso me da error
                 pass      
@@ -110,7 +110,7 @@ async def eventos(socketa):
             
             
             #2) LLamo a la logica de la IA para que me devuelva el mejor movimiento para el estado actual del tablero
-            move_choice = bot.bot_work(data["data"])
+            move_choice = bot_work(data["data"])
             #await asyncio.sleep(2)
             print("Move:",move_choice)
 

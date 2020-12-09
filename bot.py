@@ -10,7 +10,7 @@ En definitiva: Esta seccion del programa tiene como input el estado antes de que
 '''
 
 import tablero
-import ia_planificador
+from ia_planificador import analisis_ia
 
 juegos_Ejecutandose = {}            #Diccionario que juega los juegos corriendose actualmente (cada juego es un objeto), identifico cada juego mediante "board_id" 
 
@@ -44,7 +44,7 @@ def bot_work(datos_partida):
     moves_enemy = juego_actual.get_All_Possible_Moves(change)      #change=1 ----> Me devuelve una lista con los movimientos validos posibles del rival (para el estado actual del tablero)
     
     #5)Calificar los movimientos obtenidos
-    moves_analized = ia_planificador.inicio(moves, moves_enemy, juego_actual)     #Asigno un valor a cada movimiento
+    moves_analized = analisis_ia(moves, moves_enemy, juego_actual)     #Asigno un valor a cada movimiento
     juego_actual.queens_Quantity = 0                                             #reseteo el nro de reinas luego de evaluar los movimientos
     
     #6)Obtencion del mejor movimiento respecto a la calificacion otorgada 

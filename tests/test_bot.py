@@ -2,7 +2,7 @@ import unittest
 import bot
 import tablero
 
-class test_tablero_black_pieces(unittest.TestCase):
+class test_bot(unittest.TestCase):
     #Empiezo todos los tests con 2 juegos creados de antemano
     def setUp(self):
         self.id_prueba_1    = "sfjijoisjef283749"               #1er juego 
@@ -79,7 +79,7 @@ class test_tablero_black_pieces(unittest.TestCase):
         'move_left': 50, 
         'opponent_username': 'EnzoC'}
         
-        move_expected = [(1, 8), (0, 8), 118]   
+        move_expected = [(1, 8), (0, 8), 118 ,'kQ']   
         move = bot.bot_work(data)
         
         self.assertEqual(move, move_expected)
