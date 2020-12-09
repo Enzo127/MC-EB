@@ -2,8 +2,8 @@ import tablero
 import ia_planificador
 import bot
 
-game = tablero.game("white" == "white")
-game.board = [
+Game = tablero.Game("white" == "white")
+Game.board = [
             ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
             ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'Q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
             ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
@@ -40,7 +40,7 @@ game.board = [
 ['R', 'R', 'H', 'H', ' ', ' ', ' ', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']
 '''
 '''
-game.board =[
+Game.board =[
             ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
             ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'Q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
             ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
@@ -61,22 +61,22 @@ game.board =[
 
 
 #x="   h b  Q bbhhrr   b    kkbbhhrr         ppppppp                                                        p                                                      b             b                                        PPPPPPPPPP     B QKKBBHHRR     Q QKKBBHHRR"
-#game.Actualizar(x)
+#Game.actualizar(x)
 
-for line in game.board:
+for line in Game.board:
     print(line)
 
-game.columna_Rating()
+Game.columna_rating()
 
 
 change=0
-moves = game.get_All_Possible_Moves(change)
+moves       = Game.get_all_possible_moves(change)
 
 change=1
-moves_enemy = game.get_All_Possible_Moves(change)
+moves_enemy = Game.get_all_possible_moves(change)
 
 
-moves_selected = ia_planificador.analisis_ia(moves, moves_enemy, game)
+moves_selected = ia_planificador.analisis_ia(moves, moves_enemy, Game)
 
 print()
 print(moves_selected)
@@ -87,9 +87,4 @@ selected = bot.comparacion(moves_selected)
 
 print("Best move:",selected)
 
-'''
-- [(15, 9), (10, 9), 33]
-?             ^  ^   ^^
 
-+ [(15, 9), (15, 8), 9]
-'''

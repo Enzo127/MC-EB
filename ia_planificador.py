@@ -95,7 +95,7 @@ def analisis_ia(moves, moves_enemy, game):
     queens_in_row_upgrade_mia = game.qq_row_strategy[row_upgrade]
     data_row_upgrade = [row_upgrade ,queens_in_row_upgrade_mia]
 
-    if game.queens_Quantity >= 2 or queens_in_row_upgrade_mia >= 1:        #or game.qm_row_upgrade>1
+    if game.queens_quantity >= 2 or queens_in_row_upgrade_mia >= 1:        #or game.qm_row_upgrade>1
         piece = 5
         tipo  = 1
         moves_analysis = ia_calificador.move_strategic(moves[piece][tipo] ,board_eventos ,data_row_upgrade ,game.qq_row_strategy ,game.valor_row_strategy, game.retaguardia_mia ,moves_analysis) #----------->EN VEZ DE PASAR TODOS LOS MOVES, PODRIAS PASAR moves[5][1]

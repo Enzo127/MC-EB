@@ -9,7 +9,7 @@ _El segundo test es completo con la funcion "analizador_eventos"
 '''
 class test_ia_board_eventos(unittest.TestCase):
     def setUp(self):
-        self.juego = tablero.game(True)
+        self.juego = tablero.Game(True)
         self.juego.board = [
             ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
             ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'Q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
@@ -29,9 +29,9 @@ class test_ia_board_eventos(unittest.TestCase):
             ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
         
         change=0                                                       
-        self.moves       = self.juego.get_All_Possible_Moves(change)              
+        self.moves       = self.juego.get_all_possible_moves(change)              
         change=1                                                       
-        self.moves_enemy = self.juego.get_All_Possible_Moves(change) 
+        self.moves_enemy = self.juego.get_all_possible_moves(change) 
 
 #---------------------------------------------------------------1er test---------------------------------------------------------------------
     #Mapeo con mis movimientos (como jugador blanco)
@@ -277,7 +277,7 @@ class test_ia_board_eventos(unittest.TestCase):
 #---------------------------------------------------------------2do test---------------------------------------------------------------------
     
     def test_clasificacion(self):
-        juego_2 = tablero.game(False)
+        juego_2 = tablero.Game(False)
         juego_2.board =[['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
                         ['r', 'r', 'h', 'H', 'b', 'b', 'q', 'Q', 'k', 'k', 'b', 'B', 'h', 'h', 'r', 'r'],
                         ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
@@ -296,9 +296,9 @@ class test_ia_board_eventos(unittest.TestCase):
                         ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
         
         change=0                                                       
-        moves       = juego_2.get_All_Possible_Moves(change)              
+        moves       = juego_2.get_all_possible_moves(change)              
         change=1                                                       
-        moves_enemy = juego_2.get_All_Possible_Moves(change) 
+        moves_enemy = juego_2.get_all_possible_moves(change) 
 
 
         analisis_expected =[[' ', '&', ' ', ' ', ' ', '&', '&', '&', '&', ' ', '&', ' ', '&', ' ', ' ', ' '],

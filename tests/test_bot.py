@@ -22,19 +22,19 @@ class test_bot(unittest.TestCase):
         c = bot.crear_juego(id_prueba_3, color_prueba_3)
         self.assertEqual(c.color, False )                    #Comprobacion de color
 
-        a = bot.juegos_Ejecutandose[self.id_prueba_1]
-        b = bot.juegos_Ejecutandose[self.id_prueba_2]
+        a = bot.juegos_ejecutandose[self.id_prueba_1]
+        b = bot.juegos_ejecutandose[self.id_prueba_2]
         
-        self.assertEqual(len(bot.juegos_Ejecutandose), 3)   #Comprobar cantidad de juegos almacenados
+        self.assertEqual(len(bot.juegos_ejecutandose), 3)   #Comprobar cantidad de juegos almacenados
         self.assertTrue(a != b != c)                         #Comprobar que los juegos son distintos
 
 
     #LLamo a limpiar con un id del setUp y compruebo como antes esa key antes estaba y luego es removida
     def test_eliminar_juego(self):
         
-        self.assertIsNotNone(bot.juegos_Ejecutandose.get(self.id_prueba_1))
+        self.assertIsNotNone(bot.juegos_ejecutandose.get(self.id_prueba_1))
         bot.limpiar(self.id_prueba_1)
-        self.assertIsNone(bot.juegos_Ejecutandose.get(self.id_prueba_1))
+        self.assertIsNone(bot.juegos_ejecutandose.get(self.id_prueba_1))
 
 
     #Genero una lista con todos los movimientos posibles tipica, y evaluo si la funcion comparacion me devuelve el mejor movimiento posible
@@ -63,9 +63,9 @@ class test_bot(unittest.TestCase):
         move = bot.bot_work(data)
         
         self.assertEqual(move, move_expected)
-        self.assertEqual(len(bot.juegos_Ejecutandose), 3)                               #Comprobar cantidad de juegos almacenados (deberian estar los 2 del setUp y el nuevo de este test)
+        self.assertEqual(len(bot.juegos_ejecutandose), 3)                               #Comprobar cantidad de juegos almacenados (deberian estar los 2 del setUp y el nuevo de este test)
         bot.limpiar('329f0cc1-e50f-4d53-b565-05f8f5380983')
-        self.assertEqual(len(bot.juegos_Ejecutandose), 2)                               #Elimine el juego que habia creado en este test (para que no haya conflicto con los demas test y para probar bot.limpiar)
+        self.assertEqual(len(bot.juegos_ejecutandose), 2)                               #Elimine el juego que habia creado en este test (para que no haya conflicto con los demas test y para probar bot.limpiar)
         
 
     #Partida almacenada contra mi mismo (el objeto fue iniciado como "white" pero ahora debo responderme con las negras usando el mismo objeto)
@@ -79,16 +79,16 @@ class test_bot(unittest.TestCase):
         'move_left': 50, 
         'opponent_username': 'EnzoC'}
         
-        move_expected = [(1, 8), (0, 8), 118 ,'kQ']   
+        move_expected = [(1, 8), (0, 8), 811 ,'kQ']   
         move = bot.bot_work(data)
         
         self.assertEqual(move, move_expected)
-        self.assertEqual(len(bot.juegos_Ejecutandose), 2)   #Tienen estar solo los 2 juegos del setUp (accedo a un game ya creado)
+        self.assertEqual(len(bot.juegos_ejecutandose), 2)   #Tienen estar solo los 2 juegos del setUp (accedo a un game ya creado)
 
     
     #Testeo mas especificamente "restart_atributes"   (Solo se ejecuta cuando juego contra mi mismo)
     def test_restart_atributes(self):
-        game = bot.juegos_Ejecutandose[self.id_prueba_2]    #Juego inicializado como "black"
+        game = bot.juegos_ejecutandose[self.id_prueba_2]    #Juego inicializado como "black"
         
         self.assertEqual(game.color, False)                                             #Compruebo al menos 2 atributos antes del reset
         self.assertEqual(game.valor_row_strategy, {7:3 ,6:1 ,5:2    ,8:5 ,10:4})
