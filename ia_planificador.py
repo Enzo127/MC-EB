@@ -45,8 +45,7 @@ def analisis_ia(moves, moves_enemy, game):
     if lista_capturas_limpias != []: 
         
         if len(lista_capturas_limpias) > 1:         #Solo realizamos calificacion entre capturas limpias cuando hay mas de una
-            print("capturas libres:")
-            print(lista_capturas_limpias)
+
             #lista_capturas_limpias = ia_calificador.extra_capturas_limpias   (lista_capturas_rival ,lista_capturas_limpias) #Añado puntos extras si se cumplen ciertas condiciones
             lista_capturas_limpias = ia_calificador.capturas_limpias(lista_capturas_limpias)                       #Añado el valor de la pieza capturadas a cada move 
             
@@ -84,7 +83,8 @@ def analisis_ia(moves, moves_enemy, game):
             print("respondo atacando su retaguardia")
             return moves_analysis
 
-        #c) Respuesta moviendose a row estrategica (solo apto para reinas)
+        #c) Respuesta moviendose a row estrategica (solo apto para reinas) (modificado para todas las piezas)
+        
         moves_analysis = ia_calificador.capturas_rival_retirada    (lista_capturas_rival, moves, board_eventos ,game.qq_row_strategy ,game.valor_row_strategy ,moves_analysis)
         if moves_analysis != []:
             print("Respondo con retirada a row estrategica")
@@ -105,18 +105,15 @@ def analisis_ia(moves, moves_enemy, game):
             print("Respondo con un movimiento estrategico")
             return moves_analysis
     
-    # v) Avance de peones
+    # v) Avance de peones                                                   #Si todas las condiciones superiores no se cumplen ---> Mover el peon mas cercano a la coronacion
     if moves_analysis == [] and lista_capturas_limpias == []:
-        moves_analysis = ia_calificador.peon_avance(moves, game)
+        moves_analysis = ia_calificador.peon_avance(moves[0][1], game ,board_eventos)      #moves[0][1]----> movimientos de peones (moves[0]) y solo movimientos a espacios blancos (tipo=1)
         print("Respondo con avance de peones")
         return moves_analysis
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 
 
 def finder(moves, buscado, encontrado):       #si multiple=True , esa pieza puede hacer mas de una captura

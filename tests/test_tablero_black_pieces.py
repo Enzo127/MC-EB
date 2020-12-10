@@ -64,11 +64,12 @@ class test_tablero_black_pieces(unittest.TestCase):
     def test_Pawn_black_3(self):
         #Test 2
         move_capture = []
-        move_free    = [[(3, 15), (5, 15), 0] ]
+        move_free    = [[(3, 15), (4, 15), 0], [(3, 15), (5, 15), 0] ]
         actual_move  = [move_capture ,move_free]
 
         self.game_TEST.get_pawn_moves(3, 15, self.moves, 0)
         self.assertEqual(self.moves, actual_move)
+
 
     #TEST KNIGHTS
     def test_Knight_black_1(self):
