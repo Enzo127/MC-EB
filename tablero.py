@@ -13,7 +13,9 @@ class Game():       #Las clases empiezan con letra mayuscula----> Game
         self.color = turn
         self.move_functions = {"P": self.get_pawn_moves, "R": self.get_rook_moves, "H":self.get_knight_moves, "B": self.get_bishop_moves,"Q": self.get_queen_moves,"K": self.get_king_moves,
                                "p": self.get_pawn_moves, "r": self.get_rook_moves, "h":self.get_knight_moves, "b": self.get_bishop_moves,"q": self.get_queen_moves,"k": self.get_king_moves}
-
+        
+        
+        #color = True ---> white  ||  color = False ---> black
         if self.color:                      #Valores de atributos para jugador blanco  //cambiar el nombre de color
             self.reina_mia          = "Q"
             self.reina_rival        = "q"
@@ -32,6 +34,7 @@ class Game():       #Las clases empiezan con letra mayuscula----> Game
             self.valor_row_strategy = {7:3 ,6:1 ,5:2    ,8:5 ,10:4}
             self.retaguardia_rival  = [14, 15]
             self.retaguardia_mia    = [0, 1]
+
     #Atributos comunes a los 2 colores
     board = [                                                                                      
     [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
@@ -54,17 +57,13 @@ class Game():       #Las clases empiezan con letra mayuscula----> Game
     queens_quantity = 0            
     best_col = {0:0 ,1:0 ,2:0 ,3:1 ,4:0 ,5:0 ,6:0 ,7:0 ,8:0 ,9:0 ,10:0 ,11:0 ,12:0 ,13:0 ,14:0 ,15:0 }
 
-
     #actualizar con el estado actual del tablero
-    def actualizar (self, refresh):                     #LAS FUNCIONES NO USAN NI UNA SOLA MAYUSCULA, TOD A MINUSCULA PASALO
+    def actualizar (self, refresh):                     
         i=0
         for r in range(len(self.board)):
             for c in range(len(self.board[r])):
                 self.board[r][c] = refresh[i]
                 i=i+1
-
-        for row in self.board:
-            print(row)
 
     '''
     Obtengo todos los movimientos validos de las piezas (con change=0 obtengo mis movimientos y con change=1 los del rival + las posibles recapturas)

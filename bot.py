@@ -33,6 +33,13 @@ def bot_work(datos_partida):
     #3)actualizar estado de columnas
     juego_actual.columna_rating()
 
+    if len(juegos_ejecutandose) ==1:
+        for line in juego_actual.board:
+            print(line)
+    
+
+
+
     #4)Obtencion de movimientos propios y del rival
     moves       = []                                               #Reseteo las listas con los posibles movimientos mios y del rival
     moves_enemy = []

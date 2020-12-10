@@ -79,7 +79,7 @@ class test_bot(unittest.TestCase):
         'move_left': 50, 
         'opponent_username': 'EnzoC'}
         
-        move_expected = [(1, 8), (0, 8), 811 ,'kQ']   
+        move_expected = [(1, 8), (0, 8), 89 ,'kQ']   
         move = bot.bot_work(data)
         
         self.assertEqual(move, move_expected)

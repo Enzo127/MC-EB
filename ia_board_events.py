@@ -50,10 +50,10 @@ def event_maker(moves ,moves_enemy ,color ,board_game):
     board_event = move_not_capture_enemy (moves_enemy, board_event)                   #Mapeo los movimientos del rival a espacios libres                           (tipo=1)
     board_event = move_with_capture_enemy(moves_enemy, board_event)                   #Mapeo los movimientos del rival con captura                                 (tipo=0)
     
-    print()
-    for line in board_event:                                     
-        print(line)
-    print()
+    #print()
+    #for line in board_event:                                     
+    #    print(line)
+    #print()
 
     return board_event
 
