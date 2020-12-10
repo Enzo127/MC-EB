@@ -30,15 +30,13 @@ def bot_work(datos_partida):
     #2)actualizar el tablero
     juego_actual.actualizar(datos_partida["board"])
 
-    #3)actualizar estado de columnas
-    juego_actual.columna_rating()
+    #3)actualizar cantidad de reinas en filas estrategicas
+    juego_actual.queens_in_row_strategy()
 
     if len(juegos_ejecutandose) ==1:
         for line in juego_actual.board:
             print(line)
     
-
-
 
     #4)Obtencion de movimientos propios y del rival
     moves       = []                                               #Reseteo las listas con los posibles movimientos mios y del rival

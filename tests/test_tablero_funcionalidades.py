@@ -38,7 +38,7 @@ class test_tablero_funcionalidades(unittest.TestCase):
     #Creo un juego como blancas, llamo a la funcion de seteo inicial de variables y compruebo al menos 2 elementos
     def test_inicializar_blancas(self):
         funcionalidades   = tablero.Game(True)                #Juego creado como jugador blanco
-        valor_row_strategy = {8:3 ,9:1 ,10:2    ,7:5 ,5:4}
+        valor_row_strategy = {8:4 ,9:1 ,10:3    ,7:5 ,5:2}
         reina_mia         = "Q"
 
         funcionalidades.seteo_inicial(True)
@@ -58,46 +58,6 @@ class test_tablero_funcionalidades(unittest.TestCase):
         self.assertEqual (funcionalidades.reina_rival     , reina_rival)
 
 
-    #Para un tablero con reinas propias y rivales verifico si las columnas que deberian priorizarse son las mejor evaluadas
-    #ESTE TEST CAPAZ QUE ES DIFICL DE ENTENDER PARA OTRA PERSONA, PODRIAS HACER UN GLOSARIO
-    def test_best_col(self):
-        funcionalidades = tablero.Game(False)     #analizo la posicion como jugador negro
-        funcionalidades.seteo_inicial(False)          
-        funcionalidades.board = [
-            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
-            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'R', 'H', 'h', 'r', 'r'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'q', ' ', ' '],       #tactical negras
-            [' ', ' ', 'q', 'q', ' ', ' ', ' ', 'q', ' ', ' ', ' ', ' ', ' ', 'q', ' ', ' '],       #coronacion negras
-            [' ', ' ', ' ', ' ', ' ', 'Q', ' ', ' ', ' ', 'Q', ' ', 'Q', ' ', ' ', ' ', ' '],       #coronacion blancas
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],       #tactical blancas
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
-            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
-
-        funcionalidades.columna_rating()
-        x = funcionalidades.best_col                    #Lo guardo en otra variable para llamarlo mas facilment
-        
-        #print()
-        #for i in x:
-        #    print(i,  x[i])
-
-        self.assertTrue(x[1]  > x[0])
-        self.assertTrue(x[15] > x[13])
-        self.assertTrue(x[15] > x[14])
-        self.assertTrue(x[14] > x[12])
-        self.assertTrue(x[6] == x[8])
-        self.assertTrue(x[3]  < x[4])
-        self.assertTrue(x[1]  > x[15])          #Esto es asi porque a la col 1 le suma la col 2 y 3...mientras que a la col 15 le suma solo la col 13
-
-    
-    
     #Verifico que la funcion "best_col" cuente bien la cantidad de reinas propias y del rival en filas estrategicas
     def test_row_stretegy_as_white(self):
         funcionalidades = tablero.Game(True)     #analizo la posicion como jugador blanco
@@ -120,11 +80,11 @@ class test_tablero_funcionalidades(unittest.TestCase):
             ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
             ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
 
-        funcionalidades.columna_rating()
+        funcionalidades.queens_in_row_strategy()
 
-        self.assertTrue(funcionalidades.qq_row_strategy[8]  ==  4 )                  #No puse ni una reina propia en row_tactical de las blancas
-        self.assertTrue(funcionalidades.qq_row_strategy[9]  ==  0 )                  #Hay 1 Q en la fila tactical del rival
-        self.assertTrue(funcionalidades.qq_row_strategy[10] ==  1 )                  #Hay 4 Q en la fila de coronacion blanca
-        self.assertTrue(funcionalidades.qq_row_strategy[7]  ==  2 )                  #Hay 2 Q en la fila de coronacion negra
-        self.assertTrue(funcionalidades.qq_row_strategy[5]  ==  3 )                  #Hay 2 Q en la fila de coronacion negra
+        self.assertTrue(funcionalidades.qq_row_strategy[8]  ==  4 )                  #Hay 4 Q en la fila de upgrade propia
+        self.assertTrue(funcionalidades.qq_row_strategy[9]  ==  0 )                  #Hay 0 Q en la fila de peones 1
+        self.assertTrue(funcionalidades.qq_row_strategy[10] ==  1 )                  #Hay 1 Q en la fila de peones 2
+        self.assertTrue(funcionalidades.qq_row_strategy[7]  ==  2 )                  #Hay 2 Q en la fila de upgrade rival
+        self.assertTrue(funcionalidades.qq_row_strategy[5]  ==  3 )                  #Hay 3 Q en la fila de peones del rival
         

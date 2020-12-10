@@ -153,6 +153,3 @@ if __name__ == '__main__':
     #LLama a conexion
 
     asyncio.run(conexion())
-
-
-

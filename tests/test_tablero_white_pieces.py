@@ -47,7 +47,7 @@ class test_tablero_white_pieces(unittest.TestCase):
     def test_pawn_white_1(self):
         #Test 1
         move_capture = [[(12, 10),(11, 9),0,"Pk"] ,[(12, 10),(11, 11),0,"Pk"] ]
-        move_free    = [[(12, 10),(10, 10),0]]
+        move_free    = [[(12, 10), (11, 10), 0], [(12, 10), (10, 10), 0]]
         actual_move  = [move_capture ,move_free]
 
         self.game_TEST.get_pawn_moves(12, 10, self.moves, 0)
