@@ -2,12 +2,14 @@
 Almacena todas las funciones y herramientas para calificar los movimientos en el paso 2) de la ia.
 '''
 #-----------------------------------------------------------------------Settings---------------------------------------------------------------------------------
+row_clean_capture_white = {0:9 ,1:9 ,2:9    ,3:1 ,4:2 ,5:3 ,6:3 ,7:7 ,8:7 ,9:4 ,10:5     ,11:6 ,12:6        ,13:8 ,14:8 ,15:8}
+row_clean_capture_black = {0:8 ,1:8 ,2:8    ,3:6 ,4:6 ,5:5 ,6:4 ,7:7 ,8:7 ,9:3 ,10:3     ,11:1 ,12:2        ,13:9 ,14:9 ,15:9}
 
 valores_rival = {"h":5 ,"b":6 ,"r":7 ,"q":8 ,"k":9,           #Los valores de "p" y "P" los asignamos con el diccionario "valor_peon"
                  "H":5 ,"B":6 ,"R":7 ,"Q":8 ,"K":9}    
 
-valores_mios  = {"p":1 ,"h":7,"b":6 ,"r":5 ,"q":4 ,"k":9,    #Los valores de "p" y "P" los asignamos con el diccionario "valor_peon"
-                 "P":1 ,"H":7,"B":6 ,"R":5 ,"Q":4 ,"K":9}  
+valores_mios  = {"p":1 ,"q":2 ,"b":3 ,"h":4 ,"r":5 ,"k":9,    #Los valores de "p" y "P" los asignamos con el diccionario "valor_peon"
+                 "P":1 ,"Q":2 ,"B":3 ,"H":4 ,"R":5 ,"K":9}  
 
 
 piece_number={"P":0 ,"H":1 ,"B":2 ,"R":3 ,"K":4 ,"Q":5,       #Relacion entre int y string
@@ -22,35 +24,46 @@ valor_peon = {13:0 ,12:1 ,11:2 ,10:3 ,9:4 ,8:5,         #row=8 ----> Coronacion 
 #Añade un valor a la captura dependiendo la pieza rival (realizar una captura limpia sobre un rey es mas valioso que sobre un alfil)
 def capturas_limpias(lista_capturas_limpias):  
     for movement in lista_capturas_limpias:
+        end_row     = movement[1][0]
+        piece_mine  = movement[3][0]
+        piece_rival = movement[3][1]
+
+        if piece_mine.isupper():
+            movement[2] = row_clean_capture_white[end_row] * 10
+        else:
+            movement[2] = row_clean_capture_black[end_row] * 10
 
         if movement[3][1] == "P" or movement[3][1] == "p":  #Para los peones asigno un valor dependiendo la fila en que esten (mas cerca de coronar es mas valioso)
-            movement[2] =  valor_peon[movement[1][0]] * 100       #tambien tendrias que analizar en la suma la pieza con que te lo capturas, ya que si podes capturar por ej una reina infiltrada, es mejor hacerlo con un peon que con un rey
+            movement[2] = movement[2] + valor_peon[movement[1][0]] + (10-valores_mios[piece_mine])     #tambien tendrias que analizar en la suma la pieza con que te lo capturas, ya que si podes capturar por ej una reina infiltrada, es mejor hacerlo con un peon que con un rey
 
         else:
-            movement[2] =  valores_rival[movement[3][1]] *100    #Las demas piezas tienen valores fijos
+            movement[2] = movement[2] + valores_rival[piece_rival] + (10-valores_mios[piece_mine])     #Las demas piezas tienen valores fijos
 
     return lista_capturas_limpias
 
 
-
+'''
 #Analizo si hay una pieza enemiga atacando a mi pieza que dispone de una captura limpia y si ocurre, añado (+1) (añade +1 por CADA pieza rival que la ataque)
-def extra_capturas_limpias   (lista_capturas_rival, lista_capturas_limpias):                                                                 
+def extra_capturas_limpias   (lista_capturas_rival, lista_capturas_limpias):   
+                                                                
     for move_selected in lista_capturas_limpias:            
-        start_sq = move_selected[0]     #tuple con sq inicial
+        start_sq_mine = move_selected[0]     #tuple con sq inicial
+        end_sq_mine   = move_selected[1]
+
         for movement in lista_capturas_rival:
-            if movement[1] == start_sq:                     #Si el start_sq de mi pieza == al end_sq de la captura rival, entonces me conviene moverme con esta pieza para que no me capture
-                move_selected[2] = move_selected[2] + 1  
+            start_sq_rival = movement[0]
+            end_sq_rival   = movement[1]
 
-                                                      #Esto es similar al de arriba pero con un paso extra
-    for move_mio in lista_capturas_limpias:           #Analiza si el rival esta atacando a mi pieza y si yo puedo realizar una captura limpia sobre la pieza que me esta atacando (+10)
-        x = (move_mio[0], move_mio[1])
-        for move_rival in lista_capturas_rival:
-            y = (move_rival[1],move_rival[0])
-            if x == y:
-                move_mio[2] = move_mio[2] + 10
- 
+            if start_sq_mine == end_sq_rival and end_sq_mine  ==  start_sq_rival:   #Si mi captura limpia tiene como objetivo una pieza rival que me esta atacando ------> +10 de valor agregado
+                move_selected[2] = move_selected[2] + 2000 
+
+            elif start_sq_mine == end_sq_rival:               #Si el start_sq de mi pieza == al end_sq de una captura rival, entonces me conviene moverme con esta pieza para que no me capture
+                move_selected[2] = move_selected[2] + 1000     #Condicion valida -----> +1 de valor agregado
+
+
+
     return lista_capturas_limpias
-
+'''
 
 
 def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_strategy ,valor_row_strategy, moves_analysis):

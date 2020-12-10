@@ -45,10 +45,11 @@ def analisis_ia(moves, moves_enemy, game):
     if lista_capturas_limpias != []: 
         
         if len(lista_capturas_limpias) > 1:         #Solo realizamos calificacion entre capturas limpias cuando hay mas de una
-
+            print("capturas libres:")
+            print(lista_capturas_limpias)
+            #lista_capturas_limpias = ia_calificador.extra_capturas_limpias   (lista_capturas_rival ,lista_capturas_limpias) #Añado puntos extras si se cumplen ciertas condiciones
             lista_capturas_limpias = ia_calificador.capturas_limpias(lista_capturas_limpias)                       #Añado el valor de la pieza capturadas a cada move 
-            lista_capturas_limpias = ia_calificador.extra_capturas_limpias   (lista_capturas_rival ,lista_capturas_limpias) #Añado puntos extras si se cumplen ciertas condiciones
-
+            
             print("Respondo con captura limpia")
             return lista_capturas_limpias
 

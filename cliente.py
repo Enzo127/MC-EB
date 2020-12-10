@@ -28,6 +28,7 @@ board = [
         [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "]]
 
 
+
 msg_accept = '''{
 "action": "accept_challenge", 
 "data": { 
