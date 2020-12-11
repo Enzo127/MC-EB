@@ -20,9 +20,9 @@ class Game():       #Las clases empiezan con letra mayuscula----> Game
             self.reina_mia          = "Q"
             self.reina_rival        = "q"
 
-            self.row_strategy       = {"upgrade_mia":8 ,"upgrade_rival":7 ,"peones_rival":5 ,"peones_mios_1":9 ,"peones_mios_2":10}
-            self.qq_row_strategy    = {8:0 ,9:0 ,10:0    ,7:0 ,5:0}   #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
-            self.valor_row_strategy = {8:4 ,9:1 ,10:3    ,7:5 ,5:2}
+            self.row_strategy       = {"upgrade_mia":8 ,"upgrade_rival":7 ,"peones_rival":5 ,"peones_mios":10}
+            self.qq_row_strategy    = {8:0  ,10:0    ,7:0 ,5:0}   #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
+            self.valor_row_strategy = {8:4  ,10:2    ,7:5 ,5:3}
             self.retaguardia_rival  = [0, 1]
             self.retaguardia_mia    = [14,15]
             
@@ -30,9 +30,9 @@ class Game():       #Las clases empiezan con letra mayuscula----> Game
             self.reina_mia          = "q"
             self.reina_rival        = "Q"
 
-            self.row_strategy       = {"upgrade_mia":7 ,"upgrade_rival":8 ,"peones_rival":10 ,"peones_mios_1":6 ,"peones_mios_2":5}
-            self.qq_row_strategy    = {7:0 ,6:0 ,5:0    ,8:0 ,10:0} #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
-            self.valor_row_strategy = {7:4 ,6:1 ,5:3    ,8:5 ,10:2}
+            self.row_strategy       = {"upgrade_mia":7 ,"upgrade_rival":8 ,"peones_rival":10 ,"peones_mios":5}
+            self.qq_row_strategy    = {7:0  ,5:0    ,8:0 ,10:0} #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
+            self.valor_row_strategy = {7:4  ,5:3    ,8:5 ,10:2}
             self.retaguardia_rival  = [14, 15]
             self.retaguardia_mia    = [0, 1]
             
@@ -193,8 +193,6 @@ class Game():       #Las clases empiezan con letra mayuscula----> Game
                         bishop_moves = analisis_rival(bishop_moves,endPiece, self.color, r,c,endRow,endCol)
                         break                    
                     
-                    
-                    
                     else:   #Al llegar aca, significa que hay una pieza rival, por lo que termino la iteracion
                         break
                 else:       #Al llegar aca, significa que llegue al limite del tablero, por lo que termino la iteracion
@@ -292,18 +290,19 @@ class Game():       #Las clases empiezan con letra mayuscula----> Game
             self.reina_mia          = "Q"
             self.reina_rival        = "q"
 
-            self.row_strategy       = {"upgrade_mia":8 ,"upgrade_rival":7 ,"peones_rival":5 ,"peones_mios_1":9 ,"peones_mios_2":10}
-            self.qq_row_strategy    = {8:0 ,9:0 ,10:0    ,7:0 ,5:0}   #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
-            self.valor_row_strategy = {8:4 ,9:1 ,10:3    ,7:5 ,5:2}
+            self.row_strategy       = {"upgrade_mia":8 ,"upgrade_rival":7 ,"peones_rival":5 ,"peones_mios":10}
+            self.qq_row_strategy    = {8:0  ,10:0    ,7:0 ,5:0}   #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
+            self.valor_row_strategy = {8:4  ,10:2    ,7:5 ,5:3}
             self.retaguardia_rival  = [0, 1]
             self.retaguardia_mia    = [14,15]
+            
         else:                               #Valores de atributos para jugador negro
             self.reina_mia          = "q"
             self.reina_rival        = "Q"
 
-            self.row_strategy       = {"upgrade_mia":7 ,"upgrade_rival":8 ,"peones_rival":10 ,"peones_mios_1":6 ,"peones_mios_2":5}
-            self.qq_row_strategy    = {7:0 ,6:0 ,5:0    ,8:0 ,10:0} #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
-            self.valor_row_strategy = {7:4 ,6:1 ,5:3    ,8:5 ,10:2}
+            self.row_strategy       = {"upgrade_mia":7 ,"upgrade_rival":8 ,"peones_rival":10 ,"peones_mios":5}
+            self.qq_row_strategy    = {7:0  ,5:0    ,8:0 ,10:0} #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
+            self.valor_row_strategy = {7:4  ,5:3    ,8:5 ,10:2}
             self.retaguardia_rival  = [14, 15]
             self.retaguardia_mia    = [0, 1]
 
@@ -320,12 +319,13 @@ class Game():       #Las clases empiezan con letra mayuscula----> Game
             self.qq_row_strategy[row] = 0
         
         #1) Analisis: Cantidad de reinas mias en row_peones_mios_1 y row_peones_mios_2
+        '''
         row = self.row_strategy["peones_mios_1"]                            
         for col in range(16):
             if (self.reina_mia == self.board[row][col]):
                 self.qq_row_strategy[row] = self.qq_row_strategy[row] + 1
-
-        row = self.row_strategy["peones_mios_2"]
+        '''
+        row = self.row_strategy["peones_mios"]
         for col in range(16):
             if (self.reina_mia == self.board[row][col]):
                 self.qq_row_strategy[row] = self.qq_row_strategy[row] + 1

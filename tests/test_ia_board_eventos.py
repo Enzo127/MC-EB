@@ -153,8 +153,6 @@ class test_ia_board_eventos(unittest.TestCase):
         self.assertEqual(board_received ,board_expected)
 
 
-
-
     #Posterior a mi mapeo como jugador blanco, mapeo con los movimientos del rival
     def test_move_not_capture_pawn_2(self):                                                                                      
         board_eventos =[[' ', ' ', ' ', ' ', ' ', ' ', 'x', 'x', 'x', ' ', ' ', ' ', ' ', ' ', ' ', ' '],

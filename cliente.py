@@ -129,6 +129,8 @@ async def eventos(socketa):
         if data['event'] == 'ask_challenge':
             if data["data"]["username"] == "Julieta":
                 pass
+            if data["data"]["username"] == "Franco":
+                pass
             else:
                 print("New challenger: {} has arrived".format(data["data"]["username"]))    #Desafiante
 
