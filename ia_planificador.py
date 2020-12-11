@@ -99,7 +99,7 @@ def analisis_ia(moves, moves_enemy, game):
     if game.queens_quantity >= 2 or queens_in_row_upgrade_mia >= 1:        #or game.qm_row_upgrade>1
         piece = 5
         tipo  = 1
-        moves_analysis = ia_calificador.move_strategic(moves[piece][tipo] ,board_eventos ,data_row_upgrade ,game.qq_row_strategy ,game.valor_row_strategy, game.retaguardia_mia ,moves_analysis) #----------->EN VEZ DE PASAR TODOS LOS MOVES, PODRIAS PASAR moves[5][1]
+        moves_analysis = ia_calificador.move_strategic(moves[piece][tipo] ,board_eventos ,data_row_upgrade ,game.qq_row_strategy ,game.valor_row_strategy ,game.row_strategy ,game.retaguardia_mia ,moves_analysis) #----------->EN VEZ DE PASAR TODOS LOS MOVES, PODRIAS PASAR moves[5][1]
 
         if moves_analysis != []:
             print("Respondo con un movimiento estrategico")

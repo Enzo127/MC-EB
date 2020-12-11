@@ -8,8 +8,10 @@ row_clean_capture_black = {0:9 ,1:9 ,2:9    ,3:6 ,4:6 ,5:5 ,6:4 ,7:7 ,8:7 ,9:3 ,
 valores_rival = {"h":5 ,"b":6 ,"r":7 ,"q":8 ,"k":9,           #Los valores de "p" y "P" los asignamos con el diccionario "valor_peon"
                  "H":5 ,"B":6 ,"R":7 ,"Q":8 ,"K":9}    
 
-valores_mios  = {"p":1 ,"q":2 ,"b":3 ,"h":4 ,"r":5 ,"k":9,    #Los valores de "p" y "P" los asignamos con el diccionario "valor_peon"
-                 "P":1 ,"Q":2 ,"B":3 ,"H":4 ,"R":5 ,"K":9}  
+valores_mios  = {"p":1 ,"q":3 ,"b":5 ,"h":4 ,"r":6 ,"k":9,    #Los valores de "p" y "P" los asignamos con el diccionario "valor_peon"
+                 "P":1 ,"Q":3 ,"B":5 ,"H":4 ,"R":6 ,"K":9}  
+
+valor_reina   = {}
 
 
 piece_number={"P":0 ,"H":1 ,"B":2 ,"R":3 ,"K":4 ,"Q":5,       #Relacion entre int y string
@@ -103,15 +105,11 @@ def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_s
                     if quantity != None:
                         quantity = quantity -move_in_same_row
                     
-                    if (board_eventos[end_sq[0]][end_sq[1]] == "+" or board_eventos[end_sq[0]][end_sq[1]] == " ") and  quantity == 0:
-                        
+                    if (board_eventos[end_sq[0]][end_sq[1]] == "+" or board_eventos[end_sq[0]][end_sq[1]] == " ") and  quantity == 0:         
                         movement[2] = valor_row_strategy[end_row] 
-                        
                         move_save = [start_sq ,end_sq ,movement[2]]
                         repeated = moves_analysis.count(move_save)
-
                         if movement[2] > 0 and repeated == 0:
-                            
                             moves_analysis.append(move_save)
 
     return moves_analysis
@@ -140,31 +138,40 @@ def capturas_rival_contraataque(lista_capturas_rival, lista_capturas_sucias, mov
 
     return moves_analysis
 
-def move_strategic(moves ,board_eventos ,data_row_upgrade ,qq_row_strategy ,valor_row_strategy, retaguardia_mia ,moves_analysis):
-
+def move_strategic(moves ,board_eventos ,data_row_upgrade ,qq_row_strategy ,valor_row_strategy ,row_strategy ,retaguardia_mia ,moves_analysis):
     for movement in moves:
         start_sq  = movement[0]
         end_sq    = movement[1]
 
         start_row = start_sq[0]
         end_row   = end_sq[0]
+        end_col   = end_sq[1]
+
+        result = qq_row_strategy.get(end_row)
+        #if result is None or result >= 1:
+        if result is None:
+            continue
 
         if (start_row == data_row_upgrade[0] and end_row != start_row) or start_row==retaguardia_mia[0] or start_row==retaguardia_mia[1]:
-            
-            if  board_eventos[end_sq[0]][end_sq[1]] == "+" or board_eventos[end_sq[0]][end_sq[1]] == " ":
-                
-                result = qq_row_strategy.get(end_row)
-                if result is None or result >= 1:
-                    continue
-                
-                if data_row_upgrade[1] == 1:
-                    movement[2] = valor_row_strategy[end_row] - valor_row_strategy[data_row_upgrade[0]] #podrias agregar tambien un valor best_col para mov estrategico
+            if  board_eventos[end_row][end_col] == "+" or board_eventos[end_row][end_col] == " ":
+
+                #Si tengo una sola reina en upgrade, verifico si me puedo mover a la fila de upgrade rival, sino paso y sigo juntando mas reinas en mi row de upgrade
+                if data_row_upgrade[1] == 1 and qq_row_strategy[end_row] == 0:
+                    movement[2] = valor_row_strategy[end_row] - valor_row_strategy[data_row_upgrade[0]]     #este resultado solo va a ser positivo para la row_upgrade_rival
                     if movement[2] > 0:
                         move_save = [start_sq ,end_sq ,movement[2]] 
                         moves_analysis.append(move_save)
-                else:
+                
+                #Si tengo mas de 1 reina en row upgrade, las empiezo a distribuir dependiendo las filas que tengan menos reinas y mas valor estrategico
+                elif data_row_upgrade[1] >= 2 and qq_row_strategy[end_row] == 0:
                     movement[2] = valor_row_strategy[end_row]
-                    move_save = [start_sq ,end_sq ,movement[2]]
+                    move_save = [start_sq ,end_sq ,movement[2]] 
+                    moves_analysis.append(move_save)
+
+                #
+                elif end_row == row_strategy["upgrade_rival"] and  (qq_row_strategy[row_strategy["upgrade_mia"]] > qq_row_strategy[row_strategy["upgrade_rival"]] + 1):
+                    movement[2] = valor_row_strategy[end_row]
+                    move_save = [start_sq ,end_sq ,movement[2]] 
                     moves_analysis.append(move_save)
 
     return moves_analysis
@@ -198,7 +205,8 @@ def peon_avance (moves, Game ,board_eventos):
     upgrade_in = {4:100 ,3:200 ,2:300 ,1:400 ,0:1000}
 
     for movement in moves:
-        end_row = movement[1][0]
+        start_row = movement[0][0]
+        end_row   = movement[1][0]
         col = movement[0][1]          #start_col = end_col SIEMPRE para movimientos que no son de captura
         
         if board_eventos[end_row][col] == "-":
@@ -206,8 +214,8 @@ def peon_avance (moves, Game ,board_eventos):
             moves_selected.append(movement)
             continue
 
-
-        if board_eventos[end_row][col] == "#":
+        
+        if board_eventos[end_row][col] != "-":
             if Game.color:
                 if  col < 15 and Game.board[end_row-1][col+1].islower():    #captura hacia la derecha           
                     movement[2] = movement [2] + 2000
@@ -225,11 +233,15 @@ def peon_avance (moves, Game ,board_eventos):
             moves_selected.append(movement)
             continue   
 
+        #if col == 5 or col == 6:
+        #    movement[2] = movement[2] + 
+
         if not Game.color and Game.first_move:
             for c in range(16):
                 if Game.board[Game.row_strategy["peones_rival"]][c] != " ":
                     col_safe = 15 - c 
-                    if col == col_safe:
+                    x = abs(end_row - start_row)
+                    if col == col_safe and x > 1:
                         movement[2] = movement[2] + 1000
                         Game.first_move = False
                 
