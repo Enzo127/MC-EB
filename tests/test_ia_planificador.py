@@ -4,7 +4,6 @@ from ia_planificador import analisis_ia
 
 class test_ia_planificador(unittest.TestCase):
     # i) Evaluo una situacion en la que tengo multiples capturas limpias y evaluo cual de las capturas limpias que puedo hacer es la mejor
-    '''
     def test_captura_limpia_multiple(self):
         #Declaro todos los datos de entrada a la funcion a testear
         Game_test = tablero.Game(True)         #color  (True = white) (False = black)
@@ -32,7 +31,7 @@ class test_ia_planificador(unittest.TestCase):
         moves_enemy = Game_test.get_all_possible_moves(change) 
 
         #Declaro el resultado esperado
-        moves_expected = [[(6, 5), (4, 7), 29, 'Bp'], [(6, 5), (5, 4), 40, 'Bp'], [(6, 5), (7, 6), 85, 'Bq'], [(9, 8), (7, 6), 86, 'Qq'], [(14, 6), (7, 6), 86, 'Qq'], [(14, 10), (13, 9), 104, 'Br'], [(14, 8), (13, 9), 98, 'Kr'], [(14, 9), (13, 9), 98, 'Kr']]
+        moves_expected = [[(6, 5), (4, 7), 27, 'Bp'], [(6, 5), (5, 4), 38, 'Bp'], [(6, 5), (7, 6), 83, 'Bq'], [(9, 8), (7, 6), 84, 'Qq'], [(14, 6), (7, 6), 84, 'Qq'], [(14, 10), (13, 9), 102, 'Br'], [(14, 8), (13, 9), 98, 'Kr'], [(14, 9), (13, 9), 98, 'Kr']]
         
         #LLamo a la funcion con los imputs declarados y obtengo el resultado
         moves_result   = analisis_ia(moves ,moves_enemy ,Game_test)
@@ -40,7 +39,7 @@ class test_ia_planificador(unittest.TestCase):
         #Comparacion entre resultado esperado y obtenido
         self.assertEqual(moves_result ,moves_expected)
 
-    '''
+
     # i) Evaluo una situacion en la que tengo solo una captura limpia
     def test_captura_limpia_unica(self):
         #Declaro todos los datos de entrada a la funcion a testear
@@ -80,7 +79,7 @@ class test_ia_planificador(unittest.TestCase):
 
     
     # ii) Tengo una reina en la retaguardia rival con capturas sucias (es bueno que coma, porque las piezas en la retaguardia son valiosos, mientras que la reina solo vale 5 puntos)
-    def test_queen_infiltrated_true(self):
+    def test_queen_infiltrated(self):
         #Declaro todos los datos de entrada a la funcion a testear
         Game_test = tablero.Game(False)         #color  (True = white) (False = black)
         Game_test.board = [                    #Necesito un board distinto para cada test
@@ -116,27 +115,27 @@ class test_ia_planificador(unittest.TestCase):
         self.assertEqual(moves_result ,moves_expected)
 
 
-    '''
+    
     # iii) a) Respondo a las amenazas del rival contraatacando (valido para todas mis piezas)
     def test_capturas_rival_contraataque(self):
         #Declaro todos los datos de entrada a la funcion a testear
         Game_test = tablero.Game(True)         #color  (True = white) (False = black)
         Game_test.board = [                    #Necesito un board distinto para cada test
-            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],       #Necesito un board distinto para cada test
-            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'Q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            [' ', ' ', ' ', ' ', 'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'Q'],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'p', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', 'q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', ' ', 'p', 'p', 'p', 'Q', 'p', 'p', 'p', 'p', 'p'],
+            ['p', 'p', 'p', 'p', 'p', 'p', ' ', ' ', 'p', 'p', ' ', 'p', 'p', 'p', 'p', 'p'],
             [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
             [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', 'P', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            ['k', 'k', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'k'],
-            ['P', 'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['R', 'R', 'H', 'H', 'B', 'q', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', 'q', ' ', 'k', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', ' ', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['P', 'P', 'P', 'P', 'P', 'P', ' ', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
             ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
         
         change=0                                                       
@@ -145,7 +144,7 @@ class test_ia_planificador(unittest.TestCase):
         moves_enemy = Game_test.get_all_possible_moves(change) 
 
         #Declaro el resultado esperado
-        moves_expected = []
+        moves_expected = [[(2, 10), (1, 9), 4], [(2, 10), (1, 10), 1], [(2, 10), (1, 11), 1], [(9, 7), (8, 6), 7], [(9, 7), (8, 8), 8], [(14, 6), (8, 6), 3]]
         
         #LLamo a la funcion con los imputs declarados y obtengo el resultado
         moves_result   = analisis_ia(moves ,moves_enemy ,Game_test)
@@ -153,82 +152,81 @@ class test_ia_planificador(unittest.TestCase):
         #Comparacion entre resultado esperado y obtenido
         self.assertEqual(moves_result ,moves_expected)
 
+ 
+    # iii) b) El rival me puede capturar una pieza, pero yo me muevo a un casillero sin peligro para esquivar el ataque (fundamental para que no me capturen los reyes)
+    def test_capturas_rival_retirada_piezas_valiosas (self):
+        #Declaro todos los datos de entrada a la funcion a testear
+        Game_test = tablero.Game(True)         #color  (True = white) (False = black)
+        Game_test.board = [                    #Necesito un board distinto para cada test
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'R', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'q', ' ', 'K', ' ', ' ', ' '],#La reina enemiga ataca 3 piezas mias, las 3 deberian responder con retirada
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],#siendo mas valioso el movimiento de la pieza mia que mas puntos valga
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', ' ', ' ', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', ' ', 'K', ' ', 'B', 'H', 'H', 'R', 'R'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
+        
+        change=0                                                       
+        moves       = Game_test.get_all_possible_moves(change)              
+        change=1                                                       
+        moves_enemy = Game_test.get_all_possible_moves(change) 
 
+        #Declaro el resultado esperado
+        moves_expected = [[(8, 12), (7, 12), 9], [(8, 12), (7, 13), 9], [(8, 12), (8, 13), 9], [(8, 12), (9, 12), 9], [(8, 12), (9, 13), 9], [(7, 9), (6, 9), 7], [(7, 9), (5, 9), 7], [(7, 9), (7, 8), 7], [(7, 9), (7, 7), 7], [(7, 9), (7, 6), 7], [(7, 9), (7, 5), 7], [(7, 9), (7, 4), 7], [(7, 9), (7, 3), 7], [(7, 9), (7, 2), 7], [(7, 9), (7, 1), 7], [(7, 9), (7, 0), 7], [(7, 9), (10, 9), 7], [(7, 9), (11, 9), 7], [(7, 9), (7, 12), 7], [(7, 9), (7, 13), 7], [(7, 9), (7, 14), 7], [(7, 9), (7, 15), 7], [(10, 8), (9, 8), 4]]
+        
+        #LLamo a la funcion con los imputs declarados y obtengo el resultado
+        moves_result   = analisis_ia(moves ,moves_enemy ,Game_test)
+
+        #Comparacion entre resultado esperado y obtenido
+        self.assertEqual(moves_result ,moves_expected)
+
+    # iii) b) El rival me puede capturar una reina con peones, pero yo me muevo a fila estrategica para esquivar el ataque
+    def test_capturas_rival_retirada_reinas (self):
+        #Declaro todos los datos de entrada a la funcion a testear
+        Game_test = tablero.Game(False)         #color  (True = white) (False = black)
+        Game_test.board = [                    #Necesito un board distinto para cada test
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['p', 'p', 'p', 'p', 'p', 'p', ' ', ' ', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],#coronacion negra
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],#coronacion blanca (fila ya ocupada con una reina, asique no deberia retirarme ahi)
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', 'q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],#Esta reina va a retirarse(la ataca una pieza de bajo valor) a un casillero seguro, dentro de una
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],#fila estrategica en la que no tenga mas de una reina(asi controlo diferentes filas estrategicas)
+            ['P', 'P', 'P', 'P', 'P', 'P', ' ', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
+        
+        Game_test.queens_in_row_strategy()
+
+        change=0                                                       
+        moves       = Game_test.get_all_possible_moves(change)              
+        change=1                                                       
+        moves_enemy = Game_test.get_all_possible_moves(change) 
+
+        #Declaro el resultado esperado
+        moves_expected = [[(10, 6), (7, 6), 2], [(10, 6), (10, 5), 1], [(10, 6), (10, 4), 1], [(10, 6), (10, 3), 1], [(10, 6), (10, 2), 1], [(10, 6), (10, 1), 1], [(10, 6), (10, 0), 1], [(10, 6), (10, 7), 1], [(10, 6), (10, 9), 1], [(10, 6), (10, 10), 1], [(10, 6), (10, 11), 1], [(10, 6), (10, 12), 1], [(10, 6), (10, 13), 1], [(10, 6), (10, 14), 1], [(10, 6), (10, 15), 1], [(10, 6), (7, 3), 2], [(10, 6), (7, 9), 2]]
+        
+        #LLamo a la funcion con los imputs declarados y obtengo el resultado
+        moves_result   = analisis_ia(moves ,moves_enemy ,Game_test)
+
+        #Comparacion entre resultado esperado y obtenido
+        self.assertEqual(moves_result ,moves_expected)
     
-    # iii) b) Una reina propia se puede infiltrar en las filas de retaguardia del rival con una captura sucia (posibilidad de que la recapturen)
-    def test_queen_infiltrated_false(self):
-        #Declaro todos los datos de entrada a la funcion a testear
-        Game_test = tablero.Game(True)         #color  (True = white) (False = black)
-        Game_test.board = [                    #Necesito un board distinto para cada test
-            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],       #Necesito un board distinto para cada test
-            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'Q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            [' ', ' ', ' ', ' ', 'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'Q'],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'p', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', 'q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', 'P', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            ['k', 'k', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'k'],
-            ['P', 'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['R', 'R', 'H', 'H', 'B', 'q', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
-            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
-        
-        change=0                                                       
-        moves       = Game_test.get_all_possible_moves(change)              
-        change=1                                                       
-        moves_enemy = Game_test.get_all_possible_moves(change) 
-
-        #Declaro el resultado esperado
-        moves_expected = 
-        
-        #LLamo a la funcion con los imputs declarados y obtengo el resultado
-        moves_result   = analisis_ia(moves ,moves_enemy ,Game_test)
-
-        #Comparacion entre resultado esperado y obtenido
-        self.assertEqual(moves_result ,moves_expected)
-
-
-    # iii) c) El rival me puede capturar una reina, pero yo me muevo a fila estrategica para esquivar el ataque
-    def test_capturas_rival_retirada (self):
-        #Declaro todos los datos de entrada a la funcion a testear
-        Game_test = tablero.Game(True)         #color  (True = white) (False = black)
-        Game_test.board = [                    #Necesito un board distinto para cada test
-            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],       #Necesito un board distinto para cada test
-            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'Q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            [' ', ' ', ' ', ' ', 'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'Q'],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'p', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', 'q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', 'P', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            ['k', 'k', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'k'],
-            ['P', 'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['R', 'R', 'H', 'H', 'B', 'q', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
-            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
-        
-        change=0                                                       
-        moves       = Game_test.get_all_possible_moves(change)              
-        change=1                                                       
-        moves_enemy = Game_test.get_all_possible_moves(change) 
-
-        #Declaro el resultado esperado
-        moves_expected = 
-        
-        #LLamo a la funcion con los imputs declarados y obtengo el resultado
-        moves_result   = analisis_ia(moves ,moves_enemy ,Game_test)
-
-        #Comparacion entre resultado esperado y obtenido
-        self.assertEqual(moves_result ,moves_expected)
-
-    '''
     # iv) Tengo una reina en el centro y la puedo mover a una fila mas activa
     def test_move_strategic(self):          
         #Declaro todos los datos de entrada a la funcion a testear

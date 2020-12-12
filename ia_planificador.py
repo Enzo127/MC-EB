@@ -56,7 +56,7 @@ def analisis_ia(moves, moves_enemy, Game):
     # ii) Pieza infiltrada al ataque               (?) 
     #Tengo una pieza en la retaguardia rival con capturas sucias (es bueno que coma, porque las piezas en la retaguardia suelen ser valiosas)
     if lista_capturas_sucias != []:
-        moves_analysis = ia_calificador.queen_infiltrated(lista_capturas_sucias ,Game.retaguardia_rival ,moves_analysis, True)
+        moves_analysis = ia_calificador.queen_infiltrated(lista_capturas_sucias ,Game.retaguardia_rival ,moves_analysis)
         if moves_analysis != []:
             return moves_analysis
 
@@ -64,16 +64,14 @@ def analisis_ia(moves, moves_enemy, Game):
     # iii) Capturas rival                         (&)    
     if lista_capturas_rival != []:
         #a) Respuesta coontraatacando (apto para todas las piezas) (esta es una captura sucia, en la que expongo a mi pieza a ser recapturada)
+        print("respondo contraatacando")
         moves_analysis = ia_calificador.capturas_rival_contraataque (lista_capturas_rival, lista_capturas_sucias ,moves_analysis)
         if moves_analysis != []:
             return moves_analysis
 
-        #b) Respuesta infiltrando una pieza mia en su retaguardia  
-        moves_analysis = ia_calificador.queen_infiltrated(lista_capturas_sucias ,Game.retaguardia_rival ,moves_analysis, False)
-        if moves_analysis != []:
-            return moves_analysis
 
-        #c) Respuesta moviendose a row estrategica (solo apto para reinas) (modificado para todas las piezas)
+        #b) Respuesta moviendose a row estrategica (solo apto para reinas) (modificado para todas las piezas)
+        print("respondo con retirada")
         moves_analysis = ia_calificador.capturas_rival_retirada    (lista_capturas_rival, moves, board_eventos ,Game.qq_row_strategy ,Game.valor_row_strategy ,moves_analysis)
         if moves_analysis != []:
             return moves_analysis
