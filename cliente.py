@@ -9,6 +9,7 @@ import websockets
 import json
 from bot import bot_work, limpiar
 
+
 board_end_game = [                                                                                            
         [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
         [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
