@@ -8,18 +8,18 @@ La estrategia de la ia se compone de 2 partes:
 Para el paso 1) se importa "ia_board_eventos"
 Para el paso 2) se importa "ia_calificador"
 
-En definitiva: Recibe la data del estado actual del game y debe devolver una lista con los mejores movimientos calificados.
+En definitiva: Recibe la data del estado actual del Game y debe devolver una lista con los mejores movimientos calificados.
 '''
 
 from ia_board_events import event_maker, event_search
 import ia_calificador
 
-def analisis_ia(moves, moves_enemy, game):   
+def analisis_ia(moves, moves_enemy, Game):   
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------(1) Mapeo de eventos----------------------------------------------------------------------------------                                                                    
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
     #i)   Generar board de eventos    
-    board_eventos     = event_maker(moves, moves_enemy, game.color ,game.board)    
+    board_eventos     = event_maker(moves, moves_enemy, Game.color ,Game.board)    
 
     #ii)  Buscar los eventos $, & y ? y guardar el casillero en que se encuentran
     lista_desordenada = event_search(board_eventos)
@@ -35,6 +35,8 @@ def analisis_ia(moves, moves_enemy, game):
 
     lista_capturas_sucias = []                                                                  #Capturas sucias mias (?)
     lista_capturas_sucias = finder(moves, lista_desordenada[1],lista_capturas_sucias) 
+
+    ia_calificador.queen_value(Game.queens_quantity)
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -60,7 +62,7 @@ def analisis_ia(moves, moves_enemy, game):
     # ii) Reina infiltrada al ataque            (?) 
     #Tengo una reina en la retaguardia rival con capturas sucias (es bueno que coma, porque las piezas en la retaguardia son valiosos, mientras que la reina solo vale 5 puntos)
     if lista_capturas_sucias != []:
-        moves_analysis = ia_calificador.queen_infiltrated(lista_capturas_sucias ,game.retaguardia_rival ,moves_analysis, True)
+        moves_analysis = ia_calificador.queen_infiltrated(lista_capturas_sucias ,Game.retaguardia_rival ,moves_analysis, True)
 
         if moves_analysis != []:
             print("respondo atacando su retaguardia")
@@ -77,29 +79,27 @@ def analisis_ia(moves, moves_enemy, game):
             return moves_analysis
 
         #b) Respuesta infiltrando una reina mia en su retaguardia
-        moves_analysis = ia_calificador.queen_infiltrated(lista_capturas_sucias ,game.retaguardia_rival ,moves_analysis, False)
-
+        moves_analysis = ia_calificador.queen_infiltrated(lista_capturas_sucias ,Game.retaguardia_rival ,moves_analysis, False)
         if moves_analysis != []:
             print("respondo atacando su retaguardia")
             return moves_analysis
 
         #c) Respuesta moviendose a row estrategica (solo apto para reinas) (modificado para todas las piezas)
-        
-        moves_analysis = ia_calificador.capturas_rival_retirada    (lista_capturas_rival, moves, board_eventos ,game.qq_row_strategy ,game.valor_row_strategy ,moves_analysis)
+        moves_analysis = ia_calificador.capturas_rival_retirada    (lista_capturas_rival, moves, board_eventos ,Game.qq_row_strategy ,Game.valor_row_strategy ,moves_analysis)
         if moves_analysis != []:
             print("Respondo con retirada a row estrategica")
             return moves_analysis
     
 
     # iv) Movimientos estrategicos de reinas     (moves[5][1][1] a espacios con evento "+" o " ")
-    row_upgrade = game.row_strategy["upgrade_mia"]
-    queens_in_row_upgrade_mia = game.qq_row_strategy[row_upgrade]
+    row_upgrade = Game.row_strategy["upgrade_mia"]
+    queens_in_row_upgrade_mia = Game.qq_row_strategy[row_upgrade]
     data_row_upgrade = [row_upgrade ,queens_in_row_upgrade_mia]
 
-    if game.queens_quantity >= 2 or queens_in_row_upgrade_mia >= 1:        #or game.qm_row_upgrade>1
+    if Game.queens_quantity >= 2 or queens_in_row_upgrade_mia >= 1:        #or Game.qm_row_upgrade>1
         piece = 5
         tipo  = 1
-        moves_analysis = ia_calificador.move_strategic(moves[piece][tipo] ,board_eventos ,data_row_upgrade ,game.qq_row_strategy ,game.valor_row_strategy ,game.row_strategy ,game.retaguardia_mia ,moves_analysis) #----------->EN VEZ DE PASAR TODOS LOS MOVES, PODRIAS PASAR moves[5][1]
+        moves_analysis = ia_calificador.move_strategic(moves[piece][tipo] ,board_eventos ,data_row_upgrade ,Game.qq_row_strategy ,Game.valor_row_strategy ,Game.row_strategy ,Game.retaguardia_mia ,moves_analysis) #----------->EN VEZ DE PASAR TODOS LOS MOVES, PODRIAS PASAR moves[5][1]
 
         if moves_analysis != []:
             print("Respondo con un movimiento estrategico")
@@ -107,11 +107,34 @@ def analisis_ia(moves, moves_enemy, game):
     
     # v) Avance de peones                                                   #Si todas las condiciones superiores no se cumplen ---> Mover el peon mas cercano a la coronacion
     if moves_analysis == [] and lista_capturas_limpias == []:
-        moves_analysis = ia_calificador.peon_avance(moves[0][1], game ,board_eventos)      #moves[0][1]----> movimientos de peones (moves[0]) y solo movimientos a espacios blancos (tipo=1)
         print("Respondo con avance de peones")
+        
+        #--------------------NEW---------------------------------
+        if Game.flag_apertura and Game.color:
+            moves_analysis = ia_calificador.opening_white (moves[0][1], Game.row_strategy ,0)
+
+        elif Game.flag_apertura and not Game.color:
+            if Game.flag_first_move:
+                Game.strategy = ia_calificador.opening_selector  (Game.board)
+                Game.flag_first_move = False
+
+            if Game.strategy ==0:
+                moves_analysis = ia_calificador.opening_black_complex (moves[0][1] ,Game.move_opening)
+
+            elif Game.strategy == 1:
+                moves_analysis = ia_calificador.opening_white (moves[0][1], Game.row_strategy ,1)
+
+            elif Game.strategy == 2:
+                moves_analysis = ia_calificador.opening_white (moves[0][1], Game.row_strategy ,0)
+        
+        if moves_analysis != []:
+            return moves_analysis
+
+        Game.flag_apertura = False
+        #--------------------NEW---------------------------------
+        moves_analysis = ia_calificador.peon_avance(moves[0][1], Game ,board_eventos)      #moves[0][1]----> movimientos de peones (moves[0]) y solo movimientos a espacios blancos (tipo=1)
+        
         return moves_analysis
-
-
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 

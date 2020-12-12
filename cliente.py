@@ -103,6 +103,9 @@ async def eventos(socketa):
             except:       #Este except esta solo porque cuando juego contra mi mismo, al terminar la partida, intento limpiar el objeto 2 veces y eso me da error
                 pass      
 
+        if data['event'] == 'response_error':
+            print(data)
+
         #EVENTO: Solicitud de movimiento (continuacion o inicio de partida)
         if data['event'] == 'your_turn':            
             #1) Actualizacion de campos
@@ -112,7 +115,7 @@ async def eventos(socketa):
             
             #2) LLamo a la logica de la IA para que me devuelva el mejor movimiento para el estado actual del tablero
             move_choice = bot_work(data["data"])
-            #await asyncio.sleep(2)
+            #await asyncio.sleep(3)
             print("Move:",move_choice)
 
             #3) Conformacion de la respuesta
@@ -127,31 +130,19 @@ async def eventos(socketa):
 
         #EVENTO: Solicitud de partida recibida
         if data['event'] == 'ask_challenge':
-            if data["data"]["username"] == "Julieta":
-                pass
-            if data["data"]["username"] == "Franco":
-                pass
+            print("New challenger: {} has arrived".format(data["data"]["username"]))    #Desafiante
+
+            confirmacion = input("Aceptar desafio? (y/n)")
+            if confirmacion == "y":                                                     #Desafio aceptado
+                p_msg_accept["data"]["board_id"] = data["data"]["board_id"]             #Actualizo el mensaje de aceptacion con el board_id correspondiente
+                enviar_aceptacion =  json.dumps(p_msg_accept)                           #Convierto el diccionario python a string JSON
+                await socketa.send(enviar_aceptacion)                                   #Envio el msj de aceptacion via websocket
+
             else:
-                print("New challenger: {} has arrived".format(data["data"]["username"]))    #Desafiante
-
-                #Proba esto despues, la pagina no envia el campo "message"
-                '''if len(data["data"]["message"]) > 0:
-                    print (data["data"]["message"])
-                '''
-                #h=1
-                #if h==2:
-
-                
-                confirmacion = input("Aceptar desafio? (y/n)")
-                if confirmacion == "y":                                                     #Desafio aceptado
-                    p_msg_accept["data"]["board_id"] = data["data"]["board_id"]             #Actualizo el mensaje de aceptacion con el board_id correspondiente
-                    enviar_aceptacion =  json.dumps(p_msg_accept)                           #Convierto el diccionario python a string JSON
-                    await socketa.send(enviar_aceptacion)                                   #Envio el msj de aceptacion via websocket
-
-                else:
-                    print("Invitacion de {} rechazada".format(data["data"]["username"]))    #Desafio rechazado
+                print("Invitacion de {} rechazada".format(data["data"]["username"]))    #Desafio rechazado
                         
 if __name__ == '__main__':
     #LLama a conexion
 
     asyncio.run(conexion())
+
