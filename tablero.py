@@ -24,7 +24,7 @@ class Game():
             self.reina_rival        = "q"
             self.row_strategy       = {"upgrade_mia":8 ,"upgrade_rival":7 ,"peones_rival":5}
             self.qq_row_strategy    = {8:0 ,7:0 ,5:0}   #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
-            self.valor_row_strategy = {8:4 ,7:5 ,5:3}   #Valor de las filas
+            self.valor_row_strategy = {8:2 ,7:3 ,5:1}   #Valor de las filas estrategicas (la fila de upgrade rival es la mas valiosa, despues mi fila de upgrade y por ultimo la de peones rival)
             self.retaguardia_rival  = [0, 1]
             self.retaguardia_mia    = [14,15]
             
@@ -33,7 +33,7 @@ class Game():
             self.reina_rival        = "Q"
             self.row_strategy       = {"upgrade_mia":7 ,"upgrade_rival":8 ,"peones_rival":10}
             self.qq_row_strategy    = {7:0 ,8:0 ,10:0} #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
-            self.valor_row_strategy = {7:4 ,8:5 ,10:2}
+            self.valor_row_strategy = {7:2 ,8:3 ,10:1} #Valor de las filas estrategicas (la fila de upgrade rival es la mas valiosa, despues mi fila de upgrade y por ultimo la de peones rival)
             self.retaguardia_rival  = [14, 15]
             self.retaguardia_mia    = [0, 1]
 
@@ -302,24 +302,23 @@ class Game():
         if color:                      #Valores de atributos para jugador blanco  //cambiar el nombre de color
             self.reina_mia          = "Q"
             self.reina_rival        = "q"
-
             self.row_strategy       = {"upgrade_mia":8 ,"upgrade_rival":7 ,"peones_rival":5}
-            self.qq_row_strategy    = {8:0   ,7:0 ,5:0}   #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
-            self.valor_row_strategy = {8:4   ,7:5 ,5:3}
+            self.qq_row_strategy    = {8:0 ,7:0 ,5:0}   #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
+            self.valor_row_strategy = {8:2 ,7:3 ,5:1}   #Valor de las filas
             self.retaguardia_rival  = [0, 1]
             self.retaguardia_mia    = [14,15]
             
         else:                               #Valores de atributos para jugador negro
             self.reina_mia          = "q"
             self.reina_rival        = "Q"
-
             self.row_strategy       = {"upgrade_mia":7 ,"upgrade_rival":8 ,"peones_rival":10}
-            self.qq_row_strategy    = {7:0   ,8:0 ,10:0} #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
-            self.valor_row_strategy = {7:4   ,8:5 ,10:2}
+            self.qq_row_strategy    = {7:0 ,8:0 ,10:0} #Filas estrategicas y la cantidad de reinas propias en ellas (qq = queens quantity)
+            self.valor_row_strategy = {7:2 ,8:3 ,10:1}
             self.retaguardia_rival  = [14, 15]
             self.retaguardia_mia    = [0, 1]
 
-            self.first_move          = False            #No usar en partidas contra vos mismo
+            self.strategy           = 0                #Este valor puede varias entre 0 y 2, elige la estrategia de apertura como negras en la IA (por default la estrategia 0)
+            self.move_opening       = [(5,5) ,(5,6) ,(6,6) ,(5,7) ,(6,7) ,(5,8) ,(4,6) ,(5,6) ,(4,7) ,(5,7) ,(6,5) ,(6,8)]  #Primeros 12 mejores movimientos para la estrategia 2
 
 
     '''
