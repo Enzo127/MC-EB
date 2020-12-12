@@ -20,7 +20,7 @@ valor_peon = {13:0 ,12:1 ,11:2 ,10:3 ,9:4 ,8:5,         #row=8 ----> Coronacion 
               2: 0 ,3: 1 ,4: 2 ,5: 3 ,6:4 ,7:5}         #row=7 ----> Coronacion
 
 def queen_value(queens_quantity):
-    valor = 8 - queens_quantity
+    valor = 10 - queens_quantity
     if valor <= 0:
         valor = 2
     valores_mios["q"] = valor
@@ -160,8 +160,7 @@ def move_strategic(moves ,board_eventos ,data_row_upgrade ,qq_row_strategy ,valo
     return moves_analysis
 
 
-def queen_infiltrated(lista_capturas_sucias ,retaguardia_rival ,moves_analysis, infiltracion):   #Si infiltracion=True, consulto solo por reinas infiltradas, si es False, consulto por reinas que se puedan infiltrar
-    x = 1
+def queen_infiltrated(lista_capturas_sucias ,retaguardia_rival ,moves_analysis):   
 
     for movement in lista_capturas_sucias:
         start_sq = movement[0]
@@ -170,8 +169,8 @@ def queen_infiltrated(lista_capturas_sucias ,retaguardia_rival ,moves_analysis, 
         start_row = movement[0][0]
         end_row   = movement[1][0]
 
-        if infiltracion:
-            x = retaguardia_rival.count(start_row)
+
+        x = retaguardia_rival.count(start_row)
         y = retaguardia_rival.count(end_row)
 
         if x!=0 and y!=0:
@@ -299,3 +298,25 @@ def peon_avance (moves, Game ,board_eventos):
                        
     return moves_selected
 
+'''
+def queen_infiltrated(lista_capturas_sucias ,retaguardia_rival ,moves_analysis, infiltracion):   #Si infiltracion=True, consulto solo por reinas infiltradas, si es False, consulto por reinas que se puedan infiltrar
+    x = 1
+
+    for movement in lista_capturas_sucias:
+        start_sq = movement[0]
+        end_sq   = movement[1]
+
+        start_row = movement[0][0]
+        end_row   = movement[1][0]
+
+        if infiltracion:
+            x = retaguardia_rival.count(start_row)
+        y = retaguardia_rival.count(end_row)
+
+        if x!=0 and y!=0:
+            movement[2] = valores_rival[movement[3][1]]
+            move_save = [start_sq ,end_sq ,movement[2]]
+            moves_analysis.append(move_save)
+
+    return moves_analysis
+'''
