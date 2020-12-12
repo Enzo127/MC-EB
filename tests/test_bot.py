@@ -91,11 +91,9 @@ class test_bot(unittest.TestCase):
         game = bot.juegos_ejecutandose[self.id_prueba_2]    #Juego inicializado como "black"
         
         self.assertEqual(game.color, False)                                             #Compruebo al menos 2 atributos antes del reset
-        self.assertEqual(game.valor_row_strategy, {7:4  ,5:3    ,8:5 ,10:2})
+        self.assertEqual(game.valor_row_strategy, {7:2 ,8:3 ,10:1})
 
         bot.restart_atributes("white", game)
         self.assertEqual(game.color, True)                                              #Compruebo que los atributos han cambiado luego del rest
-        self.assertEqual(game.valor_row_strategy, {8:4  ,10:2    ,7:5 ,5:3})
+        self.assertEqual(game.valor_row_strategy, {8:2 ,7:3 ,5:1})
         
-
-    
