@@ -229,55 +229,45 @@ def opening_selector(board):
         return selector
 
 
-
+#Evalua los mejores movimientos de los peones
 def peon_avance (moves, Game ,board_eventos):
     moves_selected = []
     upgrade_in = {4:100 ,3:200 ,2:300 ,1:400 ,0:1000}
 
     for movement in moves:
-        start_row = movement[0][0]
         end_row   = movement[1][0]
-        col = movement[0][1]          #start_col = end_col SIEMPRE para movimientos que no son de captura
+        col = movement[0][1]                        #start_col = end_col SIEMPRE para movimientos que no son de captura
         
-        if board_eventos[end_row][col] == "-":
-            movement[2] = -500
-            moves_selected.append(movement)
+        if board_eventos[end_row][col] == "-":      #Si avanzo, el rival tiene una captura limpia sobre mi pieza (califico muy mal el movimiento y sigo al proximo)
+            movement[2] = -10000       
+            #Lo guardo de todos modos, porque aunque el rival haya ahogado mis movimientos (peor de los casos), conviene seguir avanzando la linea de peones y liberar mis piezas en retaguardia    
+            moves_selected.append(movement)         
             continue
 
-        
-        if board_eventos[end_row][col] != "-":
-            if Game.color:
-                if  col < 15 and Game.board[end_row-1][col+1].islower():    #captura hacia la derecha           
+        #Si el peon puede avanzar para PRESIONAR CON CAPTURA en el proximo turno a una pieza rival SIN exponerse, es un excelente movimiento
+        if board_eventos[end_row][col] != "-":      #solo ocurre si ---> " ", "+" o "#"
+            if Game.color:       #Jugador blanco
+                if  col < 15 and Game.board[end_row-1][col+1].islower():    #captura posible hacia la DERECHA en el proximo turno
                     movement[2] = movement [2] + 2000
-                
-                elif col > 0 and Game.board[end_row-1][col-1].islower():    #captura hacia la izquieda
+                elif col > 0 and Game.board[end_row-1][col-1].islower():    #captura posible hacia la IZQUIERDA en el proximo turno
+
                     movement[2] = movement [2] + 2000
-            else:
-                if   col < 15 and Game.board[end_row+1][col+1].isupper():   #captura hacia la derecha           
+            else:                #Jugador negro
+                if   col < 15 and Game.board[end_row+1][col+1].isupper():   #captura posible hacia la DERECHA en el proximo turno          
                     movement[2] = movement [2] + 2000
-                
-                elif col > 0 and Game.board[end_row+1][col-1].isupper():    #captura hacia la izquieda
+                elif col > 0 and Game.board[end_row+1][col-1].isupper():    #captura posible hacia la IZQUIERDA en el proximo turno
                     movement[2] = movement [2] + 2000
 
-        if movement[2] > 0:
+        if movement[2] > 0:                 #Si se cumplio la condicion superior, continuo al sgte movimiento
             moves_selected.append(movement)
             continue   
 
-        #--------------------NEW---------------------------------
-        if (col == 6 or col == 7):
+
+        if (col == 6 or col == 7):          #Priorizo mover los peones de la columna 6 y 7, asi puedo liberar las 4 reinas de la retaguardia
             movement[2] = movement[2] + 2000
-        #--------------------NEW---------------------------------
 
-        if not Game.color and Game.flag_first_move:
-            for c in range(16):
-                if Game.board[Game.row_strategy["peones_rival"]][c] != " ":
-                    col_safe = 15 - c 
-                    x = abs(end_row - start_row)
-                    if col == col_safe and x > 1:
-                        movement[2] = movement[2] + 1000
-                        Game.first_move = False
-
-        rows_to_upgrade = abs(Game.row_strategy["upgrade_mia"] - end_row)       #valoracion entre camino con "-" y camino con "+"
+                                                       
+        rows_to_upgrade = abs(Game.row_strategy["upgrade_mia"] - end_row)       #Cantidad de casilleros restantes para coronar (mientras mas)
         movement[2] = movement[2] + upgrade_in[rows_to_upgrade]
         
         if Game.color:
