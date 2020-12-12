@@ -77,7 +77,6 @@ class test_ia_planificador(unittest.TestCase):
         self.assertEqual(moves_result ,moves_expected)
 
 
-    
     # ii) Tengo una reina en la retaguardia rival con capturas sucias (es bueno que coma, porque las piezas en la retaguardia son valiosos, mientras que la reina solo vale 5 puntos)
     def test_queen_infiltrated(self):
         #Declaro todos los datos de entrada a la funcion a testear
@@ -227,8 +226,10 @@ class test_ia_planificador(unittest.TestCase):
         #Comparacion entre resultado esperado y obtenido
         self.assertEqual(moves_result ,moves_expected)
     
-    # iv) Tengo una reina en el centro y la puedo mover a una fila mas activa
-    def test_move_strategic(self):          
+
+
+    # iv) Caso 1: Tengo una reina en mi fila de coronacion y la puedo mover a la fila de coronacion rival SIN que la capturen
+    def test_move_strategic_caso_1(self):          
         #Declaro todos los datos de entrada a la funcion a testear
         Game_test = tablero.Game(True)         #color  (True = white) (False = black)
         Game_test.board = [                    #Necesito un board distinto para cada test
@@ -266,6 +267,87 @@ class test_ia_planificador(unittest.TestCase):
         self.assertEqual(moves_result ,moves_expected)
 
     
+    
+    # iv) Caso 2: Tengo mas de 1 reina en row upgrade, las puedo distribuir a otras filas dependiendo cuales tienen menos reinas y mayor valor estrategico
+    def test_move_strategic_caso_2(self):          
+        #Declaro todos los datos de entrada a la funcion a testear
+        Game_test = tablero.Game(True)         #color  (True = white) (False = black)
+        Game_test.board = [                    #Necesito un board distinto para cada test
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['p', 'p', 'p', 'p', 'p', 'p', ' ', ' ', 'p', 'p', 'p', ' ', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', 'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', 'Q', 'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '], #Una de estas 2 reinas deberia moverse a la fila 5 (fila de peones debiles del rival)
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', ' ', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['P', 'P', 'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
+        
+        Game_test.queens_in_row_strategy()                      #actualiza la cantidad de reinas estrategicas ----> Totalmente necesario en esta funcion
+
+        change=0                                                       
+        moves       = Game_test.get_all_possible_moves(change)              
+        change=1                                                       
+        moves_enemy = Game_test.get_all_possible_moves(change) 
+
+        #Declaro el resultado esperado
+        moves_expected = [[(8, 6), (5, 3), 1], [(8, 6), (5, 9), 1], [(8, 7), (5, 7), 1], [(8, 7), (5, 10), 1]]
+        
+        #LLamo a la funcion con los imputs declarados y obtengo el resultado
+        moves_result   = analisis_ia(moves ,moves_enemy ,Game_test)
+
+        #Comparacion entre resultado esperado y obtenido
+        self.assertEqual(moves_result ,moves_expected)
+
+
+    # iv) Caso 3: Tengo reinas en las 3 filas estrategicas, pero estoy juntando demasiadas en mi row de upgrade, si se cumple 
+    #             si se cumple-----> cantidad de reinas+1 en row upgrade mia > cantidad de reinas en row upgrade rival  -----> Mover una reina de mi fila de upgrade a la rival
+    def test_move_strategic_caso_3(self):          
+        #Declaro todos los datos de entrada a la funcion a testear
+        Game_test = tablero.Game(True)         #color  (True = white) (False = black)
+        Game_test.board = [                    #Necesito un board distinto para cada test
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['p', 'p', 'p', 'p', 'p', 'p', ' ', ' ', 'p', 'p', 'p', ' ', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', 'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', 'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', 'Q', 'Q', 'Q', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', ' ', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['P', 'P', 'P', 'P', 'P', 'P', ' ', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
+        
+        Game_test.queens_in_row_strategy()                      #actualiza la cantidad de reinas estrategicas ----> Totalmente necesario en esta funcion
+
+        change=0                                                       
+        moves       = Game_test.get_all_possible_moves(change)              
+        change=1                                                       
+        moves_enemy = Game_test.get_all_possible_moves(change) 
+
+        #Declaro el resultado esperado
+        moves_expected = [[(8, 6), (7, 5), 3], [(8, 6), (7, 7), 3], [(8, 7), (7, 7), 3], [(8, 7), (7, 8), 3], [(8, 8), (7, 8), 3], [(8, 8), (7, 7), 3], [(8, 8), (7, 9), 3]]
+        
+        #LLamo a la funcion con los imputs declarados y obtengo el resultado
+        moves_result   = analisis_ia(moves ,moves_enemy ,Game_test)
+
+        #Comparacion entre resultado esperado y obtenido
+        self.assertEqual(moves_result ,moves_expected)
+    
+
+
     # v) Avance de peones blancos
     def test_peon_avance_blanco(self):
         #Declaro todos los datos de entrada a la funcion a testear
