@@ -8,20 +8,27 @@ row_clean_capture_black = {0:9 ,1:9 ,2:9    ,3:6 ,4:6 ,5:5 ,6:4 ,7:7 ,8:7 ,9:3 ,
 valores_rival = {"h":5 ,"b":6 ,"r":7 ,"q":8 ,"k":9,           #Los valores de "p" y "P" los asignamos con el diccionario "valor_peon"
                  "H":5 ,"B":6 ,"R":7 ,"Q":8 ,"K":9}    
 
-valores_mios  = {"p":1 ,"q":3 ,"b":5 ,"h":4 ,"r":6 ,"k":9,    #Los valores de "p" y "P" los asignamos con el diccionario "valor_peon"
-                 "P":1 ,"Q":3 ,"B":5 ,"H":4 ,"R":6 ,"K":9}  
-
-valor_reina   = {}
-
+valores_mios  = {"p":1 ,"q":7 ,"b":5 ,"h":3 ,"r":7 ,"k":9,    #Los valores de "p" y "P" los asignamos con el diccionario "valor_peon"
+                 "P":1 ,"Q":7 ,"B":5 ,"H":3 ,"R":7 ,"K":9}  
+#ANTES DE TOQUETEAR, LAS REINAS ESTABAN VALIENDO 3
 
 piece_number={"P":0 ,"H":1 ,"B":2 ,"R":3 ,"K":4 ,"Q":5,       #Relacion entre int y string
               "p":0 ,"h":1 ,"b":2 ,"r":3 ,"k":4 ,"q":5}
+
+valor_reina = {6:5}
 
 
 
 #A los peones les incremento el valor respecto a que tan cerca de coronar estan
 valor_peon = {13:0 ,12:1 ,11:2 ,10:3 ,9:4 ,8:5,         #row=8 ----> Coronacion (los peones nunca van a valer 5, porque en 5 coronan y como reinas valen 8)
               2: 0 ,3: 1 ,4: 2 ,5: 3 ,6:4 ,7:5}         #row=7 ----> Coronacion
+
+def queen_value(queens_quantity):
+    valor = 8 - queens_quantity
+    if valor <= 0:
+        valor = 2
+    valores_mios["q"] = valor
+    valores_mios["Q"] = valor
 
 
 #-----------------------------------------------------------------------Funciones--------------------------------------------------------------------------------
@@ -70,7 +77,7 @@ def extra_capturas_limpias   (lista_capturas_rival, lista_capturas_limpias):
 '''
 
 
-def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_strategy ,valor_row_strategy, moves_analysis):
+def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_strategy ,valor_row_strategy  ,moves_analysis):
     tipo = 1                                        #Voy a analizar mis movimientos a espacios vacios (retirada)
     
     for move_capture in lista_capturas_rival:       #Con el movimiento de captura del rival, busco mi pieza y los movimientos posibles de ella
@@ -90,7 +97,7 @@ def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_s
                     move_save = [start_sq ,end_sq ,movement[2]]
                     moves_analysis.append(move_save)
 
-                if  0 < piece_int < 5 and (board_eventos[end_row][end_col]==" " or board_eventos[end_row][end_col]=="+"):
+                if  2 < piece_int < 5 and (board_eventos[end_row][end_col]==" " or board_eventos[end_row][end_col]=="+"):
                     movement[2] = movement[2] + valores_mios[move_capture[3][1]]
                     move_save = [start_sq ,end_sq ,movement[2]]
                     moves_analysis.append(move_save)
@@ -105,7 +112,7 @@ def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_s
                     if quantity != None:
                         quantity = quantity -move_in_same_row
                     
-                    if (board_eventos[end_sq[0]][end_sq[1]] == "+" or board_eventos[end_sq[0]][end_sq[1]] == " ") and  quantity == 0:         
+                    if (board_eventos[end_sq[0]][end_sq[1]] == "+" or board_eventos[end_sq[0]][end_sq[1]] == " ") and  quantity == 0:    
                         movement[2] = valor_row_strategy[end_row] 
                         move_save = [start_sq ,end_sq ,movement[2]]
                         repeated = moves_analysis.count(move_save)
@@ -123,12 +130,17 @@ def capturas_rival_contraataque(lista_capturas_rival, lista_capturas_sucias, mov
             if start_sq == movement[0]:
                 end_sq = movement[1]
                 
+                if movement[3][0] == "q" or movement[3][0] == "Q":
+                    pass
+                    #verificar si la row en la que me encuentro es estrategica
+                    #verificar si h
+
                 if movement[3][1] == "p" or movement[3][1] == "P":
                     movement[2] = valor_peon[end_sq[0]] - valores_mios[movement[3][0]]
                 else:
                     movement[2] = valores_rival[movement[3][1]] - valores_mios[movement[3][0]]
 
-                if movement[2] > 0:
+                if movement[2] >= 0:
                     move_save = [start_sq ,end_sq ,movement[2]]
                     repeated = moves_analysis.count(move_save)
 
@@ -199,6 +211,53 @@ def queen_infiltrated(lista_capturas_sucias ,retaguardia_rival ,moves_analysis, 
     return moves_analysis
 
 
+def opening_white(moves ,row_strategy ,modifier):
+    moves_selected = []
+    for movement in moves:
+        col     = movement[0][1]
+        end_row = movement[1][0]
+    
+        if   col == 6 + modifier:
+            movement[2] = 2 + (10 - abs(row_strategy["upgrade_mia"] - end_row)) * 10
+            moves_selected.append(movement)
+
+        elif col == 7 - modifier:
+            movement[2] = 1 + (10 - abs(row_strategy["upgrade_mia"] - end_row)) * 10
+            moves_selected.append(movement)
+
+    return moves_selected
+
+def opening_black_complex (moves ,move_opening):
+    moves_selected = []
+    print("MOVE:",move_opening[0])
+    for movement in moves:
+        end_sq = movement[1]
+        
+        if len(move_opening) > 0   and  end_sq == move_opening[0]:
+            moves_selected.append(movement)
+            move_opening.pop(0)
+
+            return moves_selected
+    
+    return moves_selected
+    
+
+
+def opening_selector(board):
+    if board[10][6]   != " ":
+        selector = 0
+        print("apertura negra complicada")
+        return selector
+    elif board[10][5] != " ":
+        selector = 1
+        print("apertura blanca modificada")
+        return selector
+    else:
+        selector = 2
+        print("apertura blanca sin modificar")
+        return selector
+
+
 
 def peon_avance (moves, Game ,board_eventos):
     moves_selected = []
@@ -233,10 +292,12 @@ def peon_avance (moves, Game ,board_eventos):
             moves_selected.append(movement)
             continue   
 
-        #if col == 5 or col == 6:
-        #    movement[2] = movement[2] + 
+        #--------------------NEW---------------------------------
+        if (col == 6 or col == 7):
+            movement[2] = movement[2] + 2000
+        #--------------------NEW---------------------------------
 
-        if not Game.color and Game.first_move:
+        if not Game.color and Game.flag_first_move:
             for c in range(16):
                 if Game.board[Game.row_strategy["peones_rival"]][c] != " ":
                     col_safe = 15 - c 
@@ -244,43 +305,32 @@ def peon_avance (moves, Game ,board_eventos):
                     if col == col_safe and x > 1:
                         movement[2] = movement[2] + 1000
                         Game.first_move = False
-                
 
         rows_to_upgrade = abs(Game.row_strategy["upgrade_mia"] - end_row)       #valoracion entre camino con "-" y camino con "+"
         movement[2] = movement[2] + upgrade_in[rows_to_upgrade]
         
         if Game.color:
             for i in range(16):     
-                
                 if Game.board[end_row - i][col] != " ":                 #Si hay casilleros ocupados por otras piezas delante del peon, no es bueno moverse en esta columna
                     movement[2] = movement[2] - 10000
-
                 if board_eventos[end_row - i][col] == "-":
                     movement[2] = movement[2] - 1000
-
                 if board_eventos[end_row - i][col] == "+":
                     movement[2] = movement [2] + 10
-
                 if board_eventos[end_row - i][col] == "#":
                     movement[2] = movement [2] + 1
-                
                 if end_row - i == Game.row_strategy["upgrade_mia"]:     #si por ultimo evalue la fila de upgrade, terminar la iteracion
                     break
         else:
             for i in range(16):     
-                
                 if Game.board[end_row + i][col] != " ":                 #Si hay casilleros ocupados por otras piezas delante del peon, no es bueno moverse en esta columna
                     movement[2] = movement[2] - 10000
-
                 if board_eventos[end_row + i][col] == "-":
                     movement[2] = movement[2] - 1000
-
                 if board_eventos[end_row + i][col] == "+":
                     movement[2] = movement [2] + 10
-
                 if board_eventos[end_row + i][col] == "#":
                     movement[2] = movement [2] + 1
-                
                 if end_row + i == Game.row_strategy["upgrade_mia"]:     #si por ultimo evalue la fila de upgrade, terminar la iteracion
                     break
             
@@ -325,3 +375,4 @@ def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_s
 
     return moves_analysis
 '''
+
