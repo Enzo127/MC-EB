@@ -15,10 +15,6 @@ valores_mios  = {"p":1 ,"q":7 ,"b":5 ,"h":3 ,"r":7 ,"k":9,    #Los valores de "p
 piece_number={"P":0 ,"H":1 ,"B":2 ,"R":3 ,"K":4 ,"Q":5,       #Relacion entre int y string
               "p":0 ,"h":1 ,"b":2 ,"r":3 ,"k":4 ,"q":5}
 
-valor_reina = {6:5}
-
-
-
 #A los peones les incremento el valor respecto a que tan cerca de coronar estan
 valor_peon = {13:0 ,12:1 ,11:2 ,10:3 ,9:4 ,8:5,         #row=8 ----> Coronacion (los peones nunca van a valer 5, porque en 5 coronan y como reinas valen 8)
               2: 0 ,3: 1 ,4: 2 ,5: 3 ,6:4 ,7:5}         #row=7 ----> Coronacion
@@ -51,30 +47,6 @@ def capturas_limpias(lista_capturas_limpias):
             movement[2] = movement[2] + valores_rival[piece_rival] + (10-valores_mios[piece_mine])     #Las demas piezas tienen valores fijos
 
     return lista_capturas_limpias
-
-
-'''
-#Analizo si hay una pieza enemiga atacando a mi pieza que dispone de una captura limpia y si ocurre, añado (+1) (añade +1 por CADA pieza rival que la ataque)
-def extra_capturas_limpias   (lista_capturas_rival, lista_capturas_limpias):   
-                                                                
-    for move_selected in lista_capturas_limpias:            
-        start_sq_mine = move_selected[0]     #tuple con sq inicial
-        end_sq_mine   = move_selected[1]
-
-        for movement in lista_capturas_rival:
-            start_sq_rival = movement[0]
-            end_sq_rival   = movement[1]
-
-            if start_sq_mine == end_sq_rival and end_sq_mine  ==  start_sq_rival:   #Si mi captura limpia tiene como objetivo una pieza rival que me esta atacando ------> +10 de valor agregado
-                move_selected[2] = move_selected[2] + 2000 
-
-            elif start_sq_mine == end_sq_rival:               #Si el start_sq de mi pieza == al end_sq de una captura rival, entonces me conviene moverme con esta pieza para que no me capture
-                move_selected[2] = move_selected[2] + 1000     #Condicion valida -----> +1 de valor agregado
-
-
-
-    return lista_capturas_limpias
-'''
 
 
 def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_strategy ,valor_row_strategy  ,moves_analysis):
@@ -160,7 +132,6 @@ def move_strategic(moves ,board_eventos ,data_row_upgrade ,qq_row_strategy ,valo
         end_col   = end_sq[1]
 
         result = qq_row_strategy.get(end_row)
-        #if result is None or result >= 1:
         if result is None:
             continue
 
@@ -337,42 +308,4 @@ def peon_avance (moves, Game ,board_eventos):
         moves_selected.append(movement)
                        
     return moves_selected
-
-
-
-'''
-def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_strategy ,valor_row_strategy, moves_analysis):
-    tipo = 1                                        #Voy a analizar mis movimientos a espacios vacios (retirada)
-    
-    for move_capture in lista_capturas_rival:       #Con el movimiento de captura del rival, busco mi pieza y los movimientos posibles de ella
-        piece = piece_number[move_capture[3][1]]    #move_capture[3][1] es el string identificador de la pieza que me puede comer
-        if piece ==5:                               #las retiradas solo las analizo para reinas
-            start_sq = move_capture[1]
-            for movement in moves[piece][tipo]:
-                if start_sq == movement[0]:
-                    end_sq = movement[1]
-                    end_row = end_sq[0]
-
-                    if start_sq[0] == end_row:      #Consulto si la pieza quedaria en la misma fila (importante para elegir la fila estrategica de retirada)
-                        move_in_same_row = 1
-                    else:
-                        move_in_same_row = 0
-
-                    quantity = qq_row_strategy.get(end_row)         #Verifico que end_row esta dentro de las row_stretegy y que no haya mas de una reina propia en esa fila   
-                    if quantity != None:
-                        quantity = quantity -move_in_same_row
-                    
-                    if (board_eventos[end_sq[0]][end_sq[1]] == "+" or board_eventos[end_sq[0]][end_sq[1]] == " ") and  quantity == 0:
-                        
-                        movement[2] = valor_row_strategy[end_row] 
-                        
-                        move_save = [start_sq ,end_sq ,movement[2]]
-                        repeated = moves_analysis.count(move_save)
-
-                        if movement[2] > 0 and repeated == 0:
-                            
-                            moves_analysis.append(move_save)
-
-    return moves_analysis
-'''
 

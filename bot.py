@@ -1,5 +1,5 @@
 '''
-Es el vinculo entre el cliente, el objeto y la ia:
+Es el esqueleto de la logica, hace de vinculo entre el cliente, el objeto y la ia:
 
 _Busca o crea un objeto Game para cada juego en ejecucion
 _Pide al objeto correspondiente toda la data necesaria para la eleccion del mejor movimiento en el turno actual
@@ -21,22 +21,17 @@ def bot_work(datos_partida):
     if juego_actual is None:    
         juego_actual = crear_juego(datos_partida["board_id"], datos_partida["actual_turn"])     #Para crear una partida necesito el board_id y el color con el que voy a jugar
         
-    #Esto solo se ejecuta cuando estoy jugando contra mi mismo
+
+    #2) Verifico si estoy jugando contra mi mismo
     #Tengo un solo objeto creado por partida y varios atributos dependen del color, por lo que al jugar contra mi mismo, debo reescribir los atributos que dependen del color
     if datos_partida["username"] == datos_partida ["opponent_username"]:   
         restart_atributes(datos_partida["actual_turn"] ,juego_actual)
 
 
-    #2)actualizar el tablero
-    juego_actual.actualizar(datos_partida["board"])
-
-    #3)actualizar cantidad de reinas en filas estrategicas
+    #3)actualizar el tablero y cantidad de reinas en filas estrategicas
+    juego_actual.actualizar(datos_partida["board"]) 
     juego_actual.queens_in_row_strategy()
 
-    if len(juegos_ejecutandose) ==1:
-        for line in juego_actual.board:
-            print(line)
-    
 
     #4)Obtencion de movimientos propios y del rival
     moves       = []                                               #Reseteo las listas con los posibles movimientos mios y del rival
@@ -48,9 +43,11 @@ def bot_work(datos_partida):
     change=1                                                       #Obtengo una lista con todos los movimientos validos posibles del rival
     moves_enemy = juego_actual.get_all_possible_moves(change)      #change=1 ----> Me devuelve una lista con los movimientos validos posibles del rival (para el estado actual del tablero)
     
+
     #5)Calificar los movimientos obtenidos
     moves_analized = analisis_ia(moves, moves_enemy, juego_actual)     #Asigno un valor a cada movimiento
     juego_actual.queens_quantity = 0                                             #reseteo el nro de reinas luego de evaluar los movimientos
+    
     
     #6)Obtencion del mejor movimiento respecto a la calificacion otorgada 
     return comparacion(moves_analized)

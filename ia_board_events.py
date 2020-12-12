@@ -137,9 +137,6 @@ def move_with_capture_enemy(moves_enemy, board_event):
             if board_event[end[0]][end[1]] == "&":  
                 board_event[end[0]][end[1]] = "&"    
 
-            #if board_event[end[0]][end[1]] == "+":                           
-            #    board_event[end[0]][end[1]] = "!"         #esto nunca va a ocurrir, voy a tener que analizar % sacando la pieza, si otra pieza mia cubre ese lugar con +, entonces evoluciono a !
-
             if board_event[end[0]][end[1]] == " ":                          
                 board_event[end[0]][end[1]] = "&"
 
