@@ -347,7 +347,208 @@ class test_ia_planificador(unittest.TestCase):
         self.assertEqual(moves_result ,moves_expected)
     
 
+    # v) Apertura de peones blanca
+    def test_peon_apertura_blanca(self):
+        #Declaro todos los datos de entrada a la funcion a testear
+        Game_test = tablero.Game(True)         #color  (True = white) (False = black)
+        Game_test.board = [                    #Necesito un board distinto para cada test
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],#La apertura mas fuerte de las blancas es empujar rapido los peones de la columna 6 y 7
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],#y liberar las reinas que estan detras
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
 
+        Game_test.flag_apertura = True     #Escenario en el que ya hice los movimientos de apertura
+
+        change=0                                                       
+        moves       = Game_test.get_all_possible_moves(change)              
+        change=1                                                       
+        moves_enemy = Game_test.get_all_possible_moves(change) 
+
+        #Declaro el resultado esperado
+        moves_expected = [[(12, 6), (11, 6), 72], [(12, 6), (10, 6), 82], [(12, 7), (11, 7), 71], [(12, 7), (10, 7), 81]]
+
+        #LLamo a la funcion con los imputs declarados y obtengo el resultado
+        moves_result   = analisis_ia(moves ,moves_enemy ,Game_test)
+
+        #Comparacion entre resultado esperado y obtenido
+        self.assertEqual(moves_result ,moves_expected)
+
+
+    # v) Apertura numero 1 de negras (Game.strategy = 2)
+    def test_peon_apertura_negra_1(self):
+        #Declaro todos los datos de entrada a la funcion a testear
+        Game_test = tablero.Game(False)         #color  (True = white) (False = black)
+        Game_test.board = [                    #Necesito un board distinto para cada test
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],#El rival negro inicio con una mala apertura, yo como jugador negro aprovecho y empujo los
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],#peones de la columna 6 y 7
+            [' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
+
+        Game_test.flag_apertura    = True     #Escenario en el que ya hice los movimientos de apertura
+        Game_test.flag_first_move  = True
+
+        change=0                                                       
+        moves       = Game_test.get_all_possible_moves(change)              
+        change=1                                                       
+        moves_enemy = Game_test.get_all_possible_moves(change) 
+
+        #Declaro el resultado esperado
+        moves_expected = [[(3, 6), (4, 6), 72], [(3, 6), (5, 6), 82], [(3, 7), (4, 7), 71], [(3, 7), (5, 7), 81]]
+        
+        moves_result   = analisis_ia(moves ,moves_enemy ,Game_test) #LLamo a la funcion con los imputs declarados y obtengo el resultado
+        self.assertEqual(moves_result ,moves_expected)              #Comparacion entre resultado esperado y obtenido
+
+
+    # v) Apertura numero 2 de negras (Game.strategy = 1)
+    def test_peon_apertura_negra_2(self):
+        #Declaro todos los datos de entrada a la funcion a testear
+        Game_test = tablero.Game(False)         #color  (True = white) (False = black)
+        Game_test.board = [                    #Necesito un board distinto para cada test
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', 'P', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '], #Esta es una variacion de la apertura blanca fuerte, pero liberando las reinas de la retaguardia
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '], #por la columna 5 y 6, en vez de por la 6 y 7...como negro, respondo moviendo primero el peon
+            ['P', 'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'], #mas cercano de la columna 7 y despues de la columna 6
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
+
+        Game_test.flag_apertura    = True     #Escenario en el que ya hice los movimientos de apertura
+        Game_test.flag_first_move  = True
+
+        change=0                                                       
+        moves       = Game_test.get_all_possible_moves(change)              
+        change=1                                                       
+        moves_enemy = Game_test.get_all_possible_moves(change) 
+
+        #Declaro el resultado esperado
+        moves_expected = [[(3, 6), (4, 6), 71], [(3, 6), (5, 6), 81], [(3, 7), (4, 7), 72], [(3, 7), (5, 7), 82]]
+        
+        #LLamo a la funcion con los imputs declarados y obtengo el resultado
+        moves_result   = analisis_ia(moves ,moves_enemy ,Game_test)
+
+        #Comparacion entre resultado esperado y obtenido
+        self.assertEqual(moves_result ,moves_expected)
+
+    
+    # v) Apertura numero 3 de negras (Game.strategy = 0)
+    def test_peon_apertura_negra_3(self):
+        #Declaro todos los datos de entrada a la funcion a testear
+        Game_test = tablero.Game(False)         #color  (True = white) (False = black)
+        Game_test.board = [                    #Necesito un board distinto para cada test
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', 'P', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
+
+        Game_test.flag_apertura    = True     #Escenario en el que ya hice los movimientos de apertura
+        Game_test.flag_first_move  = True
+        test_move_opening          = [(5,5) ,(5,6) ,(6,6) ,(5,7) ,(6,7) ,(5,8) ,(4,6) ,(5,6) ,(4,7) ,(5,7) ,(6,5) ,(6,8)]  #Primeros 12 mejores movimientos para la estrategia 2
+
+        self.assertEqual(Game_test.move_opening ,test_move_opening)
+
+        change=0                                                       
+        moves       = Game_test.get_all_possible_moves(change)              
+        change=1                                                       
+        moves_enemy = Game_test.get_all_possible_moves(change) 
+
+        #Declaro el resultado esperado
+        moves_expected = [[(3, 5), (5, 5), 0]]
+        
+        #LLamo a la funcion con los imputs declarados y obtengo el resultado
+        moves_result   = analisis_ia(moves ,moves_enemy ,Game_test)
+
+        #Comparacion entre resultado esperado y obtenido
+        self.assertEqual(moves_result ,moves_expected)
+        test_move_opening.pop(0)
+        self.assertEqual(Game_test.move_opening ,test_move_opening)
+
+
+    # v) Apertura numero 3 de negras terminada (ya hice todos los movimientos posibles o el rival rompio mi estrategia) y debo continuar con el movimiento de peones normal
+    def test_peon_apertura_negra_3_broke(self):
+        #Declaro todos los datos de entrada a la funcion a testear
+        Game_test = tablero.Game(False)         #color  (True = white) (False = black)
+        Game_test.board = [                    #Necesito un board distinto para cada test
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['p', 'p', 'p', 'p', 'p', ' ', ' ', ' ', ' ', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', 'p', ' ', 'q', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', 'p', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', ' ', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
+            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
+
+        Game_test.flag_apertura    = True     #Escenario en el que ya hice los movimientos de apertura
+        Game_test.flag_first_move  = False
+        Game_test.strategy         = 0
+
+        change=0                                                       
+        moves       = Game_test.get_all_possible_moves(change)              
+        change=1                                                       
+        moves_enemy = Game_test.get_all_possible_moves(change) 
+
+        #Declaro el resultado esperado
+        moves_expected = [[(2, 5), (3, 5), -9870], [(2, 5), (4, 5), -9780], [(2, 6), (3, 6), -7870], [(2, 6), (4, 6), -7780], [(2, 7), (3, 7), -7860], [(2, 7), (4, 7), -7770], [(2, 8), (3, 8), 140], [(2, 8), (4, 8), 230], [(3, 0), (4, 0), 210], [(3, 0), (5, 0), 300], [(3, 1), (4, 1), 210], [(3, 1), (5, 1), 300], [(3, 2), (4, 2), 210], [(3, 2), (5, 2), 300], [(3, 3), (4, 3), 210], [(3, 3), (5, 3), 300], [(3, 4), (4, 4), 220], [(3, 4), (5, 4), 310], [(3, 9), (4, 9), 230], [(3, 9), (5, 9), 320], [(3, 10), (4, 10), 220], [(3, 10), (5, 10), 310], [(3, 11), (4, 11), 220], [(3, 11), (5, 11), 310], [(3, 12), (4, 12), 220], [(3, 12), (5, 12), 310], [(3, 13), (4, 13), 220], [(3, 13), (5, 13), 310], [(3, 14), (4, 14), 220], [(3, 14), (5, 14), 310], [(3, 15), (4, 15), 220], [(3, 15), (5, 15), 310], [(5, 5), (6, 5), 410], [(6, 6), (7, 6), 3000]]
+        
+        #LLamo a la funcion con los imputs declarados y obtengo el resultado
+        moves_result   = analisis_ia(moves ,moves_enemy ,Game_test)
+
+        #Comparacion entre resultado esperado y obtenido
+        self.assertEqual(moves_result ,moves_expected)
+        self.assertEqual(Game_test.flag_apertura ,False)  #Habia empezado en True, pero al ver que no podia seguir con la apertura, la logica lo cambia a False y continua 
+                                                          #con el movimiento de peones de la funcion "peon_avance"
     # v) Avance de peones blancos
     def test_peon_avance_blanco(self):
         #Declaro todos los datos de entrada a la funcion a testear
@@ -462,41 +663,3 @@ class test_ia_planificador(unittest.TestCase):
         #Comparacion entre resultado esperado y obtenido
         self.assertEqual(moves_result ,moves_expected)
 
-    '''
-    # v) Primer turno como negro (respondo en la columna totalmente opuesta a la que se mueva el blanco) (solo si el rival empezo moviendose 2 casilleros)
-    def test_first_move_black(self):
-        #Declaro todos los datos de entrada a la funcion a testear
-        Game_test = tablero.Game(False)         #color  (True = white) (False = black)
-        Game_test.board = [                    #Necesito un board distinto para cada test
-            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
-            ['r', 'r', 'h', 'h', 'b', 'b', 'q', 'q', 'k', 'k', 'b', 'b', 'h', 'h', 'r', 'r'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', 'P', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-            ['P', 'P', 'P', 'P', 'P', 'P', ' ', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R'],
-            ['R', 'R', 'H', 'H', 'B', 'B', 'Q', 'Q', 'K', 'K', 'B', 'B', 'H', 'H', 'R', 'R']]
-       
-        
-        change=0                                                       
-        moves       = Game_test.get_all_possible_moves(change)              
-        change=1                                                       
-        moves_enemy = Game_test.get_all_possible_moves(change) 
-
-        #Declaro el resultado esperado
-        moves_expected = [[(3, 0), (4, 0), 210], [(3, 0), (5, 0), 300], [(3, 1), (4, 1), 210], [(3, 1), (5, 1), 300], [(3, 2), (4, 2), 210], [(3, 2), (5, 2), 300], [(3, 3), (4, 3), 210], [(3, 3), (5, 3), 300], [(3, 4), (4, 4), 210], [(3, 4), (5, 4), 300], [(3, 5), (4, 5), 210], [(3, 5), (5, 5), 300], [(3, 6), (4, 6), 210], [(3, 6), (5, 6), 300], [(3, 7), (4, 7), 210], [(3, 7), (5, 7), 300], [(3, 8), (4, 8), 210], [(3, 8), (5, 8), 300], [(3, 9), (4, 9), 210], [(3, 9), (5, 9), 1300], [(3, 10), (4, 10), 210], [(3, 10), (5, 10), 300], [(3, 11), (4, 11), 210], [(3, 11), (5, 11), 300], [(3, 12), (4, 12), 210], [(3, 12), (5, 12), 300], [(3, 13), (4, 13), 210], [(3, 13), (5, 13), 300], [(3, 14), (4, 14), 210], [(3, 14), (5, 14), 300], [(3, 15), (4, 15), 210], [(3, 15), (5, 15), 300]]
-        
-        #LLamo a la funcion con los imputs declarados y obtengo el resultado
-        moves_result   = analisis_ia(moves ,moves_enemy ,Game_test)
-
-        #Comparacion entre resultado esperado y obtenido
-        self.assertEqual(moves_result ,moves_expected)
-    '''

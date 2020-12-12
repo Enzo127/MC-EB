@@ -90,14 +90,14 @@ def analisis_ia(moves, moves_enemy, Game):
         if moves_analysis != []:
             return moves_analysis
     
+
+
     # v) Avance de peones                         #Si todas las condiciones superiores no se cumplen ---> Mover peones
     if moves_analysis == [] and lista_capturas_limpias == []:
         #Analisis de apertura
-
         #Analisis de apertura blanco  ------> Hay una apertura que es la mas eficiente de todas y las blancas parten con la ventaja de poder desarrollarla primero
         if Game.flag_apertura and Game.color:
             moves_analysis = ia_calificador.opening_white (moves[0][1], Game.row_strategy ,0)
-
 
         #Analsis de apertura negro    ------> Busco la mejor respuesta al 1er movimiento blanco para poder conquistar el centro lo mas rapido posible
         elif Game.flag_apertura and not Game.color:

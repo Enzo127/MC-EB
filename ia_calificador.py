@@ -199,7 +199,6 @@ def opening_white(moves ,row_strategy ,modifier):
 
 def opening_black_complex (moves ,move_opening):
     moves_selected = []
-    print("MOVE:",move_opening[0])
     for movement in moves:
         end_sq = movement[1]
         
@@ -298,25 +297,3 @@ def peon_avance (moves, Game ,board_eventos):
                        
     return moves_selected
 
-'''
-def queen_infiltrated(lista_capturas_sucias ,retaguardia_rival ,moves_analysis, infiltracion):   #Si infiltracion=True, consulto solo por reinas infiltradas, si es False, consulto por reinas que se puedan infiltrar
-    x = 1
-
-    for movement in lista_capturas_sucias:
-        start_sq = movement[0]
-        end_sq   = movement[1]
-
-        start_row = movement[0][0]
-        end_row   = movement[1][0]
-
-        if infiltracion:
-            x = retaguardia_rival.count(start_row)
-        y = retaguardia_rival.count(end_row)
-
-        if x!=0 and y!=0:
-            movement[2] = valores_rival[movement[3][1]]
-            move_save = [start_sq ,end_sq ,movement[2]]
-            moves_analysis.append(move_save)
-
-    return moves_analysis
-'''
