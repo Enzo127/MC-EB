@@ -59,11 +59,12 @@ class Game():
     [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "],
     [" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "]]
     
-    queens_quantity = 0            #SE USA EN ALGUN LADO?
+    queens_quantity = 0            #Sirve para determinar el valor de las reinas mias
     
     flag_apertura      = True      #Identifican si el objeto game se encuentra en los movimientos iniciales de apertura (se usa en ia_planificador)
     flag_first_move    = True
     
+
 
     #actualizar con el estado actual del tablero
     def actualizar (self, refresh):                     
