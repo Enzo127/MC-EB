@@ -49,6 +49,7 @@ def capturas_limpias(lista_capturas_limpias):
 
     return lista_capturas_limpias
 
+#Si tengo una pieza bajo ataque y esa pieza se puede mover a un casillero sin eventos peligrosos, se mueve esquivando el ataque
 #La retirada esta habilitada para todas las piezas excepto el caballo y alfil (piece=1 and piece=2)
 def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_strategy ,valor_row_strategy  ,moves_analysis):
     tipo = 1                                        #Voy a analizar mis movimientos a espacios vacios (retirada)
@@ -64,16 +65,17 @@ def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_s
                 end_row = end_sq[0]
                 end_col = end_sq[1]
 
+                #Peones
                 if piece_int == 0 and ((start_row>4 and piece_str.islower()) or (start_row<11 and piece_str.isupper())) and (board_eventos[end_row][end_col]==" " or board_eventos[end_row][end_col]=="+") :
                     movement[2] = movement[2] + valor_peon[end_row]
                     move_save = [start_sq ,end_sq ,movement[2]]
                     moves_analysis.append(move_save)
-
+                #Torres y reyes 
                 if  2 < piece_int < 5 and (board_eventos[end_row][end_col]==" " or board_eventos[end_row][end_col]=="+"):
                     movement[2] = movement[2] + valores_mios[move_capture[3][1]]
                     move_save = [start_sq ,end_sq ,movement[2]]
                     moves_analysis.append(move_save)
-                
+                #Reinas
                 if piece_int ==5:                   #Logica de reinas
                     if start_sq[0] == end_row:      #Consulto si la pieza quedaria en la misma fila (importante para elegir la fila estrategica de retirada)
                         move_in_same_row = 1
@@ -92,7 +94,7 @@ def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_s
                             moves_analysis.append(move_save)
     return moves_analysis
 
-
+#El rival me puede capturar una pieza, respondo contraatacando(y me expongo a que me recapturar) solo si el valor de mi pieza es menor que el de la pieza rival
 def capturas_rival_contraataque(lista_capturas_rival, lista_capturas_sucias, moves_analysis):
     for move_capture in lista_capturas_rival:
         start_sq = move_capture[1]
@@ -113,6 +115,7 @@ def capturas_rival_contraataque(lista_capturas_rival, lista_capturas_sucias, mov
                         moves_analysis.append(move_save)
     return moves_analysis
 
+#Muevo las reinas de mi casilla de upgrade o de la retaguardia a filas estrategicas en las que apliquen mayor presion
 def move_strategic(moves ,board_eventos ,data_row_upgrade ,qq_row_strategy ,valor_row_strategy ,row_strategy ,retaguardia_mia ,moves_analysis):
     for movement in moves:
         start_sq  = movement[0]
@@ -149,15 +152,15 @@ def move_strategic(moves ,board_eventos ,data_row_upgrade ,qq_row_strategy ,valo
 
     return moves_analysis
 
-
-def queen_infiltrated(lista_capturas_sucias ,retaguardia_rival ,moves_analysis):   
+#Tengo una pieza en la retaguardia rival, añado el valor de la pieza rival a cada movimiento
+def piece_infiltrated(lista_capturas_sucias ,retaguardia_rival ,moves_analysis):   
     for movement in lista_capturas_sucias:
         start_sq = movement[0]
         end_sq   = movement[1]
         start_row = movement[0][0]
         end_row   = movement[1][0]
 
-        x = retaguardia_rival.count(start_row)
+        x = retaguardia_rival.count(start_row)      #solo para start_row y end_row que se ubican ambas en la retaguardia rival
         y = retaguardia_rival.count(end_row)
 
         if x!=0 and y!=0:
@@ -166,7 +169,7 @@ def queen_infiltrated(lista_capturas_sucias ,retaguardia_rival ,moves_analysis):
             moves_analysis.append(move_save)
     return moves_analysis
 
-
+#Priprizo las columnas 6 y 7, para asi liberar las reinas de la retaguardia
 def opening_white(moves ,row_strategy ,modifier): #Con modifier establezco que columna tiene mas prioridad entre la 6 y la 7
     moves_selected = []
     for movement in moves:
