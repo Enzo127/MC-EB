@@ -38,8 +38,6 @@ def analisis_ia(moves, moves_enemy, Game):
 #----------------------------------------------------------(2) Calificador de movimientos------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
     #Los siguientes eventos estan ordenados por prioridad y el que ocurra primero es el que responde
-
-
     ia_calificador.queen_value(Game.queens_quantity)    #Actualizo el valor de mis reinas, dependiendo de la cantidad que disponga (mientras mayor cantidad, menos valor)
     moves_analysis = []
     # i) Capturas limpias                          ($)  #Las capturas limpias tienen maxima prioridad (capturas sin que me puedan recapturar)
@@ -56,7 +54,7 @@ def analisis_ia(moves, moves_enemy, Game):
     # ii) Pieza infiltrada al ataque               (?) 
     #Tengo una pieza en la retaguardia rival con capturas sucias (es bueno que coma, porque las piezas en la retaguardia suelen ser valiosas)
     if lista_capturas_sucias != []:
-        moves_analysis = ia_calificador.queen_infiltrated(lista_capturas_sucias ,Game.retaguardia_rival ,moves_analysis)
+        moves_analysis = ia_calificador.piece_infiltrated(lista_capturas_sucias ,Game.retaguardia_rival ,moves_analysis)
         if moves_analysis != []:
             return moves_analysis
 
@@ -64,14 +62,12 @@ def analisis_ia(moves, moves_enemy, Game):
     # iii) Capturas rival                         (&)    
     if lista_capturas_rival != []:
         #a) Respuesta coontraatacando (apto para todas las piezas) (esta es una captura sucia, en la que expongo a mi pieza a ser recapturada)
-        print("respondo contraatacando")
         moves_analysis = ia_calificador.capturas_rival_contraataque (lista_capturas_rival, lista_capturas_sucias ,moves_analysis)
         if moves_analysis != []:
             return moves_analysis
 
 
         #b) Respuesta moviendose a row estrategica (solo apto para reinas) (modificado para todas las piezas)
-        print("respondo con retirada")
         moves_analysis = ia_calificador.capturas_rival_retirada    (lista_capturas_rival, moves, board_eventos ,Game.qq_row_strategy ,Game.valor_row_strategy ,moves_analysis)
         if moves_analysis != []:
             return moves_analysis
@@ -85,13 +81,12 @@ def analisis_ia(moves, moves_enemy, Game):
     if Game.queens_quantity >= 2 or queens_in_row_upgrade_mia >= 1:  #Solo los considero si tengo cierta cantidad de reinas y si alguna se encuentra en mi fila de upgrade
         piece = 5   #reina
         tipo  = 1   #movimiento a espacio libre
-        moves_analysis = ia_calificador.move_strategic(moves[piece][tipo] ,board_eventos ,data_row_upgrade ,Game.qq_row_strategy ,Game.valor_row_strategy ,Game.row_strategy ,Game.retaguardia_mia ,moves_analysis) #----------->EN VEZ DE PASAR TODOS LOS MOVES, PODRIAS PASAR moves[5][1]
+        moves_analysis = ia_calificador.move_strategic(moves[piece][tipo] ,board_eventos ,data_row_upgrade ,Game.qq_row_strategy ,Game.valor_row_strategy ,Game.row_strategy ,Game.retaguardia_mia ,moves_analysis)
 
         if moves_analysis != []:
             return moves_analysis
     
-
-
+    
     # v) Avance de peones                         #Si todas las condiciones superiores no se cumplen ---> Mover peones
     if moves_analysis == [] and lista_capturas_limpias == []:
         #Analisis de apertura
