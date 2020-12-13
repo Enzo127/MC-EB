@@ -2,10 +2,11 @@
 [![Build Status](https://travis-ci.com/Enzo127/MC-EB.svg?token=Nx3isxfu7pDpvqBeY9pq&branch=main)](https://travis-ci.com/Enzo127/MC-EB) [![Coverage Status](https://coveralls.io/repos/github/Enzo127/MC-EB/badge.svg?branch=main&service=github)](https://coveralls.io/github/Enzo127/MC-EB?branch=main)
 
 ## Languages and Utilities:
+<img align="left" alt="Python 3" width="26px" src="https://user-images.githubusercontent.com/66569117/102001075-8a868a00-3ccc-11eb-8e1e-4b48be386518.png" />
 <img align="left" alt="Visual Studio Code" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/visual-studio-code/visual-studio-code.png" />
 <img align="left" alt="Git" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/git/git.png" />
 <img align="left" alt="GitHub" width="26px" src="https://raw.githubusercontent.com/github/explore/78df643247d429f6cc873026c0622819ad797942/topics/github/github.png" /> 
-<img src="https://user-images.githubusercontent.com/66569117/102001075-8a868a00-3ccc-11eb-8e1e-4b48be386518.png" width="15%"></img> 
+
 <br />
 
 ### Acerca del juego:
