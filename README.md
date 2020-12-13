@@ -5,9 +5,10 @@
 <img align="left" alt="Visual Studio Code" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/visual-studio-code/visual-studio-code.png" />
 <img align="left" alt="Git" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/git/git.png" />
 <img align="left" alt="GitHub" width="26px" src="https://raw.githubusercontent.com/github/explore/78df643247d429f6cc873026c0622819ad797942/topics/github/github.png" /> 
+<img src="https://user-images.githubusercontent.com/66569117/102001075-8a868a00-3ccc-11eb-8e1e-4b48be386518.png" width="15%"></img> 
+<br />
 
-
-## About:
+### Acerca del juego:
 MegaChess es un juego por código donde los participantes, mediante inteligencia artificial, deben competir. Este juego guarda un parecido al Ajedrez. 
 
 El servidor se encarga de crear las partidas y torneos, controlar los turnos de los jugadores y la validación de las movidas. 
@@ -16,9 +17,10 @@ Este ajedrez en particular se trata de un tablero de 16 x 16, que contiene 64 pi
 
 ## Gameover:
 Cuando se concluyen cuando alguna de las siguientes condiciones es cierta:
-Todos las movida indicadas en move_left, la partida finaliza.  
-Un jugador tiene menos de -500 puntos
-Un jugador se queda sin piezas
+
+ - Todos las movida indicadas en move_left, la partida finaliza.  
+ - Un jugador tiene menos de -500 puntos
+ - Un jugador se queda sin piezas
 
 
 ## Puntajes:
@@ -31,9 +33,12 @@ Esta variante del ajedrez no se basa en el jaque, sino en los puntos. Cada pieza
   - Queen: 5
   - King: 100
 
-_Si un jugador mueve con éxito una pieza, sumará el valor de la pieza movida.
-_Si un jugador come una pieza del oponente, entonces sumará el valor de la pieza del oponente multiplicado por 10.
-_Si un jugador realiza una movida incorrecta o pierde el turno, entonces restará 20 puntos.
+
+Si un jugador mueve con éxito una pieza, sumará el valor de la pieza movida.
+
+Si un jugador come una pieza del oponente, entonces sumará el valor de la pieza del oponente multiplicado por 10.
+
+Si un jugador realiza una movida incorrecta o pierde el turno, entonces restará 20 puntos.
 
 ## Promote:
 En este ajedrez en particular, los peones coronan (promote) en el centro del tablero, convirtiéndose en Damas automáticamente.
@@ -41,4 +46,4 @@ En este ajedrez en particular, los peones coronan (promote) en el centro del tab
 Cada promote da 500 puntos
 
 ## Autor:
-* **Enzo Crespillo** -[enzo__127@hotmail.com]()
+* **Enzo Crespillo**    [enzo__127@hotmail.com]()
