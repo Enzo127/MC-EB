@@ -20,7 +20,7 @@ valor_peon = {13:0 ,12:1 ,11:2 ,10:3 ,9:4 ,8:5,         #row=8 ----> Coronacion 
               2: 0 ,3: 1 ,4: 2 ,5: 3 ,6:4 ,7:5}         #row=7 ----> Coronacion
 
 
-#Actualiza el valor de mis reinas, mientras mas reinas tengo, menor valor tienen
+#Actualiza el valor de mis reinas, mientras mas reinas tengo menor es su valor
 def queen_value(queens_quantity):
     valor = 10 - queens_quantity
     if valor <= 0:

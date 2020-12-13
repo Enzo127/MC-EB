@@ -37,8 +37,8 @@ class Game():
             self.retaguardia_rival  = [14, 15]
             self.retaguardia_mia    = [0, 1]
 
-            self.strategy           = 0                #Este valor puede varias entre 0 y 2, elige la estrategia de apertura como negras en la IA (por default la estrategia 0)
-            self.move_opening       = [(5,5) ,(5,6) ,(6,6) ,(5,7) ,(6,7) ,(5,8) ,(4,6) ,(5,6) ,(4,7) ,(5,7) ,(6,5) ,(6,8)]  #Primeros 12 mejores movimientos para la estrategia 2
+            self.strategy           = 2                #Este valor puede varias entre 0 y 2, elige la estrategia de apertura como negras en la IA (por default la estrategia 2)
+            self.move_opening       = [(5,5) ,(5,6) ,(6,6) ,(5,7) ,(6,7) ,(5,8) ,(4,6) ,(5,6) ,(4,7) ,(5,7) ,(6,5) ,(6,8)]  #Primeros 12 mejores movimientos para la estrategia 0
 
     #Atributos comunes a los 2 colores
     board = [                                                                                      
@@ -314,8 +314,8 @@ class Game():
             self.retaguardia_rival  = [14, 15]
             self.retaguardia_mia    = [0, 1]
 
-            self.strategy           = 0                #Este valor puede varias entre 0 y 2, elige la estrategia de apertura como negras en la IA (por default la estrategia 0)
-            self.move_opening       = [(5,5) ,(5,6) ,(6,6) ,(5,7) ,(6,7) ,(5,8) ,(4,6) ,(5,6) ,(4,7) ,(5,7) ,(6,5) ,(6,8)]  #Primeros 12 mejores movimientos para la estrategia 2
+            self.strategy           = 2                #Este valor puede varias entre 0 y 2, elige la estrategia de apertura como negras en la IA (por default la estrategia 2)
+            self.move_opening       = [(5,5) ,(5,6) ,(6,6) ,(5,7) ,(6,7) ,(5,8) ,(4,6) ,(5,6) ,(4,7) ,(5,7) ,(6,5) ,(6,8)]  #Primeros 12 mejores movimientos para la estrategia 0
 
 
     '''
