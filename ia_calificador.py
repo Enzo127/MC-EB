@@ -1,16 +1,16 @@
 '''
 Almacena todas las funciones y herramientas para calificar los movimientos en el paso 2) de la ia.
 '''
-#-----------------------------------------------------------------------Settings---------------------------------------------------------------------------------
-row_clean_capture_white = {0:8 ,1:8 ,2:8    ,3:1 ,4:2 ,5:3 ,6:3 ,7:7 ,8:7 ,9:4 ,10:5     ,11:6 ,12:6        ,13:9 ,14:9 ,15:9}
-row_clean_capture_black = {0:9 ,1:9 ,2:9    ,3:6 ,4:6 ,5:5 ,6:4 ,7:7 ,8:7 ,9:3 ,10:3     ,11:1 ,12:2        ,13:8 ,14:8 ,15:8}
+#Dependiendo la fila, las capturas tienen un mayor valor agregado
+row_clean_capture_white = {0:8 ,1:8 ,2:8 ,3:1 ,4:2 ,5:3 ,6:3 ,7:7 ,8:7 ,9:4 ,10:5 ,11:6 ,12:6 ,13:9 ,14:9 ,15:9}  
+row_clean_capture_black = {0:9 ,1:9 ,2:9 ,3:6 ,4:6 ,5:5 ,6:4 ,7:7 ,8:7 ,9:3 ,10:3 ,11:1 ,12:2 ,13:8 ,14:8 ,15:8}
 
 valores_rival = {"h":5 ,"b":6 ,"r":7 ,"q":8 ,"k":9,           #Los valores de "p" y "P" los asignamos con el diccionario "valor_peon"
                  "H":5 ,"B":6 ,"R":7 ,"Q":8 ,"K":9}    
 
 valores_mios  = {"p":1 ,"q":7 ,"b":5 ,"h":3 ,"r":7 ,"k":9,    #Los valores de "p" y "P" los asignamos con el diccionario "valor_peon"
                  "P":1 ,"Q":7 ,"B":5 ,"H":3 ,"R":7 ,"K":9}  
-#ANTES DE TOQUETEAR, LAS REINAS ESTABAN VALIENDO 3
+
 
 piece_number={"P":0 ,"H":1 ,"B":2 ,"R":3 ,"K":4 ,"Q":5,       #Relacion entre int y string
               "p":0 ,"h":1 ,"b":2 ,"r":3 ,"k":4 ,"q":5}
@@ -19,6 +19,8 @@ piece_number={"P":0 ,"H":1 ,"B":2 ,"R":3 ,"K":4 ,"Q":5,       #Relacion entre in
 valor_peon = {13:0 ,12:1 ,11:2 ,10:3 ,9:4 ,8:5,         #row=8 ----> Coronacion (los peones nunca van a valer 5, porque en 5 coronan y como reinas valen 8)
               2: 0 ,3: 1 ,4: 2 ,5: 3 ,6:4 ,7:5}         #row=7 ----> Coronacion
 
+
+#Actualiza el valor de mis reinas, mientras mas reinas tengo, menor valor tienen
 def queen_value(queens_quantity):
     valor = 10 - queens_quantity
     if valor <= 0:
@@ -27,7 +29,6 @@ def queen_value(queens_quantity):
     valores_mios["Q"] = valor
 
 
-#-----------------------------------------------------------------------Funciones--------------------------------------------------------------------------------
 #Añade un valor a la captura dependiendo la pieza rival (realizar una captura limpia sobre un rey es mas valioso que sobre un alfil)
 def capturas_limpias(lista_capturas_limpias):  
     for movement in lista_capturas_limpias:
@@ -48,10 +49,9 @@ def capturas_limpias(lista_capturas_limpias):
 
     return lista_capturas_limpias
 
-
+#La retirada esta habilitada para todas las piezas excepto el caballo y alfil (piece=1 and piece=2)
 def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_strategy ,valor_row_strategy  ,moves_analysis):
     tipo = 1                                        #Voy a analizar mis movimientos a espacios vacios (retirada)
-    
     for move_capture in lista_capturas_rival:       #Con el movimiento de captura del rival, busco mi pieza y los movimientos posibles de ella
         start_sq = move_capture[1]
         piece_str = move_capture[3][1]
@@ -73,8 +73,8 @@ def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_s
                     movement[2] = movement[2] + valores_mios[move_capture[3][1]]
                     move_save = [start_sq ,end_sq ,movement[2]]
                     moves_analysis.append(move_save)
-                #Logica de reinas
-                if piece_int ==5:     #else                          #las retiradas solo las analizo para reinas
+                
+                if piece_int ==5:                   #Logica de reinas
                     if start_sq[0] == end_row:      #Consulto si la pieza quedaria en la misma fila (importante para elegir la fila estrategica de retirada)
                         move_in_same_row = 1
                     else:
@@ -90,23 +90,16 @@ def capturas_rival_retirada(lista_capturas_rival, moves, board_eventos ,qq_row_s
                         repeated = moves_analysis.count(move_save)
                         if movement[2] > 0 and repeated == 0:
                             moves_analysis.append(move_save)
-
     return moves_analysis
 
 
 def capturas_rival_contraataque(lista_capturas_rival, lista_capturas_sucias, moves_analysis):
     for move_capture in lista_capturas_rival:
         start_sq = move_capture[1]
-
         for movement in lista_capturas_sucias:
             if start_sq == movement[0]:
                 end_sq = movement[1]
                 
-                if movement[3][0] == "q" or movement[3][0] == "Q":
-                    pass
-                    #verificar si la row en la que me encuentro es estrategica
-                    #verificar si h
-
                 if movement[3][1] == "p" or movement[3][1] == "P":
                     movement[2] = valor_peon[end_sq[0]] - valores_mios[movement[3][0]]
                 else:
@@ -115,11 +108,9 @@ def capturas_rival_contraataque(lista_capturas_rival, lista_capturas_sucias, mov
                 if movement[2] >= 0:
                     move_save = [start_sq ,end_sq ,movement[2]]
                     repeated = moves_analysis.count(move_save)
-
-                    if repeated == 0:                       # si no haces esto, pasa que cuando te pueden capturar con 2 piezas, sumas los mismos movimientos 2 veces, podes solucionarlo con esto o retocando la logica del for
+                    if repeated == 0: 
                                 
                         moves_analysis.append(move_save)
-
     return moves_analysis
 
 def move_strategic(moves ,board_eventos ,data_row_upgrade ,qq_row_strategy ,valor_row_strategy ,row_strategy ,retaguardia_mia ,moves_analysis):
@@ -132,9 +123,8 @@ def move_strategic(moves ,board_eventos ,data_row_upgrade ,qq_row_strategy ,valo
         end_col   = end_sq[1]
 
         result = qq_row_strategy.get(end_row)
-        if result is None:
+        if result is None:  #Si es None, significa que la fila destino no es estrategica
             continue
-
         if (start_row == data_row_upgrade[0] and end_row != start_row) or start_row==retaguardia_mia[0] or start_row==retaguardia_mia[1]:
             if  board_eventos[end_row][end_col] == "+" or board_eventos[end_row][end_col] == " ":
 
@@ -151,7 +141,7 @@ def move_strategic(moves ,board_eventos ,data_row_upgrade ,qq_row_strategy ,valo
                     move_save = [start_sq ,end_sq ,movement[2]] 
                     moves_analysis.append(move_save)
 
-                #
+                #Si acumulo varias reinas en mi fila de upgrade, conviene moverlas a la fila de upgrade rival para meter presion
                 elif end_row == row_strategy["upgrade_rival"] and  (qq_row_strategy[row_strategy["upgrade_mia"]] > qq_row_strategy[row_strategy["upgrade_rival"]] + 1):
                     movement[2] = valor_row_strategy[end_row]
                     move_save = [start_sq ,end_sq ,movement[2]] 
@@ -161,14 +151,11 @@ def move_strategic(moves ,board_eventos ,data_row_upgrade ,qq_row_strategy ,valo
 
 
 def queen_infiltrated(lista_capturas_sucias ,retaguardia_rival ,moves_analysis):   
-
     for movement in lista_capturas_sucias:
         start_sq = movement[0]
         end_sq   = movement[1]
-
         start_row = movement[0][0]
         end_row   = movement[1][0]
-
 
         x = retaguardia_rival.count(start_row)
         y = retaguardia_rival.count(end_row)
@@ -177,16 +164,14 @@ def queen_infiltrated(lista_capturas_sucias ,retaguardia_rival ,moves_analysis):
             movement[2] = valores_rival[movement[3][1]]
             move_save = [start_sq ,end_sq ,movement[2]]
             moves_analysis.append(move_save)
-
     return moves_analysis
 
 
-def opening_white(moves ,row_strategy ,modifier):
+def opening_white(moves ,row_strategy ,modifier): #Con modifier establezco que columna tiene mas prioridad entre la 6 y la 7
     moves_selected = []
     for movement in moves:
         col     = movement[0][1]
         end_row = movement[1][0]
-    
         if   col == 6 + modifier:
             movement[2] = 2 + (10 - abs(row_strategy["upgrade_mia"] - end_row)) * 10
             moves_selected.append(movement)
@@ -194,36 +179,30 @@ def opening_white(moves ,row_strategy ,modifier):
         elif col == 7 - modifier:
             movement[2] = 1 + (10 - abs(row_strategy["upgrade_mia"] - end_row)) * 10
             moves_selected.append(movement)
-
     return moves_selected
+
 
 def opening_black_complex (moves ,move_opening):
     moves_selected = []
     for movement in moves:
         end_sq = movement[1]
-        
         if len(move_opening) > 0   and  end_sq == move_opening[0]:
             moves_selected.append(movement)
             move_opening.pop(0)
-
             return moves_selected
-    
     return moves_selected
     
 
-
+#Busco que peon movio el rival blanco y en base a eso, elijo que estrategia de apertura sigo como jugador negro
 def opening_selector(board):
     if board[10][6]   != " ":
         selector = 0
-        print("apertura negra complicada")
         return selector
     elif board[10][5] != " ":
         selector = 1
-        print("apertura blanca modificada")
         return selector
     else:
         selector = 2
-        print("apertura blanca sin modificar")
         return selector
 
 
@@ -260,12 +239,10 @@ def peon_avance (moves, Game ,board_eventos):
             moves_selected.append(movement)
             continue   
 
-
         if (col == 6 or col == 7):          #Priorizo mover los peones de la columna 6 y 7, asi puedo liberar las 4 reinas de la retaguardia
             movement[2] = movement[2] + 2000
-
-                                                       
-        rows_to_upgrade = abs(Game.row_strategy["upgrade_mia"] - end_row)       #Cantidad de casilleros restantes para coronar (mientras mas)
+                                    
+        rows_to_upgrade = abs(Game.row_strategy["upgrade_mia"] - end_row)  #Es mejor mover un peon que esta cerca de la coronacion
         movement[2] = movement[2] + upgrade_in[rows_to_upgrade]
         
         if Game.color:

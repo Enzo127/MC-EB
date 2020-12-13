@@ -100,9 +100,9 @@ async def eventos(websocket):
             await send(websocket , 'move' ,
             {   'board_id'  : data['data']['board_id'],
                 'turn_token': data['data']['turn_token'],
-                'from_row'  : move_choice[0][0],                 #Start_SQ
+                'from_row'  : move_choice[0][0],                 
                 'from_col'  : move_choice[0][1],                 
-                'to_row'    : move_choice[1][0],                 #End_SQ
+                'to_row'    : move_choice[1][0],                 
                 'to_col'    : move_choice[1][1]                
             })
 

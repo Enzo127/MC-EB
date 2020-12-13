@@ -11,7 +11,7 @@ _Guardar los movimientos y darmelos en listas ordenadas respecto a si los movimi
 
 class Game():       
     def __init__(self,turn):           #Cuando creo el juego, debo guardar el color con el que se jugara la partida
-        self.color = turn              #
+        self.color = turn              
 
         #Diccionario para llamar a los metodos de movimientos de piezas
         self.move_functions = {"P": self.get_pawn_moves, "R": self.get_rook_moves, "H":self.get_knight_moves, "B": self.get_bishop_moves,"Q": self.get_queen_moves,"K": self.get_king_moves,
@@ -133,9 +133,7 @@ class Game():
                 movement[3] = "q"+letter
         return queen_moves
 
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#--------------------------------------------------------Movimienentos de piezas--------------------------------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     '''
     Elementos que guardo de un movimiento (move):
     move[0] = start_sq
@@ -145,7 +143,6 @@ class Game():
     move[3] = este termino esta solo para movimientos de captura, es un string de 2 elementos que indica con que pieza capture a una pieza rival
     ej: "pQ  --------> como jugador negro, puedo comer con un peon una reina blanca del rival"
     '''
-
     #Guardo los movimientos validos de peones
     def get_pawn_moves(self,r,c,pawn_moves,change):                 
         if self.color:    #Logica de peon blanco                    
@@ -161,7 +158,6 @@ class Game():
             if c+1 <= 15: #Capturas a la derecha
                 if self.board[r-1][c+1][0].islower():                   #Captura de pieza enemiga
                     pawn_moves[0].append([(r,c),(r-1,c+1), 0, "P"+self.board[r-1][c+1][0]])
-
 
         else:       #Logica de peon negro
             if self.board[r+1][c] == " " and change==0:                 #Verifico si puedo avanzar 1 casillero  
@@ -185,26 +181,26 @@ class Game():
 
         for d in directions:
             for i in range(1,16):                                                              #El alfil se puede mover un maximo de 15 casilleros
-                endRow = r + d[0] * i
-                endCol = c + d[1] * i
-                if (0 <= endRow < 16) and (0 <= endCol < 16):                                  #Limites del tablero
+                end_row = r + d[0] * i
+                end_col = c + d[1] * i
+                if (0 <= end_row < 16) and (0 <= end_col < 16):                                  #Limites del tablero
                     
-                    endPiece = self.board[endRow][endCol]                   
-                    if endPiece == " ":                                                        #Lugar vacio es valido
-                        bishop_moves[1].append([(r,c),(endRow,endCol),0])                      #Movimientos a espacios libres [1]
+                    end_piece = self.board[end_row][end_col]                   
+                    if end_piece == " ":                                                        #Lugar vacio es valido
+                        bishop_moves[1].append([(r,c),(end_row,end_col),0])                      #Movimientos a espacios libres [1]
 
                     
-                    elif endPiece.islower() and self.color:                                    #Captura de pieza enemiga
-                        bishop_moves[0].append([(r,c),(endRow,endCol), 0, "B"+endPiece])       #Movimientos de captura [0]
+                    elif end_piece.islower() and self.color:                                    #Captura de pieza enemiga
+                        bishop_moves[0].append([(r,c),(end_row,end_col), 0, "B"+end_piece])       #Movimientos de captura [0]
                         break
 
-                    elif endPiece.isupper() and not self.color:                                #Captura de pieza enemiga
-                        bishop_moves[0].append([(r,c),(endRow,endCol), 0, "b"+endPiece])
+                    elif end_piece.isupper() and not self.color:                                #Captura de pieza enemiga
+                        bishop_moves[0].append([(r,c),(end_row,end_col), 0, "b"+end_piece])
                         break
                     
                     #Cuando change==1, debo verificar que piezas el rival puede defender ante capturas mias (analizo si el rival puede recapturar sus piezas)
                     elif change==1:  
-                        bishop_moves = analisis_rival(bishop_moves,endPiece, self.color, r,c,endRow,endCol)
+                        bishop_moves = analisis_rival(bishop_moves,end_piece, self.color, r,c,end_row,end_col)
                         break                    
                     
                     else:   #Al llegar aca, significa que hay una pieza mia, por lo que termino la iteracion
@@ -217,25 +213,25 @@ class Game():
         directions = ((-1,0),(0,-1),(1,0),(0,1))                                            #Direcciones de movimiento posible con la torre
         for d in directions:
             for i in range(1,16):
-                endRow = r + d[0] * i
-                endCol = c + d[1] * i
+                end_row = r + d[0] * i
+                end_col = c + d[1] * i
 
-                if (0 <= endRow < 16) and (0 <= endCol < 16):                               #Limites del tablero
-                    endPiece = self.board[endRow][endCol]
-                    if endPiece == " ":                                                     #Lugar vacio es valido
-                        rook_moves[1].append([(r,c),(endRow,endCol),0])
+                if (0 <= end_row < 16) and (0 <= end_col < 16):                               #Limites del tablero
+                    end_piece = self.board[end_row][end_col]
+                    if end_piece == " ":                                                     #Lugar vacio es valido
+                        rook_moves[1].append([(r,c),(end_row,end_col),0])
 
-                    elif endPiece.islower() and self.color:                                 #Captura de pieza enemiga
-                        rook_moves[0].append([(r,c),(endRow,endCol), 0, "R"+endPiece])
+                    elif end_piece.islower() and self.color:                                 #Captura de pieza enemiga
+                        rook_moves[0].append([(r,c),(end_row,end_col), 0, "R"+end_piece])
                         break
                         
-                    elif endPiece.isupper() and not self.color:                             #Captura de pieza enemiga
-                        rook_moves[0].append([(r,c),(endRow,endCol), 0, "r"+endPiece])
+                    elif end_piece.isupper() and not self.color:                             #Captura de pieza enemiga
+                        rook_moves[0].append([(r,c),(end_row,end_col), 0, "r"+end_piece])
                         break
 
                     #Cuando change==1, debo verificar que piezas el rival puede defender ante capturas mias (analizo si el rival puede recapturar sus piezas)
                     elif change==1:  
-                        rook_moves = analisis_rival(rook_moves,endPiece, self.color, r,c,endRow,endCol)
+                        rook_moves = analisis_rival(rook_moves,end_piece, self.color, r,c,end_row,end_col)
                         break
 
                     else:   #Al llegar aca, significa que hay una pieza mia, por lo que termino la iteracion
@@ -256,46 +252,46 @@ class Game():
         directions = ((-2,-1),(-2,1),(-1,-2),(-1,2),(1,-2),(1,2),(2,-1),(2,1))  #Todas las posibles di
 
         for m in directions:
-            endRow = r + m[0]
-            endCol = c + m[1]
-            if (0 <= endRow < 16) and (0 <= endCol < 16):                       #Limites del tablero
-                endPiece = self.board[endRow][endCol]
+            end_row = r + m[0]
+            end_col = c + m[1]
+            if (0 <= end_row < 16) and (0 <= end_col < 16):                       #Limites del tablero
+                end_piece = self.board[end_row][end_col]
                 #Movimientos a espacios libres
-                if endPiece==" ":                                               #Lugar vacio es valido
-                    knight_moves[1].append([(r,c),(endRow,endCol),0])
+                if end_piece==" ":                                               #Lugar vacio es valido
+                    knight_moves[1].append([(r,c),(end_row,end_col),0])
 
                 #Movimientos con captura
-                elif endPiece.islower() and self.color:  
-                    knight_moves[0].append([(r,c),(endRow,endCol), 0, "H"+endPiece])
+                elif end_piece.islower() and self.color:  
+                    knight_moves[0].append([(r,c),(end_row,end_col), 0, "H"+end_piece])
 
-                elif endPiece.isupper() and not self.color:
-                    knight_moves[0].append([(r,c),(endRow,endCol), 0, "h"+endPiece])
+                elif end_piece.isupper() and not self.color:
+                    knight_moves[0].append([(r,c),(end_row,end_col), 0, "h"+end_piece])
                     
                 #Cuando change==1, debo verificar que piezas el rival puede defender ante capturas mias (analizo si el rival puede recapturar sus piezas)
                 elif change==1:  
-                    knight_moves = analisis_rival(knight_moves,endPiece, self.color, r,c,endRow,endCol)
+                    knight_moves = analisis_rival(knight_moves,end_piece, self.color, r,c,end_row,end_col)
 
     #Movimientos del rey
     def get_king_moves(self,r,c,king_moves,change): 
         directions = ((-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1))
 
         for i in range(8):
-            endRow = r + directions[i][0]
-            endCol = c + directions[i][1]
-            if (0 <= endRow < 16) and (0 <= endCol < 16):
-                endPiece = self.board[endRow][endCol]
-                if endPiece==" ":                                        #Lugar vacio es valido
-                    king_moves[1].append([(r,c),(endRow,endCol),0])
+            end_row = r + directions[i][0]
+            end_col = c + directions[i][1]
+            if (0 <= end_row < 16) and (0 <= end_col < 16):
+                end_piece = self.board[end_row][end_col]
+                if end_piece==" ":                                        #Lugar vacio es valido
+                    king_moves[1].append([(r,c),(end_row,end_col),0])
 
-                if endPiece.islower() and self.color:  
-                    king_moves[0].append([(r,c),(endRow,endCol), 0, "K"+endPiece])
+                if end_piece.islower() and self.color:  
+                    king_moves[0].append([(r,c),(end_row,end_col), 0, "K"+end_piece])
 
-                elif endPiece.isupper() and not self.color:
-                    king_moves[0].append([(r,c),(endRow,endCol), 0, "k"+endPiece])
+                elif end_piece.isupper() and not self.color:
+                    king_moves[0].append([(r,c),(end_row,end_col), 0, "k"+end_piece])
 
                 #Cuando change==1, debo verificar que piezas el rival puede defender ante capturas mias (analizo si el rival puede recapturar sus piezas)
                 elif change==1:  
-                    king_moves = analisis_rival(king_moves,endPiece, self.color, r,c,endRow,endCol)
+                    king_moves = analisis_rival(king_moves,end_piece, self.color, r,c,end_row,end_col)
                 
 
     #Esto solo se ejecuta cuando juego contra mi mismo, es la misma asignacion de atributos que dependen del color que hay en el __init__
@@ -330,7 +326,6 @@ class Game():
         for row in self.qq_row_strategy:            #Esto se tiene que resetear todos los turnos
             self.qq_row_strategy[row] = 0
         
-
         #1) Analisis: Cantidad de reinas mias en row upgrade
         row = self.row_strategy["upgrade_mia"]
         for col in range(16):
@@ -350,15 +345,14 @@ class Game():
                 self.qq_row_strategy[row] = self.qq_row_strategy[row] + 1
 
 
-
 #Almacena los movimientos con captura validos del rival
-def analisis_rival(piece_moves ,endPiece ,color ,r ,c ,endRow ,endCol):
-    if endPiece.islower() and not color:
-        piece_moves[1].append([(r,c),(endRow,endCol), 0])   #Necesito el 3er termino? Total, no califico lo que el rival podria hacer
+def analisis_rival(piece_moves ,end_piece ,color ,r ,c ,end_row ,end_col):
+    if end_piece.islower() and not color:
+        piece_moves[1].append([(r,c),(end_row,end_col), 0])   #Necesito el 3er termino? Total, no califico lo que el rival podria hacer
         return piece_moves
 
-    elif endPiece.isupper() and color:
-        piece_moves[1].append([(r,c),(endRow,endCol), 0])
+    elif end_piece.isupper() and color:
+        piece_moves[1].append([(r,c),(end_row,end_col), 0])
         return piece_moves
 
     return piece_moves

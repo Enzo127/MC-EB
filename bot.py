@@ -14,7 +14,7 @@ from ia_planificador import analisis_ia
 
 juegos_ejecutandose = {}            #Diccionario que juega los juegos corriendose actualmente (cada juego es un objeto), identifico cada juego mediante "board_id" 
 
-#-----------------------------------------------------------BOT--------------------------------------------------------------------------------#
+
 def bot_work(datos_partida):   
     #1) Accedo al juego en cuestion mediante la id unica de cada partida (si no existe, lo creo)
     juego_actual = juegos_ejecutandose.get(datos_partida["board_id"])
@@ -52,8 +52,7 @@ def bot_work(datos_partida):
     #6)Obtencion del mejor movimiento respecto a la calificacion otorgada 
     return comparacion(moves_analized)
 
-#----------------------------------------------------------------FIN BOT----------------------------------------------------------------------------#
-#-----------------------------------------------------------FUNCIONES DEl BOT-----------------------------------------------------------------------#
+
 # Crea para cada "board_id" un objeto "Game"
 def crear_juego(id_nueva, color):
     print ("Inicia el juego")
