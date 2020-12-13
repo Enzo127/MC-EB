@@ -12,8 +12,8 @@
 
 ## Mi estrategia:
 Cada turno almaceno todos los movimientos validos mios y del rival y en base a eso genero un board con los eventos posibles en cada casillero:
- - Capturas limpias mias (x) (capturas en las que el rival no puede recapturarme)
- - Capturas sucias mias (?) (capturas en las que el rival me puede recapturas) 
+ - Capturas limpias mias (x) (capturas en las que el rival no puede recapturar)
+ - Capturas sucias mias (?) (capturas en las que el rival me puede recapturar) 
  - Capturas del rival (&)
  - Casilleros vacios pero controlados por mis piezas (+)
  - Casilleros vacios pero controlados por piezas rivales (-)
@@ -36,7 +36,7 @@ Este ajedrez en particular se trata de un tablero de 16 x 16, que contiene 64 pi
 ### Gameover:
 Cuando se concluyen cuando alguna de las siguientes condiciones es cierta:
 
- - Todos las movida indicadas en move_left, la partida finaliza.  
+ - Todos las movida indicadas en move_left, la partida finaliza  
  - Un jugador tiene menos de -500 puntos
  - Un jugador se queda sin piezas
 
